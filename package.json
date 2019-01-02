@@ -6,12 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node lib/app.js"
+    "start": "node lib/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/parse-torrent": "^5.8.2",
     "express": "^4.16.4",
+    "parse-torrent": "^6.1.2",
     "pump": "^3.0.0",
     "range-parser": "^1.2.0"
   },
