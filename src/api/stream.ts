@@ -3,7 +3,7 @@ import rangeParser from 'range-parser'
 import { Express } from 'express'
 import { TorrentClient, Torrent } from '../torrent'
 
-export function setupStreamApi(app: Express, client: TorrentClient): void {
+export function setupStreamApi(app: Express, client: TorrentClient): Express {
     app.get('/stream', async (req, res) => {
         const link = req.query.torrent
         if (!link) {
@@ -48,4 +48,5 @@ export function setupStreamApi(app: Express, client: TorrentClient): void {
     
         return pump(file.createReadStream(range), res)
     })
+    return app
 }
