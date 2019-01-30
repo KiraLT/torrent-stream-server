@@ -2,12 +2,13 @@
 
 HTTP server to convert any torrent to video stream
 
+![Demo](https://i.imgur.com/twwkcOl.png)
+
 ## Demo
 
 * `npm install`
 * `npm run start`
 * Go to http://127.0.0.1:3000
-
 
 ## Commands
 
