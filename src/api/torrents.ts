@@ -1,7 +1,10 @@
 import { Express } from 'express'
-import { TorrentClient } from '../torrent'
+import { Logger } from 'winston'
 
-export function setupTorrentsApi(app: Express, client: TorrentClient): Express {
+import { TorrentClient } from '../torrent'
+import { Config } from '../config'
+
+export function setupTorrentsApi(app: Express, config: Config, logger: Logger, client: TorrentClient): Express {
     app.get('/torrents', (req, res) => res.send(client.getAll().map(torrent => ({
         infoHash: torrent.infoHash,
         files: torrent.engine.files.map(file => ({

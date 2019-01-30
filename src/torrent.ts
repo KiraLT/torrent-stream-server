@@ -1,6 +1,12 @@
+import { setInterval, clearInterval } from 'timers'
+import { join } from 'path'
+import { promises } from 'fs'
+
 import torrentStream from 'torrent-stream'
 import parseTorrent from 'parse-torrent'
-import { setInterval, clearInterval } from 'timers'
+import { Logger } from 'winston'
+
+import { Config } from './config'
 
 export interface Torrent {
     engine: TorrentStream.TorrentEngine
@@ -12,8 +18,9 @@ export interface Torrent {
 export class TorrentClient {
     protected torrents: Record<string, Torrent>
     protected interval: NodeJS.Timeout
+    protected onStartExecuted: boolean = false
 
-    constructor() {
+    constructor(protected config: Config, protected logger: Logger) {
         this.torrents = {}
         this.interval = setInterval(() => {
             this.periodCheck()
@@ -23,21 +30,28 @@ export class TorrentClient {
     public async addAndGet(link: string): Promise<Torrent> {
         return new Promise<Torrent>((resolve) => {
             const info = parseTorrent(link)
-            if (info.infoHash! in this.torrents) {
+            const hash =  info.infoHash
+            if (!hash) {
+                throw `Torrent hash not found for ${link}`
+            }
+            if (hash in this.torrents) {
                 const torrent = {
-                    ...this.torrents[info.infoHash!],
+                    ...this.torrents[hash],
                     updated: Date.now()
                 }
-                this.torrents[info.infoHash!] = torrent
+                this.torrents[hash] = torrent
                 resolve(torrent)
             } else {
+                this.logger.info(`Add new torrent from ${link}`)
                 const torrent = {
-                    engine: torrentStream(link),
-                    infoHash: info.infoHash!,
+                    engine: torrentStream(link, {
+                        path: join(this.config.torrents.path, hash)
+                    }),
+                    infoHash: hash,
                     started: Date.now(),
                     updated: Date.now()
                 }
-                this.torrents[info.infoHash!] = torrent
+                this.torrents[hash] = torrent
                 torrent.engine.on('ready', () => {
                     resolve(torrent)
                 })
@@ -45,7 +59,8 @@ export class TorrentClient {
         })
     }
 
-    public periodCheck(): void {
+    public async periodCheck(): Promise<void> {
+        await this.onStart()
         this.getAll().forEach(torrent => {
             if (Date.now() - torrent.updated > 60*60*24) {
                 torrent.engine.remove(false, () => {
@@ -63,5 +78,12 @@ export class TorrentClient {
 
     public stop(): void {
         clearInterval(this.interval)
+    }
+
+    protected async onStart(): Promise<void> {
+        if (!this.onStartExecuted) {
+            this.onStartExecuted = true
+            await promises.mkdir(this.config.torrents.path, {recursive: true})
+        }
     }
 }

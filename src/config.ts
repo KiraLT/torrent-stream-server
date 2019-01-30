@@ -5,8 +5,8 @@ const readFilePromise = promisify(readFile)
 
 export interface Config {
     port: number
-    logging?: {
-        transports?: Array<{
+    logging: {
+        transports: Array<{
             type: 'console'
         } | {
             type: 'loggly'
@@ -14,11 +14,26 @@ export interface Config {
             token: true
             tags?: string[]
         }>
+        level: 'debug' | 'info' | 'warn' | 'error'
+    },
+    torrents: {
+        path: string
     }
 }
 
 const defaultConfig: Config = {
-    port: 3000
+    port: 3000,
+    logging: {
+        transports: [
+            {
+                type: 'console'
+            }
+        ],
+        level: 'info'
+    },
+    torrents: {
+        path: '/tmp'
+    }
 }
 
 export async function readConfig(path: string | undefined): Promise<Config> {

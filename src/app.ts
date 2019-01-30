@@ -1,12 +1,10 @@
-import { Express, default as express } from 'express'
-import winston from 'winston'
-import expressWinston from 'express-winston'
-const { Loggly } = require('winston-loggly-bulk')
+import express, { Express } from 'express'
 
 import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
 import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
+import { setupAppLogger, createLogger } from './logging'
 
 function createApp(config: Config): Express {
     const app = express()
@@ -17,33 +15,23 @@ function createApp(config: Config): Express {
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next()
     })
-    return setupLogging(app, config)
-}
-
-function setupLogging(app: Express, config: Config): Express {
-    if (config.logging && config.logging.transports) {
-        app.use(expressWinston.logger({
-            transports: config.logging.transports.map(
-                v => v.type === 'loggly' ? new Loggly({
-                    subdomain: v.subdomain,
-                    inputToken: v.token,
-                    json: true,
-                    tags: v.tags || []
-                }) : new winston.transports.Console({}))
-        }))
-    }
-    return app
+    return setupAppLogger(app, config)
 }
 
 export async function setup(): Promise<void> {
     const config = await readConfig(process.argv[2])
+    const logger = createLogger(config)
+
+    logger.info('Starting app')
+
     const app = createApp(config)
-    const client = new TorrentClient()
+    const client = new TorrentClient(config, logger)
     
-    app.get('/status', (req, res) => res.send('ok'))
+    app.get('/status', (req, res) => res.send({'status': 'ok'}))
 
-    setupTorrentsApi(app, client)
-    setupStreamApi(app, client)
+    setupTorrentsApi(app, config, logger, client)
+    setupStreamApi(app, config, logger, client)
 
-    app.listen(config.port, () => console.log(`Listening on port ${config.port}!`))
+    app.listen(config.port)
 }
+

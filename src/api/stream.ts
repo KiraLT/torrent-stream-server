@@ -1,20 +1,24 @@
 import pump from 'pump'
 import rangeParser from 'range-parser'
 import { Express } from 'express'
-import { TorrentClient, Torrent } from '../torrent'
+import { Logger } from 'winston'
 
-export function setupStreamApi(app: Express, client: TorrentClient): Express {
+import { TorrentClient, Torrent } from '../torrent'
+import { Config } from '../config'
+
+export function setupStreamApi(app: Express, config: Config, logger: Logger, client: TorrentClient): Express {
     app.get('/stream', async (req, res) => {
         const link = req.query.torrent
         if (!link) {
             return res.send(400)
         }
-        const headersRange = req.headers.range instanceof Array ? req.headers.range[0] : req.headers.range
+        const headersRange = req.headers.range
 
         let torrent: Torrent
         try {
             torrent = await client.addAndGet(link)
         } catch (error) {
+            logger.warn(`Bad torrent: ${error}`)
             return res.sendStatus(400).send(String(error))
         }
     
