@@ -5,6 +5,7 @@ import { setupStreamApi } from './api/stream'
 import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
 import { setupAppLogger, createLogger } from './logging'
+import { setupDemoPage } from './api/demo'
 
 function createApp(config: Config): Express {
     const app = express()
@@ -29,6 +30,7 @@ export async function setup(): Promise<void> {
     
     app.get('/status', (req, res) => res.send({'status': 'ok'}))
 
+    setupDemoPage(app, config, logger)
     setupTorrentsApi(app, config, logger, client)
     setupStreamApi(app, config, logger, client)
 

@@ -1,6 +1,7 @@
 import { setInterval, clearInterval } from 'timers'
 import { join } from 'path'
-import { promises } from 'fs'
+import { mkdir } from 'fs'
+import { promisify } from 'util'
 
 import torrentStream from 'torrent-stream'
 import parseTorrent from 'parse-torrent'
@@ -82,8 +83,9 @@ export class TorrentClient {
 
     protected async onStart(): Promise<void> {
         if (!this.onStartExecuted) {
+            this.logger.info('Preparing torrents directory')
             this.onStartExecuted = true
-            await promises.mkdir(this.config.torrents.path, {recursive: true})
+            await promisify(mkdir)(this.config.torrents.path, {recursive: true})
         }
     }
 }

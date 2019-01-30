@@ -12,7 +12,6 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
         if (!link) {
             return res.send(400)
         }
-        const headersRange = req.headers.range
 
         let torrent: Torrent
         try {
@@ -27,7 +26,7 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
             return res.send(400)
         }
 
-        const parsedRange = headersRange ? rangeParser(file.length, headersRange) : undefined
+        const parsedRange = req.headers.range ? rangeParser(file.length, req.headers.range) : undefined
         const range = parsedRange instanceof Array ? parsedRange[0] : undefined
 
         res.setHeader('Accept-Ranges', 'bytes');
