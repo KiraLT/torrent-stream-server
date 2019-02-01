@@ -26,7 +26,7 @@ export async function setup(): Promise<void> {
     logger.info('Starting app')
 
     const app = createApp(config)
-    const client = new TorrentClient(config, logger)
+    const client = await TorrentClient.create(config, logger)
     
     app.get('/status', (req, res) => res.send({'status': 'ok'}))
 

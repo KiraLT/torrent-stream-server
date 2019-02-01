@@ -1,7 +1,7 @@
 import { readFile } from 'fs'
 import { promisify } from 'util'
 
-const readFilePromise = promisify(readFile)
+import { merge } from './utils'
 
 export interface Config {
     port: number
@@ -18,6 +18,7 @@ export interface Config {
     },
     torrents: {
         path: string
+        autocleanInternal: number
     }
 }
 
@@ -32,14 +33,19 @@ const defaultConfig: Config = {
         level: 'info'
     },
     torrents: {
-        path: '/tmp'
+        path: '/tmp/torrent-stream-server',
+        autocleanInternal: 60*60
     }
 }
 
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
-        return path ? JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })) : defaultConfig
+        return path ? mergeConfig(JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' }))) : defaultConfig
     } catch (error) {
         throw Error(`Failed to read config from ${path} - ${error}`)
     }
+}
+
+function mergeConfig(config: {}): Config {
+    return merge(defaultConfig, config)
 }
