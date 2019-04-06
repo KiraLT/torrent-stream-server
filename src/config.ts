@@ -15,10 +15,16 @@ export interface Config {
             tags?: string[]
         }>
         level: 'debug' | 'info' | 'warn' | 'error'
-    },
+    }
     torrents: {
         path: string
         autocleanInternal: number
+    }
+    security: {
+        streamApi?: {
+            key: string
+            maxAge: string
+        }
     }
 }
 
@@ -35,6 +41,9 @@ const defaultConfig: Config = {
     torrents: {
         path: '/tmp/torrent-stream-server',
         autocleanInternal: 60*60
+    },
+    security: {
+        streamApi: undefined
     }
 }
 

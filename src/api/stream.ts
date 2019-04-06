@@ -5,10 +5,24 @@ import { Logger } from 'winston'
 
 import { TorrentClient, Torrent } from '../torrent'
 import { Config } from '../config'
+import { verifyJwrRoken } from '../utils'
+
+type UrlParams = {
+    torrent?: string
+    file?: string
+} | undefined
 
 export function setupStreamApi(app: Express, config: Config, logger: Logger, client: TorrentClient): Express {
     app.get('/stream', async (req, res) => {
-        const link = req.query.torrent
+        const data: UrlParams = config.security.streamApi ?
+            verifyJwrRoken(String(req.query.token), config.security.streamApi.key, config.security.streamApi.maxAge) :
+            req.query
+        if (!data) {
+            logger.warn(`Access denied`)
+            return res.send(403)
+        }
+    
+        const link = data.torrent
         if (!link) {
             return res.send(400)
         }
@@ -21,7 +35,7 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
             return res.sendStatus(400).send(String(error))
         }
     
-        const file = torrent.engine.files.find(f => f.name === req.query.file) || torrent.engine.files[0]
+        const file = torrent.engine.files.find(f => f.name === data.file) || torrent.engine.files[0]
         if (!file) {
             return res.send(400)
         }
