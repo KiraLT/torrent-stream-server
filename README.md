@@ -83,6 +83,25 @@ type Response = {
 }
 ```
 
+### GET /api/torrents/{infoHash}
+
+```ts
+type Response = {
+    link: string
+    infoHash: string
+    name: string
+    started: number
+    updated: number
+    files: {
+        name: string
+        path: string
+        length: number
+    }[]
+    downloaded: number
+    downloadSpeed: number
+}
+```
+
 ### GET /api/usage
 
 ```ts
