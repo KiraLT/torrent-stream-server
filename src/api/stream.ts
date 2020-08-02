@@ -2,6 +2,7 @@ import pump from 'pump'
 import rangeParser from 'range-parser'
 import { Express } from 'express'
 import { Logger } from 'winston'
+import { lookup } from 'mime-types'
 
 import { TorrentClient, Torrent } from '../torrent'
 import { Config } from '../config'
@@ -34,11 +35,19 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
             logger.warn(`Bad torrent: ${error}`)
             return res.sendStatus(400).send(String(error))
         }
-    
-        const file = torrent.files.find(f => f.name === data.file) || torrent.files[0]
+
+        const file = torrent.files.find(f => f.path === data.file)
+            || torrent.files.find(f => f.name === data.file)
+            || torrent.files[0]
+
         if (!file) {
             return res.send(400)
         }
+
+        res.setHeader('Content-Disposition', `inline; filename="${file.name}"`)
+        res.setHeader('Content-Type', lookup(file.name) || 'application/octet-stream')
+
+        console.log(`Streaming ${file.name}`)
 
         const parsedRange = req.headers.range ? rangeParser(file.length, req.headers.range) : undefined
         const range = parsedRange instanceof Array ? parsedRange[0] : undefined
