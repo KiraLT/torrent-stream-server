@@ -44,13 +44,54 @@ Available parameters:
 
 ## API
 
-### GET /
+### GET /api/torrents
 
-Demo page
+```ts
+type Response = Array<{
+    link: string
+    infoHash: string
+    name: string
+    started: number
+    updated: number
+    files: {
+        name: string
+        path: string
+        length: number
+    }[]
+    downloaded: number
+    downloadSpeed: number
+}>
+```
 
-### GET /torrents
 
-List of active torrents
+### POST /api/torrents?link={magnetOrUrl}
+
+```ts
+type Response = {
+    link: string
+    infoHash: string
+    name: string
+    started: number
+    updated: number
+    files: {
+        name: string
+        path: string
+        length: number
+    }[]
+    downloaded: number
+    downloadSpeed: number
+}
+```
+
+### GET /api/usage
+
+```ts
+type Response = {
+  totalDiskSpace: number,
+  freeDiskSpace: number,
+  usedTorrentSpace: number,
+}
+```
 
 ### GET /stream
 
