@@ -11,7 +11,7 @@ export interface Config {
         } | {
             type: 'loggly'
             subdomain: string
-            token: true
+            token: string
             tags?: string[]
         }>
         level: 'debug' | 'info' | 'warn' | 'error'
@@ -25,6 +25,8 @@ export interface Config {
             key: string
             maxAge: string
         }
+        demoEnabled: boolean
+        apiKey?: string
     }
 }
 
@@ -43,7 +45,9 @@ const defaultConfig: Config = {
         autocleanInternal: 60*60
     },
     security: {
-        streamApi: undefined
+        streamApi: undefined,
+        apiKey: undefined,
+        demoEnabled: true
     }
 }
 

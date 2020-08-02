@@ -2,7 +2,7 @@
 
 HTTP server to convert any torrent to video stream
 
-![Demo](https://i.imgur.com/twwkcOl.png)
+![Demo](https://i.imgur.com/mIzSYWV.png)
 
 ## Demo
 
@@ -10,10 +10,59 @@ HTTP server to convert any torrent to video stream
 * `npm run start`
 * Go to http://127.0.0.1:3000
 
+> This will run prebuild server
+
+**Whats new:**
+
+* Stream any file from the torrent - [preview](https://i.imgur.com/qRmicai.png)
+* Monitor activity - [preview](https://i.imgur.com/aPTcl9P.png)
+
 ## Commands
 
 * `npm run build` - build typescript to javascript
 * `npm run start` - start HTTP server (javascript)
+* `npm run dev` - start HTTP server from source with live reload
+
+## Configuration
+
+You can pass json config file to any run command (`e.g. npm run start config.json`)
+
+Available parameters:
+* **port** - server port. Default 3000.
+* **logging**
+  * **level** - debug, info, warn or error. Default info.
+  * **transports** - `{"type": "console"}` or `{"type": "loggly","subdomain": "my-subdomain","token": "abc","tags":["my-anime-stream]}`. Default `console`.
+* **torrents**
+  * **path** - torrents storage path. Default `/tmp/torrent-stream-server`.
+  * **autocleanInternal** - how many seconds downloaded from last stream torrent is kept before deleting. Default is 1 hour. 
+* **security**
+  * **streamApi** - API is disabled when using this option unless `apiKey` is set.
+    * **key** - JWT token.
+    * **maxAge** - the maximum allowed age for tokens to still be valid.
+  * **demoEnabled** - enable demo page. Default is `true`.
+  * **apiKey** - key which should be passed to headers to access the API (`authorization: bearer ${apiKey}`).
+
+## API
+
+### GET /
+
+Demo page
+
+### GET /torrents
+
+List of active torrents
+
+### GET /stream
+
+URL GET params:
+
+* `torrent` - magnet or torrent link
+* `file` (optional) - file name to stream, by default takes first file
+
+Or:
+
+* `token` - JWT token with above parameters as payload
+
 
 ## JWT tokens
 
@@ -68,24 +117,3 @@ HMACSHA256(
 #### Use generated token
 
 http://127.0.0.1:3000/stream?token=JWT_TOKEN
-
-## API
-
-### GET /
-
-Demo page
-
-### GET /torrents
-
-List of active torrents
-
-### GET /stream
-
-URL GET params:
-
-* `torrent` - magnet or torrent link
-* `file` (optional) - file name to stream, by default takes first file
-
-Or:
-
-* `token` - JWT token with above parameters as payload

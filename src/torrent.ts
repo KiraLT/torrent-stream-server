@@ -9,10 +9,29 @@ import { Logger } from 'winston'
 import { Config } from './config'
 
 export interface Torrent {
+    link: string
     engine: TorrentStream.TorrentEngine
     infoHash: string
+    name: string
     started: number
     updated: number
+    files: TorrentStream.TorrentEngine['files']
+    getMeta: () => TorrentMeta
+}
+
+export interface TorrentMeta {
+    link: string
+    infoHash: string
+    name: string
+    started: number
+    updated: number
+    files: {
+        name: string
+        path: string
+        length: number
+    }[]
+    downloaded: number
+    downloadSpeed: number
 }
 
 export class TorrentClient {
@@ -54,15 +73,36 @@ export class TorrentClient {
                 resolve(this.get(hash))
             } else {
                 this.logger.info(`Add new torrent from ${link}`)
-                this.update(hash, {
-                    engine: torrentStream(link, {
-                        tmp: this.config.torrents.path
-                    }),
-                    infoHash: hash,
-                    started: Date.now(),
-                    updated: Date.now()
+                const engine = torrentStream(link, {
+                    tmp: this.config.torrents.path
                 })
-                this.get(hash)!.engine.on('ready', () => {
+                engine.on('ready', () => {
+                    const torrent = {
+                        link,
+                        engine,
+                        name: (engine as any).torrent.name,
+                        infoHash: hash,
+                        files: engine.files,
+                        started: Date.now(),
+                        updated: Date.now(),
+                    }
+                    this.update(hash, {
+                        ...torrent,
+                        getMeta: () => ({
+                            link: torrent.link,
+                            infoHash: torrent.infoHash,
+                            name: torrent.name,
+                            files: torrent.files.map(v => ({
+                                name: v.name,
+                                length: v.length,
+                                path: v.path
+                            })),
+                            started: torrent.started,
+                            updated: torrent.updated,
+                            downloadSpeed: (engine.swarm as any).downloadSpeed(),
+                            downloaded: engine.swarm.downloaded
+                        })
+                    })
                     resolve(this.get(hash))
                 })
             }

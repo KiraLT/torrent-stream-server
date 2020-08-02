@@ -1,21 +1,19 @@
 import express, { Express } from 'express'
+import { resolve, join } from 'path'
+import { exists } from 'fs'
+import cors from 'cors'
 
 import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
 import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
 import { setupAppLogger, createLogger } from './logging'
-import { setupDemoPage } from './api/demo'
+import { setupUsageApi } from './api/usage'
 
 function createApp(config: Config): Express {
     const app = express()
+    app.use(cors())
     app.use(express.json())
-    app.use((req, res, next) => {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT, DELETE');
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-        next()
-    })
     return setupAppLogger(app, config)
 }
 
@@ -23,16 +21,50 @@ export async function setup(): Promise<void> {
     const config = await readConfig(process.argv[2])
     const logger = createLogger(config)
 
-    logger.info('Starting app')
+    logger.info(`Starting app on http://127.0.0.1:${config.port}`)
 
     const app = createApp(config)
     const client = await TorrentClient.create(config, logger)
     
     app.get('/status', (req, res) => res.send({'status': 'ok'}))
 
-    setupDemoPage(app, config, logger)
-    setupTorrentsApi(app, config, logger, client)
-    setupStreamApi(app, config, logger, client)
+    if (!config.security.streamApi || (config.security.streamApi && config.security.apiKey)) {
+        if (config.security.apiKey) {
+            app.use('/api/', (req, res, next) => {
+                const [type, token] = (req.headers.authorization || '').split(' ')
+                if (type.toLowerCase() === 'bearer' && token === config.security.apiKey) {
+                    next()
+                } else {
+                    res.status(403).send({
+                        'error': 'Incorect authorization header'
+                    })
+                }
+            })
+        }
+    
+        setupTorrentsApi(app, config, logger, client)
+        setupStreamApi(app, config, logger, client)
+        setupUsageApi(app, config, logger, client)
+    }
+
+    if (config.security.demoEnabled) {
+        const path = resolve(__dirname, '../demo/build')
+
+        app.use((req, res, next) => {
+            var file = path + req.path;
+            exists(file, (fileExists) => {
+                if (fileExists) {
+                    res.sendFile(file)
+                } else {
+                    next()
+                }
+            })
+        })
+
+        app.get('/', (req, res) => res.sendFile(join(path, 'index.html')))
+        app.get('/play', (req, res) => res.sendFile(join(path, 'index.html')))
+        app.get('/dashboard', (req, res) => res.sendFile(join(path, 'index.html')))
+    }
 
     app.listen(config.port)
 }

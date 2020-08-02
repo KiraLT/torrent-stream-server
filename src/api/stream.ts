@@ -35,7 +35,7 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
             return res.sendStatus(400).send(String(error))
         }
     
-        const file = torrent.engine.files.find(f => f.name === data.file) || torrent.engine.files[0]
+        const file = torrent.files.find(f => f.name === data.file) || torrent.files[0]
         if (!file) {
             return res.send(400)
         }
