@@ -47,8 +47,6 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
         res.setHeader('Content-Disposition', `inline; filename="${file.name}"`)
         res.setHeader('Content-Type', lookup(file.name) || 'application/octet-stream')
 
-        console.log(`Streaming ${file.name}`)
-
         const parsedRange = req.headers.range ? rangeParser(file.length, req.headers.range) : undefined
         const range = parsedRange instanceof Array ? parsedRange[0] : undefined
 

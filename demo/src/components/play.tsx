@@ -35,7 +35,7 @@ export function PlayComponent(): JSX.Element {
                 <span className="sr-only">Loading...</span>
             </div>
         </div>}
-        {torrent && <>
+        {torrent && link && <>
             <h3><small>{torrent.name}</small></h3>
             {!file ? <table className="table">
                 <thead>
@@ -54,12 +54,12 @@ export function PlayComponent(): JSX.Element {
                             {formatBytes(v.length)}
                         </td>
                         <td>
-                            <Link to={`?torrent=${link}&file=${encodeURIComponent(v.path)}`} className="btn btn-outline-primary ti-control-play"></Link>
+                            <Link to={`?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(v.path)}`} className="btn btn-outline-primary ti-control-play"></Link>
                         </td>
                     </tr>)}
                 </tbody>
             </table> : <>
-                <h5 className="text-muted"><small>{file}</small> - <Link to={`?torrent=${link}`}>view all</Link></h5>
+                <h5 className="text-muted"><small>{file}</small> - <Link to={`?torrent=${encodeURIComponent(link)}`}>view all</Link></h5>
             </>}
             {file && link && <>
                 <div className="embed-responsive embed-responsive-16by9">

@@ -98,7 +98,7 @@ export function DashboardComponent(): JSX.Element {
                                 <td>{torrent.name}</td>
                                 <td>{formatBytes(torrent.downloaded)} ({formatBytes(torrent.downloadSpeed)}/s)</td>
                                 <td>{format(torrent.started)}</td>
-                                <td><Link to={`/play?torrent=${torrent.link}`} className="btn btn-outline-primary ti-control-play"></Link></td>
+                                <td><Link to={`/play?torrent=${encodeURIComponent(torrent.link)}`} className="btn btn-outline-primary ti-control-play"></Link></td>
                             </tr>
                         </>)}
                     </tbody>
