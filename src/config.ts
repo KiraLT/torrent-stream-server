@@ -31,7 +31,7 @@ export interface Config {
 }
 
 const defaultConfig: Config = {
-    port: 3000,
+    port: parseInt(process.env.PORT || '') || 3000,
     logging: {
         transports: [
             {
