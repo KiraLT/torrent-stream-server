@@ -28,7 +28,7 @@ HTTP server to convert any torrent to video stream
 You can pass json config file to any run command (`e.g. npm run start config.json`)
 
 Available parameters:
-* **port** - server port. Default 3000.
+* **port** - server port. Default `process.env.PORT` or 3000.
 * **logging**
   * **level** - debug, info, warn or error. Default info.
   * **transports** - `{"type": "console"}` or `{"type": "loggly","subdomain": "my-subdomain","token": "abc","tags":["my-anime-stream]}`. Default `console`.
