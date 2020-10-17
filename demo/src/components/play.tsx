@@ -3,6 +3,7 @@ import { useLocation, Link } from 'react-router-dom'
 
 import { TorrentMeta, createTorrent, getSteamUrl } from '../helpers/client'
 import { formatBytes, sortBy } from '../helpers'
+import { addHistoryItem } from '../helpers/history'
 
 export function PlayComponent(): JSX.Element {
     const [torrent, setTorrent] = useState<TorrentMeta>()
@@ -16,7 +17,12 @@ export function PlayComponent(): JSX.Element {
     useEffect(() => {
         const action = async () => {
             if (link) {
-                setTorrent(await createTorrent({ link }))
+                const newTorrent = await createTorrent({ link })
+                setTorrent(newTorrent)
+                addHistoryItem({
+                    name: newTorrent.name,
+                    link: newTorrent.link,
+                })
             } else {
                 setError('Torrent link is not specified')
             }
