@@ -1,8 +1,7 @@
-import express, { Express, Response, Request, NextFunction } from 'express'
+import express, { Express } from 'express'
 import { resolve, join } from 'path'
 import { exists } from 'fs'
 import cors from 'cors'
-import { Logger } from 'winston'
 
 import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
@@ -18,7 +17,6 @@ function createApp(config: Config): Express {
     const app = express()
     app.use(cors())
     app.use(express.json())
-    setupAppLogger(app, config)
     
     return app
 }
