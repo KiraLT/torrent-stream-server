@@ -7,6 +7,7 @@ import parseTorrent from 'parse-torrent'
 import { Logger } from 'winston'
 
 import { Config } from './config'
+import { ValidationError } from './errors'
 
 export interface Torrent {
     link: string
@@ -34,6 +35,8 @@ export interface TorrentMeta {
     downloadSpeed: number
 }
 
+export class TorrentError extends ValidationError {}
+
 export class TorrentClient {
     protected torrents: Record<string, Torrent>
     protected interval: NodeJS.Timeout
@@ -55,27 +58,40 @@ export class TorrentClient {
     }
 
     public async addAndGet(link: string): Promise<Torrent> {
-        return new Promise<Torrent>((resolve) => {
-            const info = parseTorrent(link)
-            const hash =  info.infoHash
-    
-            if (!hash) {
-                throw `Torrent hash not found for ${link}`
-            }
+        let info: parseTorrent.Instance | undefined
+        try {
+            info = await promisify(parseTorrent.remote)(link)
+        } catch (err) {
+            throw new TorrentError(`Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`)
+        }
 
-            const torrent = this.get(hash)
+        if (!info) {
+            throw new TorrentError(`Cannot parse torrent: ${link}`)
+        }
 
-            if (torrent) {
-                this.update(hash, {
-                    ...torrent,
-                    updated: Date.now()
-                })
-                resolve(this.get(hash))
+        const magnet = parseTorrent.toMagnetURI(info)
+        const hash =  info.infoHash
+
+        const torrent = this.get(hash)
+
+        if (torrent) {
+            this.update(hash, {
+                ...torrent,
+                updated: Date.now()
+            })
+            const result = this.get(hash)
+            if (result) {
+                return result
             } else {
-                this.logger.info(`Add new torrent from ${link}`)
-                const engine = torrentStream(link, {
-                    tmp: this.config.torrents.path
-                })
+                throw new Error()
+            }
+        } else {
+            this.logger.info(`Add new torrent from ${link}`)
+            const engine = torrentStream(magnet, {
+                tmp: this.config.torrents.path
+            })
+
+            return new Promise(resolve => {
                 engine.on('ready', () => {
                     const torrent = {
                         link,
@@ -105,8 +121,9 @@ export class TorrentClient {
                     })
                     resolve(this.get(hash))
                 })
-            }
-        })
+            })
+        }
+    
     }
 
     public async periodCheck(): Promise<void> {

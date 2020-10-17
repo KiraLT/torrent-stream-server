@@ -1,7 +1,8 @@
-import express, { Express } from 'express'
+import express, { Express, Response, Request, NextFunction } from 'express'
 import { resolve, join } from 'path'
 import { exists } from 'fs'
 import cors from 'cors'
+import { Logger } from 'winston'
 
 import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
@@ -9,12 +10,17 @@ import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
 import { setupAppLogger, createLogger } from './logging'
 import { setupUsageApi } from './api/usage'
+import { handleApiErrors } from './errors'
+
+import 'express-async-errors'
 
 function createApp(config: Config): Express {
     const app = express()
     app.use(cors())
     app.use(express.json())
-    return setupAppLogger(app, config)
+    setupAppLogger(app, config)
+    
+    return app
 }
 
 export async function setup(): Promise<void> {
@@ -65,6 +71,8 @@ export async function setup(): Promise<void> {
         app.get('/play', (req, res) => res.sendFile(join(path, 'index.html')))
         app.get('/dashboard', (req, res) => res.sendFile(join(path, 'index.html')))
     }
+
+    app.use(handleApiErrors(logger))
 
     app.listen(config.port)
 }
