@@ -17,6 +17,24 @@ HTTP server to convert any torrent to video stream
 * Stream any file from the torrent - [preview](https://i.imgur.com/qRmicai.png)
 * Monitor activity - [preview](https://i.imgur.com/aPTcl9P.png)
 
+## Development
+
+_Run backend dev server_
+
+* `npm run dev` - it will run typescript server with live reload.
+
+> Please not that it will use prebuild frontend. If you wish to change frontend, check [frontend readme](demo/README.md)
+
+_Build backend_
+
+* `npm run build` - it will compile typescript code to javascript, required for `npm run start`.
+
+> Please not that it will not build frontend. If you wish to build frontend, check [frontend readme](demo/README.md)
+
+## Production
+
+`npm run start` - run prebuild JS backend which includes prebuild frontend 
+
 ## Commands
 
 * `npm run build` - build typescript to javascript
