@@ -4,6 +4,7 @@ import { promisify } from 'util'
 import { merge } from './utils'
 
 export interface Config {
+    host: string
     port: number
     logging: {
         transports: Array<{
@@ -28,10 +29,17 @@ export interface Config {
         demoEnabled: boolean
         apiKey?: string
     }
+    trustProxy: boolean
 }
 
+// Trust proxy by default if running in GoogleAppEngine
+export const isInGoogleAppEngine = process.env.GAE_APPLICATION ? true : false
+export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('heroku') : false
+
 const defaultConfig: Config = {
+    host: process.env.HOST || '0.0.0.0',
     port: parseInt(process.env.PORT || '') || 3000,
+    trustProxy: (process.env.TRUST_PROXY || '').toLowerCase() === 'true' ? true : isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [
             {

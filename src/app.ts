@@ -7,17 +7,23 @@ import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
 import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
-import { setupAppLogger, createLogger } from './logging'
+import { createLogger } from './logging'
 import { setupUsageApi } from './api/usage'
 import { handleApiErrors } from './errors'
 
 import 'express-async-errors'
+import { Logger } from 'winston'
 
-function createApp(config: Config): Express {
+function createApp(config: Config, logger: Logger): Express {
     const app = express()
     app.use(cors())
     app.use(express.json())
-    
+
+    if (config.trustProxy) {
+        logger.info('Enabling proxy support')
+        app.set('trust proxy', true)
+    }
+
     return app
 }
 
@@ -25,9 +31,7 @@ export async function setup(): Promise<void> {
     const config = await readConfig(process.argv[2])
     const logger = createLogger(config)
 
-    logger.info(`Starting app on http://127.0.0.1:${config.port}`)
-
-    const app = createApp(config)
+    const app = createApp(config, logger)
     const client = await TorrentClient.create(config, logger)
     
     app.get('/status', (req, res) => res.send({'status': 'ok'}))
@@ -72,6 +76,8 @@ export async function setup(): Promise<void> {
 
     app.use(handleApiErrors(logger))
 
-    app.listen(config.port)
+    app.listen(config.port, config.host, () => {
+        logger.info(`Starting app on http://${config.host}:${config.port}`)
+    })
 }
 
