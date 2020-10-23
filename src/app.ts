@@ -10,6 +10,7 @@ import { readConfig, Config } from './config'
 import { createLogger } from './logging'
 import { setupUsageApi } from './api/usage'
 import { handleApiErrors } from './errors'
+import { setupBrowseApi } from './api/browse'
 
 import 'express-async-errors'
 import { Logger } from 'winston'
@@ -53,6 +54,7 @@ export async function setup(): Promise<void> {
         setupTorrentsApi(app, config, logger, client)
         setupStreamApi(app, config, logger, client)
         setupUsageApi(app, config, logger, client)
+        setupBrowseApi(app, config, logger, client)
     }
 
     if (config.security.demoEnabled) {

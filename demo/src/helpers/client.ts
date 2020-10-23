@@ -115,3 +115,34 @@ export function getSteamUrl(link: string, file: string): string {
 export async function getUsage(): Promise<Usage> {
     return request(`api/usage`).then(v => v.json())
 }
+
+export interface BrowseTorrent {
+    name: string
+    magnet: string
+    seeds?: number
+    peers?: number
+    downloads?: number
+    size: string
+    time: string
+}
+
+export interface BrowseProvider {
+    name: string
+    categories: string[]
+}
+
+export async function getProviders(): Promise<BrowseProvider[]> {
+    return request(`api/browse/providers`, {
+        method: 'GET'
+    }).then(v => v.json())
+}
+
+export async function searchTorrents(provider: string, query: string, category: string): Promise<BrowseTorrent[]> {
+    const params = new URLSearchParams({
+        q: query,
+        c: category
+    })
+    return request(`api/browse/search/${encodeURIComponent(provider)}?${params.toString()}`, {
+        method: 'GET'
+    }).then(v => v.json())
+}
