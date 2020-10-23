@@ -35,7 +35,7 @@ export async function setup(): Promise<void> {
     const app = createApp(config, logger)
     const client = await TorrentClient.create(config, logger)
     
-    app.get('/status', (req, res) => res.send({'status': 'ok'}))
+    app.get('/status', (_req, res) => res.send({'status': 'ok'}))
 
     if (!config.security.streamApi || (config.security.streamApi && config.security.apiKey)) {
         if (config.security.apiKey) {
@@ -79,7 +79,7 @@ export async function setup(): Promise<void> {
     app.use(handleApiErrors(logger))
 
     app.listen(config.port, config.host, () => {
-        logger.info(`Starting app on http://${config.host}:${config.port}`)
+        logger.info(`Listening on ${config.host}:${config.port}`)
     })
 }
 
