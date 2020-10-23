@@ -43,10 +43,24 @@ _Build backend_
 
 ## Configuration
 
+### ENV variables
+
+_Check bellow for descriptions_
+
+* `PORT`
+* `HOST`
+* `TRUST_PROXY`
+
+> Configuration file can overwrite ENV variables
+
+### File
+
 You can pass json config file to any run command (`e.g. npm run start config.json`)
 
 Available parameters:
+* **host** - server host.Default is `process.env.HOST` or `0.0.0.0`
 * **port** - server port. Default `process.env.PORT` or 3000.
+* **trustProxy** - get ip from `X-Forwarded-*` header, [check more](https://expressjs.com/en/guide/behind-proxies.html), Default is `true` if running inside App Engine or Heroku else `false`
 * **logging**
   * **level** - debug, info, warn or error. Default info.
   * **transports** - `{"type": "console"}` or `{"type": "loggly","subdomain": "my-subdomain","token": "abc","tags":["my-anime-stream]}`. Default `console`.
