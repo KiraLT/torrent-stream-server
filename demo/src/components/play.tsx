@@ -64,12 +64,12 @@ export function PlayComponent(): JSX.Element {
                             <Link to={`?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(v.path)}`} className="btn btn-outline-primary ti-control-play"></Link>
                         </td>
                         <td>
-                            <a href={getSteamUrl(link, v.path)} className="btn btn-outline-primary ti-cloud-down" />
+                            <a href={getSteamUrl(link, v.path)} className="btn btn-outline-primary ti-cloud-down">{' '}</a>
                         </td>
                     </tr>)}
                 </tbody>
             </table> : <>
-                <h5 className="text-muted"><small>{file}</small><a href={`${getSteamUrl(link, file)}`} className="btn ti-cloud-down" /> - <Link to={`?torrent=${encodeURIComponent(link)}`}>view all</Link></h5>
+                <h5 className="text-muted"><small>{file}</small><a href={`${getSteamUrl(link, file)}`} className="btn ti-cloud-down text-primary">{' '}</a> - <Link to={`?torrent=${encodeURIComponent(link)}`}>view all</Link></h5>
             </>}
             {file && link && <>
                 <div className="embed-responsive embed-responsive-16by9">
