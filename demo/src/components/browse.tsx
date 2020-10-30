@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Container, Row, Col, FormControl, Alert, Button, InputGroup, Form, Table } from 'react-bootstrap'
 import { getProviders, BrowseProvider, BrowseTorrent, searchTorrents } from '../helpers/client'
 import { useSearchParam, useSearchParamsHandler } from '../helpers/hooks'
@@ -9,7 +9,7 @@ export function BrowseComponent(): JSX.Element {
     const [loading, setLoading] = useState(false)
 
     const [providers, setProviders] = useState<BrowseProvider[]>([])
-    const [torrents, setTorrents] = useState<BrowseTorrent[]>([])
+    const [torrents, setTorrents] = useState<BrowseTorrent[]>()
 
     const handler = useSearchParamsHandler()
     const provider = useSearchParam('provider') ?? ''
@@ -23,10 +23,12 @@ export function BrowseComponent(): JSX.Element {
         doAction().catch(err => setError(String(err)))
     }, [])
 
+    const canSearch = provider && query
+
     useEffect(() => {
         const doAction = async () => {
             setError('')
-            if (provider && category && query) {
+            if (canSearch) {
                 try {
                     setLoading(true)
                     setTorrents(await searchTorrents(provider, query, category))
@@ -36,15 +38,12 @@ export function BrowseComponent(): JSX.Element {
             }
         }
         doAction().catch(err => setError(String(err)))
-    }, [provider, query, category])
+    }, [provider, query, category, canSearch])
 
     const providerNames = providers.map(v => v.name).sort()
     const categories = provider ? providers.find(v => v.name === provider)?.categories ?? [] : []
 
     return <Container>
-        {error && <Alert variant="danger">
-            {error}
-        </Alert>}
         <Form onSubmit={event => {
             event.preventDefault()
             const formQuery = new FormData(event.target as HTMLFormElement).get('query') 
@@ -79,18 +78,27 @@ export function BrowseComponent(): JSX.Element {
                                     delete: ['query']
                                 })
                             }} disabled={!provider}>
-                                <option value="">-- select category --</option>
-                                {categories.map(v => <option key={v} value={v}>{v}</option>)}
+                                <option value="">All categories</option>
+                                {categories.map((v, vi) => <Fragment key={vi}>
+                                    {v.subcategories.length > 0 ? <>
+                                        <optgroup label={v.name}>
+                                            <option value={v.id}>All {v.name}</option>
+                                            {v.subcategories.map((s, si) => <option value={s.id} key={si}>{s.name}</option>)}
+                                        </optgroup>
+                                    </> : <>
+                                        <option value={v.id}>{v.name}</option>
+                                    </>}
+                                </Fragment>)}
                             </FormControl>
                         </Col>
                     </Row>
                 </Col>
                 <Col sm className="mt-2">
                     <InputGroup>
-                        <FormControl disabled={!category || !provider} defaultValue={query} type="search" placeholder="Search..." name="query"/>
+                        <FormControl disabled={!provider} defaultValue={query} type="search" placeholder="Search..." name="query"/>
                         <InputGroup.Append>
                             <Button
-                                disabled={!category || !provider}
+                                disabled={!provider}
                                 variant="outline-primary"
                                 type="submit"
                             ><svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-search"><circle cx={11} cy={11} r={8} /><line x1={21} y1={21} x2="16.65" y2="16.65" /></svg></Button>
@@ -99,15 +107,21 @@ export function BrowseComponent(): JSX.Element {
                 </Col>
             </Row>
         </Form>
+        {error && <Alert variant="danger" className="mt-5">
+            {error}
+        </Alert>}
         {loading && <div className="d-flex justify-content-center mt-5">
             <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
             </div>
         </div>}
+        {!loading && torrents?.length === 0 && canSearch && <Alert variant="info" className="mt-5">
+            No results were found
+        </Alert>}
         {!loading && <Table className="mt-3">
             <tbody>
-                {torrents.map(torrent => <>
-                    <tr>
+                {torrents?.map((torrent, ti) => <>
+                    <tr key={ti}>
                         <td>{torrent.name}</td>
                         <td className="text-right" style={{whiteSpace: 'nowrap'}}>{torrent.size}</td>
                         <td className="text-right" style={{whiteSpace: 'nowrap'}}>

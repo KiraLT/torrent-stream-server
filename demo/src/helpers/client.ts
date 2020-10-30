@@ -128,7 +128,15 @@ export interface BrowseTorrent {
 
 export interface BrowseProvider {
     name: string
-    categories: string[]
+    categories: {
+        name: string
+        id: string
+        subcategories: {
+            name: string
+            id: string
+        }[]
+    }[]
+    features: string[]
 }
 
 export async function getProviders(): Promise<BrowseProvider[]> {
@@ -140,9 +148,10 @@ export async function getProviders(): Promise<BrowseProvider[]> {
 export async function searchTorrents(provider: string, query: string, category: string): Promise<BrowseTorrent[]> {
     const params = new URLSearchParams({
         q: query,
-        c: category
+        c: category,
+        p: provider
     })
-    return request(`api/browse/search/${encodeURIComponent(provider)}?${params.toString()}`, {
+    return request(`api/browse/search?${params.toString()}`, {
         method: 'GET'
     }).then(v => v.json())
 }
