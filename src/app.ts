@@ -58,7 +58,7 @@ export async function setup(): Promise<void> {
     }
 
     if (config.security.demoEnabled) {
-        const path = resolve(__dirname, '../demo/build')
+        const path = resolve(__dirname, '../frontend/build')
 
         app.use((req, res, next) => {
             var file = path + req.path;

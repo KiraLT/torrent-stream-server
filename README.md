@@ -23,13 +23,13 @@ _Run backend dev server_
 
 * `npm run dev` - it will run typescript server with live reload.
 
-> Please not that it will use prebuild frontend. If you wish to change frontend, check [frontend readme](demo/README.md)
+> Please not that it will use prebuild frontend. If you wish to change frontend, check [frontend readme](frontend/README.md)
 
 _Build backend_
 
 * `npm run build` - it will compile typescript code to javascript, required for `npm run start`.
 
-> Please not that it will not build frontend. If you wish to build frontend, check [frontend readme](demo/README.md)
+> Please not that it will not build frontend. If you wish to build frontend, check [frontend readme](frontend/README.md)
 
 ## Production
 
