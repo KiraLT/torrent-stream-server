@@ -20,6 +20,10 @@ function createApp(config: Config, logger: Logger): Express {
     app.use(cors())
     app.use(express.json())
 
+    if (config.environment === 'development') {
+        logger.info(`Starting app in ${config.environment} environment`)
+    }
+
     if (config.trustProxy) {
         logger.info('Enabling proxy support')
         app.set('trust proxy', true)
@@ -57,23 +61,28 @@ export async function setup(): Promise<void> {
         setupBrowseApi(app, config, logger, client)
     }
 
-    if (config.security.demoEnabled) {
-        const path = resolve(__dirname, '../frontend/build')
+    if (config.security.frontendEnabled) {
 
-        app.use((req, res, next) => {
-            var file = path + req.path;
-            exists(file, (fileExists) => {
-                if (fileExists) {
-                    res.sendFile(file)
-                } else {
-                    next()
-                }
+        if (config.environment === 'production') {
+            logger.info('Serving frontend files')
+
+            const path = resolve(__dirname, '../frontend/build')
+
+            app.use((req, res, next) => {
+                var file = path + req.path;
+                exists(file, (fileExists) => {
+                    if (fileExists) {
+                        res.sendFile(file)
+                    } else {
+                        next()
+                    }
+                })
             })
-        })
-
-        app.get('/', (req, res) => res.sendFile(join(path, 'index.html')))
-        app.get('/play', (req, res) => res.sendFile(join(path, 'index.html')))
-        app.get('/dashboard', (req, res) => res.sendFile(join(path, 'index.html')))
+            app.get('/', (_req, res) => res.sendFile(join(path, 'index.html')))
+            app.get('/play', (_req, res) => res.sendFile(join(path, 'index.html')))
+            app.get('/dashboard', (_req, res) => res.sendFile(join(path, 'index.html')))
+            app.get('/browse', (_req, res) => res.sendFile(join(path, 'browse.html')))
+        }
     }
 
     app.use(handleApiErrors(logger))

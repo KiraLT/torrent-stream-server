@@ -6,6 +6,7 @@ import { merge } from './utils'
 export interface Config {
     host: string
     port: number
+    environment: 'development' | 'production'
     logging: {
         transports: Array<{
             type: 'console'
@@ -26,7 +27,7 @@ export interface Config {
             key: string
             maxAge: string
         }
-        demoEnabled: boolean
+        frontendEnabled: boolean
         apiKey?: string
     }
     trustProxy: boolean
@@ -39,6 +40,7 @@ export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('
 const defaultConfig: Config = {
     host: process.env.HOST || '0.0.0.0',
     port: parseInt(process.env.PORT || '') || 3000,
+    environment: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     trustProxy: (process.env.TRUST_PROXY || '').toLowerCase() === 'true' ? true : isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [
@@ -55,7 +57,7 @@ const defaultConfig: Config = {
     security: {
         streamApi: undefined,
         apiKey: undefined,
-        demoEnabled: true
+        frontendEnabled: true
     }
 }
 

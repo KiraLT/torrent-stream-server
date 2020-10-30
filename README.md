@@ -58,7 +58,8 @@ _Check bellow for descriptions_
 You can pass json config file to any run command (`e.g. npm run start config.json`)
 
 Available parameters:
-* **host** - server host.Default is `process.env.HOST` or `0.0.0.0`
+
+* **host** - server host. Default is `process.env.HOST` or `0.0.0.0`
 * **port** - server port. Default `process.env.PORT` or 3000.
 * **trustProxy** - get ip from `X-Forwarded-*` header, [check more](https://expressjs.com/en/guide/behind-proxies.html), Default is `true` if running inside App Engine or Heroku else `false`
 * **logging**
@@ -71,7 +72,7 @@ Available parameters:
   * **streamApi** - API is disabled when using this option unless `apiKey` is set.
     * **key** - JWT token.
     * **maxAge** - the maximum allowed age for tokens to still be valid.
-  * **demoEnabled** - enable demo page. Default is `true`.
+  * **frontendEnabled** - enable demo page. Default is `true`.
   * **apiKey** - key which should be passed to headers to access the API (`authorization: bearer ${apiKey}`).
 
 ## API

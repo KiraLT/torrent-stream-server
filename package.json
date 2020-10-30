@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node lib/index.js",
-    "dev": "nodemon --watch 'src/**/*' -e 'mustache,ts,json' --exec 'ts-node' src/index.ts"
+    "dev": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json' --exec 'ts-node' src/index.ts"
   },
   "author": "",
   "license": "ISC",
