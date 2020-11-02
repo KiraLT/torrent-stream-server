@@ -77,7 +77,7 @@ paths:
                     $ref: '#/components/responses/401'
                 403:
                     $ref: '#/components/responses/403'
-    /api/torrents/:infoHash:
+    /api/torrents/{infoHash}:
         get:
             operationId: getTorrent
             tags:
