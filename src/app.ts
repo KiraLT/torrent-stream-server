@@ -45,29 +45,37 @@ export async function setup(): Promise<void> {
 
     const app = createApp(config, logger)
     const client = await TorrentClient.create(config, logger)
-    
-    app.get('/status', (_req, res) => res.send({'status': 'ok'}))
+
+    app.get('/status', (_req, res) => res.send({ status: 'ok' }))
 
     if (config.security.apiEnabled) {
         if (config.security.apiKey || config.security.streamApi) {
             logger.info('Enabled API security')
 
             app.use('/api/', (req, _res, next) => {
-                const [type, token] = (req.headers.authorization || '').split(' ')
-                const correctKey = config.security.apiKey || (config.security.streamApi && config.security.streamApi.key)
+                const [type, token] = (req.headers.authorization || '').split(
+                    ' '
+                )
+                const correctKey =
+                    config.security.apiKey ||
+                    (config.security.streamApi && config.security.streamApi.key)
 
                 if (type === '') {
-                    throw new Unauthorized() 
+                    throw new Unauthorized()
                 }
 
-                if (type.toLowerCase() === 'bearer' && correctKey && token === correctKey) {
+                if (
+                    type.toLowerCase() === 'bearer' &&
+                    correctKey &&
+                    token === correctKey
+                ) {
                     next()
                 } else {
                     throw new Forbidden()
                 }
             })
         }
-    
+
         setupTorrentsApi(app, config, logger, client)
         setupStreamApi(app, config, logger, client)
         setupUsageApi(app, config, logger, client)
@@ -78,14 +86,13 @@ export async function setup(): Promise<void> {
     }
 
     if (config.security.frontendEnabled) {
-
         if (config.environment === 'production') {
             logger.info('Serving frontend files')
 
             const path = resolve(__dirname, '../frontend/build')
 
             app.use((req, res, next) => {
-                var file = path + req.path;
+                var file = path + req.path
                 exists(file, (fileExists) => {
                     if (fileExists) {
                         res.sendFile(file)
@@ -95,9 +102,15 @@ export async function setup(): Promise<void> {
                 })
             })
             app.get('/', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/play', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/dashboard', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/browse', (_req, res) => res.sendFile(join(path, 'browse.html')))
+            app.get('/play', (_req, res) =>
+                res.sendFile(join(path, 'index.html'))
+            )
+            app.get('/dashboard', (_req, res) =>
+                res.sendFile(join(path, 'index.html'))
+            )
+            app.get('/browse', (_req, res) =>
+                res.sendFile(join(path, 'browse.html'))
+            )
         }
     }
 
@@ -105,11 +118,10 @@ export async function setup(): Promise<void> {
 
     app.listen(config.port, config.host, () => {
         logger.info(`Listening on ${config.host}:${config.port}`)
-        
+
         if (config.environment === 'development') {
             logger.info(`* Website on http://127.0.0.1:${config.port}`)
             logger.info(`* Docs on http://127.0.0.1:${config.port}/api-docs`)
         }
     })
 }
-

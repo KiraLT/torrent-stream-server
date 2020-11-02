@@ -43,14 +43,17 @@ export class TorrentClient {
         this.torrents = {}
         this.interval = setInterval(() => {
             this.periodCheck()
-        }, 1000*10)
+        }, 1000 * 10)
     }
 
-    static async create(config: Config, logger: Logger): Promise<TorrentClient> {
+    static async create(
+        config: Config,
+        logger: Logger
+    ): Promise<TorrentClient> {
         const client = new TorrentClient(config, logger)
-    
+
         logger.info(`Preparing torrent directory - ${config.torrents.path}`)
-        await promisify(mkdir)(config.torrents.path, {recursive: true})
+        await promisify(mkdir)(config.torrents.path, { recursive: true })
 
         return client
     }
@@ -60,7 +63,11 @@ export class TorrentClient {
         try {
             info = await promisify(parseTorrent.remote)(link)
         } catch (err) {
-            throw new TorrentError(`Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`)
+            throw new TorrentError(
+                `Cannot parse torrent: ${
+                    err instanceof Error ? err.message : err
+                }, link: ${link}`
+            )
         }
 
         if (!info) {
@@ -68,14 +75,14 @@ export class TorrentClient {
         }
 
         const magnet = parseTorrent.toMagnetURI(info)
-        const hash =  info.infoHash
+        const hash = info.infoHash
 
         const torrent = this.get(hash)
 
         if (torrent) {
             this.update(hash, {
                 ...torrent,
-                updated: Date.now()
+                updated: Date.now(),
             })
             const result = this.get(hash)
             if (result) {
@@ -86,10 +93,10 @@ export class TorrentClient {
         } else {
             this.logger.info(`Add new torrent from ${link}`)
             const engine = torrentStream(magnet, {
-                tmp: this.config.torrents.path
+                tmp: this.config.torrents.path,
             })
 
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 engine.on('ready', () => {
                     const torrent = {
                         link,
@@ -106,27 +113,32 @@ export class TorrentClient {
                             link: torrent.link,
                             infoHash: torrent.infoHash,
                             name: torrent.name,
-                            files: torrent.files.map(v => ({
+                            files: torrent.files.map((v) => ({
                                 name: v.name,
                                 length: v.length,
-                                path: v.path
+                                path: v.path,
                             })),
                             started: torrent.started,
                             updated: torrent.updated,
                             downloadSpeed: (engine.swarm as any).downloadSpeed(),
-                            downloaded: engine.swarm.downloaded
-                        })
+                            downloaded: engine.swarm.downloaded,
+                        }),
                     })
                     resolve(this.get(hash))
                 })
             })
         }
-    
     }
 
     public async periodCheck(): Promise<void> {
-        const torrentToRemove = this.getAll().filter(torrent => Date.now() - torrent.updated > this.config.torrents.autocleanInternal * 1000)
-        await Promise.all(torrentToRemove.map(torrent => this.remove(torrent.infoHash)))
+        const torrentToRemove = this.getAll().filter(
+            (torrent) =>
+                Date.now() - torrent.updated >
+                this.config.torrents.autocleanInternal * 1000
+        )
+        await Promise.all(
+            torrentToRemove.map((torrent) => this.remove(torrent.infoHash))
+        )
     }
 
     public getAll(): Torrent[] {
@@ -143,7 +155,7 @@ export class TorrentClient {
                     this.logger.info(`Torrent removed - ${torrent.infoHash}`)
                 })
             })
-        } 
+        }
     }
 
     public get(infoHash: string): Torrent | undefined {

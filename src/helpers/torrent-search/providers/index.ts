@@ -1,6 +1,6 @@
 export enum ProviderFeature {
-    Search = 'search'
-} 
+    Search = 'search',
+}
 
 export interface ProviderResult {
     name: string
@@ -33,6 +33,9 @@ export interface ProviderSearchOptions {
 
 export abstract class Provider {
     static providerName: string
-    public abstract async getMeta(): Promise<ProviderMeta> 
-    public abstract async search(query: string, options?: ProviderSearchOptions): Promise<ProviderResult[]>
+    public abstract async getMeta(): Promise<ProviderMeta>
+    public abstract async search(
+        query: string,
+        options?: ProviderSearchOptions
+    ): Promise<ProviderResult[]>
 }

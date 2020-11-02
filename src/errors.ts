@@ -1,4 +1,4 @@
-import { Logger } from "winston"
+import { Logger } from 'winston'
 import { Response, Request, NextFunction } from 'express'
 import { HttpError } from 'http-errors'
 
@@ -10,17 +10,17 @@ export function handleApiErrors(
             if (err instanceof HttpError) {
                 logger.warn(`${err.statusCode} error: ${err.message}`)
                 return resp.status(err.statusCode).json({
-                    error: err.message
+                    error: err.message,
                 })
             } else if (String(err).includes('JSON at position')) {
                 logger.warn(String(err))
                 resp.status(400).json({
-                    error: 'invalid JSON'
+                    error: 'invalid JSON',
                 })
             } else {
                 logger.error(String(err))
                 return resp.status(500).json({
-                    error: 'unknown error'
+                    error: 'unknown error',
                 })
             }
         }

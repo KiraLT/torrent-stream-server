@@ -3,7 +3,9 @@ import { __RouterContext } from 'react-router'
 
 export function useSearchParam<T extends string>(key: string): T | undefined {
     const { location } = useContext(__RouterContext)
-    const params = useMemo(() => new URLSearchParams(location.search), [location.search])
+    const params = useMemo(() => new URLSearchParams(location.search), [
+        location.search,
+    ])
 
     return params.get(key) as T
 }
@@ -11,7 +13,10 @@ export function useSearchParam<T extends string>(key: string): T | undefined {
 export function useSearchParamsHandler() {
     const { location, history } = useContext(__RouterContext)
 
-    return (args: { set?: Record<string, string>; delete?: readonly string[] }, replace: boolean = false) => {
+    return (
+        args: { set?: Record<string, string>; delete?: readonly string[] },
+        replace: boolean = false
+    ) => {
         const params = new URLSearchParams(location.search)
         if (args.delete) {
             args.delete.forEach((v) => {

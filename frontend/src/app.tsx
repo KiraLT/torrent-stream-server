@@ -42,6 +42,6 @@ function registerWebworker(): void {
                     x
                 </button>`
             document.body.appendChild(div)
-        }
+        },
     })
 }

@@ -9,7 +9,8 @@
     "dev": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts",
     "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
     "build-swagger-frontend": "openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client",
-    "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'"
+    "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'",
+    "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\""
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "node-fetch": "^2.6.1",
     "nyaapi": "^2.3.3",
     "parse-torrent": "^7.1.3",
+    "prettier": "^2.1.2",
     "pump": "^3.0.0",
     "range-parser": "^1.2.1",
     "swagger-ui-express": "^4.1.4",
@@ -59,5 +61,14 @@
   },
   "engines": {
     "node": "12.x"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "trailingComma": "es5",
+    "arrowParens": "always",
+    "proseWrap": "always"
   }
 }

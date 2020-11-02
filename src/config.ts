@@ -8,14 +8,17 @@ export interface Config {
     port: number
     environment: 'development' | 'production'
     logging: {
-        transports: Array<{
-            type: 'console'
-        } | {
-            type: 'loggly'
-            subdomain: string
-            token: string
-            tags?: string[]
-        }>
+        transports: Array<
+            | {
+                  type: 'console'
+              }
+            | {
+                  type: 'loggly'
+                  subdomain: string
+                  token: string
+                  tags?: string[]
+              }
+        >
         level: 'debug' | 'info' | 'warn' | 'error'
     }
     torrents: {
@@ -36,36 +39,48 @@ export interface Config {
 
 // Trust proxy by default if running in GoogleAppEngine
 export const isInGoogleAppEngine = process.env.GAE_APPLICATION ? true : false
-export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('heroku') : false
+export const isInHeroku = process.env._
+    ? process.env._.toLowerCase().includes('heroku')
+    : false
 
 const defaultConfig: Config = {
     host: process.env.HOST || '0.0.0.0',
     port: parseInt(process.env.PORT || '') || 3000,
-    environment: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-    trustProxy: (process.env.TRUST_PROXY || '').toLowerCase() === 'true' ? true : isInGoogleAppEngine || isInHeroku,
+    environment:
+        process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    trustProxy:
+        (process.env.TRUST_PROXY || '').toLowerCase() === 'true'
+            ? true
+            : isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [
             {
-                type: 'console'
-            }
+                type: 'console',
+            },
         ],
-        level: 'info'
+        level: 'info',
     },
     torrents: {
         path: '/tmp/torrent-stream-server',
-        autocleanInternal: 60*60
+        autocleanInternal: 60 * 60,
     },
     security: {
         streamApi: undefined,
         apiKey: undefined,
         frontendEnabled: true,
-        apiEnabled: true
-    }
+        apiEnabled: true,
+    },
 }
 
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
-        return path ? mergeConfig(JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' }))) : defaultConfig
+        return path
+            ? mergeConfig(
+                  JSON.parse(
+                      await promisify(readFile)(path, { encoding: 'utf8' })
+                  )
+              )
+            : defaultConfig
     } catch (error) {
         throw Error(`Failed to read config from ${path} - ${error}`)
     }

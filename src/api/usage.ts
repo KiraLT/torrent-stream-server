@@ -7,7 +7,12 @@ import { Config } from '../config'
 import { getUsedSpace } from '../helpers'
 import { Usage } from '../models'
 
-export function setupUsageApi(app: Express, config: Config, _logger: Logger, _client: TorrentClient): Express {
+export function setupUsageApi(
+    app: Express,
+    config: Config,
+    _logger: Logger,
+    _client: TorrentClient
+): Express {
     app.get<{}, Usage, {}, {}>('/api/usage', async (_req, res) => {
         const space = await checkDiskSpace(config.torrents.path)
         const usedSpace = await getUsedSpace(config.torrents.path)

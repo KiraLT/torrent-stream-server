@@ -1,10 +1,14 @@
-import { ProviderMeta, ProviderSearchOptions, ProviderResult } from './providers'
+import {
+    ProviderMeta,
+    ProviderSearchOptions,
+    ProviderResult,
+} from './providers'
 import { NyaaProvider } from './providers/nyaa'
 import { ThepiratebayProvider } from './providers/thepiratebay'
 
 export const providers = {
     [NyaaProvider.providerName]: new NyaaProvider(),
-    [ThepiratebayProvider.providerName]: new ThepiratebayProvider()
+    [ThepiratebayProvider.providerName]: new ThepiratebayProvider(),
 }
 
 export type Provider = keyof typeof providers
@@ -19,13 +23,17 @@ export async function getProvidersInfo(): Promise<ProviderInfo[]> {
             const meta = await provider.getMeta()
             return {
                 name,
-                ...meta
+                ...meta,
             }
         })
     )
 }
 
-export async function search(searchProviders: Provider[], query: string, options: ProviderSearchOptions): Promise<ProviderResult[]> {
+export async function search(
+    searchProviders: Provider[],
+    query: string,
+    options: ProviderSearchOptions
+): Promise<ProviderResult[]> {
     if (searchProviders.length !== 1) {
         throw new Error('Only 1 provider search is supported at the moment')
     }

@@ -16,16 +16,19 @@ export function setupAppLogger(app: Express, config: Config): Express {
     return app
 }
 
-const getLoggerParams = (config: Config) =>  ({
-    transports: config.logging.transports.map(
-    v => v.type === 'loggly' ? new Loggly({
-        subdomain: v.subdomain,
-        inputToken: v.token,
-        json: true,
-        tags: v.tags || [],
-        handleExceptions: true
-    }) : new winston.transports.Console({
-        handleExceptions: true
-    })),
-    level: config.logging.level
+const getLoggerParams = (config: Config) => ({
+    transports: config.logging.transports.map((v) =>
+        v.type === 'loggly'
+            ? new Loggly({
+                  subdomain: v.subdomain,
+                  inputToken: v.token,
+                  json: true,
+                  tags: v.tags || [],
+                  handleExceptions: true,
+              })
+            : new winston.transports.Console({
+                  handleExceptions: true,
+              })
+    ),
+    level: config.logging.level,
 })
