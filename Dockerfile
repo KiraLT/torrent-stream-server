@@ -1,9 +1,9 @@
 FROM node:12
 
 WORKDIR /usr/app
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci
-COPY tsconfig.json .
+COPY tsconfig.json ./
 COPY src/ src/
 RUN npm run build
 
