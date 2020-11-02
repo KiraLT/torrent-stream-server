@@ -86,6 +86,12 @@ API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/src/swagg
 
 > [Check documentation](https://kiralt.github.io/torrent-stream-server/src/swagger.html)
 
+### Example
+Running the following command from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
+```
+$ vlc "http://localhost:3000/stream?torrent=magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&file=Sintel.mp4"
+```
+
 ## JWT tokens
 
 You can protect stream API with [JWT token](https://jwt.io/).
