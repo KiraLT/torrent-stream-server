@@ -31,10 +31,7 @@ export function SuccessFromJSON(json: any): Success {
     return SuccessFromJSONTyped(json, false)
 }
 
-export function SuccessFromJSONTyped(
-    json: any,
-    ignoreDiscriminator: boolean
-): Success {
+export function SuccessFromJSONTyped(json: any, ignoreDiscriminator: boolean): Success {
     if (json === undefined || json === null) {
         return json
     }

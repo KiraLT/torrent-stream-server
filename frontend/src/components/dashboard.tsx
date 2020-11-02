@@ -67,15 +67,11 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                 <div className="card-deck mb-3 text-center">
                     <div className="card mb-4 box-shadow">
                         <div className="card-header">
-                            <h4 className="my-0 font-weight-normal">
-                                Disk space
-                            </h4>
+                            <h4 className="my-0 font-weight-normal">Disk space</h4>
                         </div>
                         <div className="card-body">
                             <h2 className="card-title pricing-card-title">
-                                {formatBytes(
-                                    usage.totalDiskSpace - usage.freeDiskSpace
-                                )}
+                                {formatBytes(usage.totalDiskSpace - usage.freeDiskSpace)}
                                 <small className="text-muted">
                                     / {formatBytes(usage.totalDiskSpace)}
                                 </small>
@@ -86,8 +82,7 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                     role="progressbar"
                                     style={{
                                         width: `${
-                                            ((usage.totalDiskSpace -
-                                                usage.freeDiskSpace) /
+                                            ((usage.totalDiskSpace - usage.freeDiskSpace) /
                                                 usage.totalDiskSpace) *
                                             100
                                         }%`,
@@ -98,19 +93,13 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                     </div>
                     <div className="card mb-4 box-shadow">
                         <div className="card-header">
-                            <h4 className="my-0 font-weight-normal">
-                                Torrents space
-                            </h4>
+                            <h4 className="my-0 font-weight-normal">Torrents space</h4>
                         </div>
                         <div className="card-body">
                             <h2 className="card-title pricing-card-title">
                                 {formatBytes(usage.usedTorrentSpace)}
                                 <small className="text-muted">
-                                    /{' '}
-                                    {formatBytes(
-                                        usage.freeDiskSpace +
-                                            usage.usedTorrentSpace
-                                    )}
+                                    / {formatBytes(usage.freeDiskSpace + usage.usedTorrentSpace)}
                                 </small>
                             </h2>
                             <div className="progress">
@@ -120,8 +109,7 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                     style={{
                                         width: `${
                                             (usage.usedTorrentSpace /
-                                                (usage.freeDiskSpace +
-                                                    usage.usedTorrentSpace)) *
+                                                (usage.freeDiskSpace + usage.usedTorrentSpace)) *
                                             100
                                         }%`,
                                     }}
@@ -150,18 +138,11 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                             <tr>
                                                 <td>{torrent.name}</td>
                                                 <td>
-                                                    {formatBytes(
-                                                        torrent.downloaded
-                                                    )}{' '}
-                                                    (
-                                                    {formatBytes(
-                                                        torrent.downloadSpeed
-                                                    )}
+                                                    {formatBytes(torrent.downloaded)} (
+                                                    {formatBytes(torrent.downloadSpeed)}
                                                     /s)
                                                 </td>
-                                                <td>
-                                                    {format(torrent.started)}
-                                                </td>
+                                                <td>{format(torrent.started)}</td>
                                                 <td>
                                                     <Link
                                                         to={`/play?torrent=${encodeURIComponent(

@@ -33,9 +33,7 @@ export interface ProviderCategorySubcategories {
     id: string
 }
 
-export function ProviderCategorySubcategoriesFromJSON(
-    json: any
-): ProviderCategorySubcategories {
+export function ProviderCategorySubcategoriesFromJSON(json: any): ProviderCategorySubcategories {
     return ProviderCategorySubcategoriesFromJSONTyped(json, false)
 }
 

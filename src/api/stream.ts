@@ -60,10 +60,7 @@ export function setupStreamApi(
         }
 
         res.setHeader('Content-Disposition', `inline; filename="${file.name}"`)
-        res.setHeader(
-            'Content-Type',
-            lookup(file.name) || 'application/octet-stream'
-        )
+        res.setHeader('Content-Type', lookup(file.name) || 'application/octet-stream')
 
         const parsedRange = req.headers.range
             ? rangeParser(file.length, req.headers.range)
@@ -84,10 +81,7 @@ export function setupStreamApi(
 
         res.statusCode = 206
         res.setHeader('Content-Length', range.end - range.start + 1)
-        res.setHeader(
-            'Content-Range',
-            'bytes ' + range.start + '-' + range.end + '/' + file.length
-        )
+        res.setHeader('Content-Range', 'bytes ' + range.start + '-' + range.end + '/' + file.length)
 
         if (req.method === 'HEAD') {
             return res.end()

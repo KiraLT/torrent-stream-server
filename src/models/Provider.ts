@@ -54,18 +54,13 @@ export function ProviderFromJSON(json: any): Provider {
     return ProviderFromJSONTyped(json, false)
 }
 
-export function ProviderFromJSONTyped(
-    json: any,
-    ignoreDiscriminator: boolean
-): Provider {
+export function ProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Provider {
     if (json === undefined || json === null) {
         return json
     }
     return {
         name: json['name'],
-        categories: (json['categories'] as Array<any>).map(
-            ProviderCategoryFromJSON
-        ),
+        categories: (json['categories'] as Array<any>).map(ProviderCategoryFromJSON),
         features: (json['features'] as Array<any>).map(ProviderFeatureFromJSON),
     }
 }
@@ -79,9 +74,7 @@ export function ProviderToJSON(value?: Provider | null): any {
     }
     return {
         name: value.name,
-        categories: (value.categories as Array<any>).map(
-            ProviderCategoryToJSON
-        ),
+        categories: (value.categories as Array<any>).map(ProviderCategoryToJSON),
         features: (value.features as Array<any>).map(ProviderFeatureToJSON),
     }
 }

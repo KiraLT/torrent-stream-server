@@ -43,10 +43,7 @@ export function UsageFromJSON(json: any): Usage {
     return UsageFromJSONTyped(json, false)
 }
 
-export function UsageFromJSONTyped(
-    json: any,
-    ignoreDiscriminator: boolean
-): Usage {
+export function UsageFromJSONTyped(json: any, ignoreDiscriminator: boolean): Usage {
     if (json === undefined || json === null) {
         return json
     }

@@ -22,17 +22,12 @@ export function sortBy<T>(
             }
 
             if (keyA instanceof Array && keyB instanceof Array) {
-                const res = keyA
-                    .map((v, i) => doCompare(v, keyB[i]))
-                    .filter((v) => v !== 0)
+                const res = keyA.map((v, i) => doCompare(v, keyB[i])).filter((v) => v !== 0)
                 return res.length ? res[0] : 1
             }
 
             if (typeof keyA === 'object' && typeof keyB === 'object') {
-                return doCompare(
-                    Object.values(keyA ?? {})[0],
-                    Object.values(keyB ?? {})[0]
-                )
+                return doCompare(Object.values(keyA ?? {})[0], Object.values(keyB ?? {})[0])
             }
 
             const stringA = String(keyA).toLowerCase()

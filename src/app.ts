@@ -53,9 +53,7 @@ export async function setup(): Promise<void> {
             logger.info('Enabled API security')
 
             app.use('/api/', (req, _res, next) => {
-                const [type, token] = (req.headers.authorization || '').split(
-                    ' '
-                )
+                const [type, token] = (req.headers.authorization || '').split(' ')
                 const correctKey =
                     config.security.apiKey ||
                     (config.security.streamApi && config.security.streamApi.key)
@@ -64,11 +62,7 @@ export async function setup(): Promise<void> {
                     throw new Unauthorized()
                 }
 
-                if (
-                    type.toLowerCase() === 'bearer' &&
-                    correctKey &&
-                    token === correctKey
-                ) {
+                if (type.toLowerCase() === 'bearer' && correctKey && token === correctKey) {
                     next()
                 } else {
                     throw new Forbidden()
@@ -102,15 +96,9 @@ export async function setup(): Promise<void> {
                 })
             })
             app.get('/', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/play', (_req, res) =>
-                res.sendFile(join(path, 'index.html'))
-            )
-            app.get('/dashboard', (_req, res) =>
-                res.sendFile(join(path, 'index.html'))
-            )
-            app.get('/browse', (_req, res) =>
-                res.sendFile(join(path, 'browse.html'))
-            )
+            app.get('/play', (_req, res) => res.sendFile(join(path, 'index.html')))
+            app.get('/dashboard', (_req, res) => res.sendFile(join(path, 'index.html')))
+            app.get('/browse', (_req, res) => res.sendFile(join(path, 'browse.html')))
         }
     }
 

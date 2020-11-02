@@ -39,10 +39,7 @@ export class TorrentsApi extends runtime.BaseAPI {
     async createTorrentRaw(
         requestParameters: CreateTorrentRequest
     ): Promise<runtime.ApiResponse<Torrent>> {
-        if (
-            requestParameters.torrent === null ||
-            requestParameters.torrent === undefined
-        ) {
+        if (requestParameters.torrent === null || requestParameters.torrent === undefined) {
             throw new runtime.RequiredError(
                 'torrent',
                 'Required parameter requestParameters.torrent was null or undefined when calling createTorrent.'
@@ -59,8 +56,7 @@ export class TorrentsApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
@@ -73,16 +69,12 @@ export class TorrentsApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            TorrentFromJSON(jsonValue)
-        )
+        return new runtime.JSONApiResponse(response, (jsonValue) => TorrentFromJSON(jsonValue))
     }
 
     /**
      */
-    async createTorrent(
-        requestParameters: CreateTorrentRequest
-    ): Promise<Torrent> {
+    async createTorrent(requestParameters: CreateTorrentRequest): Promise<Torrent> {
         const response = await this.createTorrentRaw(requestParameters)
         return await response.value()
     }
@@ -92,10 +84,7 @@ export class TorrentsApi extends runtime.BaseAPI {
     async getTorrentRaw(
         requestParameters: GetTorrentRequest
     ): Promise<runtime.ApiResponse<Torrent>> {
-        if (
-            requestParameters.infoHash === null ||
-            requestParameters.infoHash === undefined
-        ) {
+        if (requestParameters.infoHash === null || requestParameters.infoHash === undefined) {
             throw new runtime.RequiredError(
                 'infoHash',
                 'Required parameter requestParameters.infoHash was null or undefined when calling getTorrent.'
@@ -108,8 +97,7 @@ export class TorrentsApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
@@ -125,9 +113,7 @@ export class TorrentsApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            TorrentFromJSON(jsonValue)
-        )
+        return new runtime.JSONApiResponse(response, (jsonValue) => TorrentFromJSON(jsonValue))
     }
 
     /**
@@ -146,8 +132,7 @@ export class TorrentsApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
@@ -160,9 +145,7 @@ export class TorrentsApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            jsonValue.map(TorrentFromJSON)
-        )
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TorrentFromJSON))
     }
 
     /**

@@ -9,10 +9,7 @@ export function exists(json: any, key: string) {
 }
 
 export function mapValues(data: any, fn: (item: any) => any) {
-    return Object.keys(data).reduce(
-        (acc, key) => ({ ...acc, [key]: fn(data[key]) }),
-        {}
-    )
+    return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {})
 }
 
 export async function getUsedSpace(path: string): Promise<number> {

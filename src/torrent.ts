@@ -46,10 +46,7 @@ export class TorrentClient {
         }, 1000 * 10)
     }
 
-    static async create(
-        config: Config,
-        logger: Logger
-    ): Promise<TorrentClient> {
+    static async create(config: Config, logger: Logger): Promise<TorrentClient> {
         const client = new TorrentClient(config, logger)
 
         logger.info(`Preparing torrent directory - ${config.torrents.path}`)
@@ -64,9 +61,7 @@ export class TorrentClient {
             info = await promisify(parseTorrent.remote)(link)
         } catch (err) {
             throw new TorrentError(
-                `Cannot parse torrent: ${
-                    err instanceof Error ? err.message : err
-                }, link: ${link}`
+                `Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`
             )
         }
 
@@ -133,12 +128,9 @@ export class TorrentClient {
     public async periodCheck(): Promise<void> {
         const torrentToRemove = this.getAll().filter(
             (torrent) =>
-                Date.now() - torrent.updated >
-                this.config.torrents.autocleanInternal * 1000
+                Date.now() - torrent.updated > this.config.torrents.autocleanInternal * 1000
         )
-        await Promise.all(
-            torrentToRemove.map((torrent) => this.remove(torrent.infoHash))
-        )
+        await Promise.all(torrentToRemove.map((torrent) => this.remove(torrent.infoHash)))
     }
 
     public getAll(): Torrent[] {

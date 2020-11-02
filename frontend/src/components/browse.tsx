@@ -32,9 +32,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
 
     useEffect(() => {
         const doAction = async () => {
-            setProviders(
-                await new BrowseApi(getApiConfig({ bearer })).getProviders()
-            )
+            setProviders(await new BrowseApi(getApiConfig({ bearer })).getProviders())
         }
         doAction().catch(async (err) => setError(await parseError(err)))
     }, [bearer])
@@ -48,9 +46,11 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                 try {
                     setLoading(true)
                     setTorrents(
-                        await new BrowseApi(
-                            getApiConfig({ bearer })
-                        ).searchTorrents({ provider, query, category })
+                        await new BrowseApi(getApiConfig({ bearer })).searchTorrents({
+                            provider,
+                            query,
+                            category,
+                        })
                     )
                 } finally {
                     setLoading(false)
@@ -61,22 +61,17 @@ export const BrowseComponent = withBearer(({ bearer }) => {
     }, [provider, query, category, canSearch, bearer])
 
     const providerNames = providers.map((v) => v.name).sort()
-    const categories = provider
-        ? providers.find((v) => v.name === provider)?.categories ?? []
-        : []
+    const categories = provider ? providers.find((v) => v.name === provider)?.categories ?? [] : []
 
     return (
         <Container>
             <Form
                 onSubmit={(event) => {
                     event.preventDefault()
-                    const formQuery = new FormData(
-                        event.target as HTMLFormElement
-                    ).get('query')
+                    const formQuery = new FormData(event.target as HTMLFormElement).get('query')
                     handler({
                         set: {
-                            query:
-                                typeof formQuery === 'string' ? formQuery : '',
+                            query: typeof formQuery === 'string' ? formQuery : '',
                         },
                     })
                 }}
@@ -97,9 +92,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                         })
                                     }}
                                 >
-                                    <option value="">
-                                        -- select provider --
-                                    </option>
+                                    <option value="">-- select provider --</option>
                                     {providerNames.map((v) => (
                                         <option key={v} value={v}>
                                             {v}
@@ -127,26 +120,17 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                             {v.subcategories.length > 0 ? (
                                                 <>
                                                     <optgroup label={v.name}>
-                                                        <option value={v.id}>
-                                                            All {v.name}
-                                                        </option>
-                                                        {v.subcategories.map(
-                                                            (s, si) => (
-                                                                <option
-                                                                    value={s.id}
-                                                                    key={si}
-                                                                >
-                                                                    {s.name}
-                                                                </option>
-                                                            )
-                                                        )}
+                                                        <option value={v.id}>All {v.name}</option>
+                                                        {v.subcategories.map((s, si) => (
+                                                            <option value={s.id} key={si}>
+                                                                {s.name}
+                                                            </option>
+                                                        ))}
                                                     </optgroup>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <option value={v.id}>
-                                                        {v.name}
-                                                    </option>
+                                                    <option value={v.id}>{v.name}</option>
                                                 </>
                                             )}
                                         </Fragment>
@@ -183,12 +167,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                         className="feather feather-search"
                                     >
                                         <circle cx={11} cy={11} r={8} />
-                                        <line
-                                            x1={21}
-                                            y1={21}
-                                            x2="16.65"
-                                            y2="16.65"
-                                        />
+                                        <line x1={21} y1={21} x2="16.65" y2="16.65" />
                                     </svg>
                                 </Button>
                             </InputGroup.Append>
@@ -220,22 +199,13 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                             <>
                                 <tr key={ti}>
                                     <td>{torrent.name}</td>
-                                    <td
-                                        className="text-right"
-                                        style={{ whiteSpace: 'nowrap' }}
-                                    >
+                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.size}
                                     </td>
-                                    <td
-                                        className="text-right"
-                                        style={{ whiteSpace: 'nowrap' }}
-                                    >
+                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.time}
                                     </td>
-                                    <td
-                                        className="text-right"
-                                        style={{ whiteSpace: 'nowrap' }}
-                                    >
+                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.seeds != null && (
                                             <span className="text-success">
                                                 <svg
@@ -250,12 +220,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                                     strokeLinejoin="round"
                                                     className="feather feather-arrow-up"
                                                 >
-                                                    <line
-                                                        x1={12}
-                                                        y1={19}
-                                                        x2={12}
-                                                        y2={5}
-                                                    />
+                                                    <line x1={12} y1={19} x2={12} y2={5} />
                                                     <polyline points="5 12 12 5 19 12" />
                                                 </svg>
                                                 {torrent.seeds}
@@ -275,22 +240,14 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                                     strokeLinejoin="round"
                                                     className="feather feather-arrow-down"
                                                 >
-                                                    <line
-                                                        x1={12}
-                                                        y1={5}
-                                                        x2={12}
-                                                        y2={19}
-                                                    />
+                                                    <line x1={12} y1={5} x2={12} y2={19} />
                                                     <polyline points="19 12 12 19 5 12" />
                                                 </svg>
                                                 {torrent.peers}
                                             </span>
                                         )}{' '}
                                     </td>
-                                    <td
-                                        className="text-right"
-                                        style={{ whiteSpace: 'nowrap' }}
-                                    >
+                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.downloads != null && (
                                             <span>
                                                 <svg
@@ -307,12 +264,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                                 >
                                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                                     <polyline points="7 10 12 15 17 10" />
-                                                    <line
-                                                        x1={12}
-                                                        y1={15}
-                                                        x2={12}
-                                                        y2={3}
-                                                    />
+                                                    <line x1={12} y1={15} x2={12} y2={3} />
                                                 </svg>
                                                 {torrent.downloads}
                                             </span>

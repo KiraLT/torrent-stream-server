@@ -31,10 +31,7 @@ export function ApiErrorFromJSON(json: any): ApiError {
     return ApiErrorFromJSONTyped(json, false)
 }
 
-export function ApiErrorFromJSONTyped(
-    json: any,
-    ignoreDiscriminator: boolean
-): ApiError {
+export function ApiErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiError {
     if (json === undefined || json === null) {
         return json
     }

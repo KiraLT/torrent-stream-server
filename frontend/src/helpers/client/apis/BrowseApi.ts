@@ -44,8 +44,7 @@ export class BrowseApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
@@ -58,9 +57,7 @@ export class BrowseApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            jsonValue.map(ProviderFromJSON)
-        )
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ProviderFromJSON))
     }
 
     /**
@@ -75,20 +72,14 @@ export class BrowseApi extends runtime.BaseAPI {
     async searchTorrentsRaw(
         requestParameters: SearchTorrentsRequest
     ): Promise<runtime.ApiResponse<Array<ProviderTorrent>>> {
-        if (
-            requestParameters.query === null ||
-            requestParameters.query === undefined
-        ) {
+        if (requestParameters.query === null || requestParameters.query === undefined) {
             throw new runtime.RequiredError(
                 'query',
                 'Required parameter requestParameters.query was null or undefined when calling searchTorrents.'
             )
         }
 
-        if (
-            requestParameters.provider === null ||
-            requestParameters.provider === undefined
-        ) {
+        if (requestParameters.provider === null || requestParameters.provider === undefined) {
             throw new runtime.RequiredError(
                 'provider',
                 'Required parameter requestParameters.provider was null or undefined when calling searchTorrents.'
@@ -113,8 +104,7 @@ export class BrowseApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`

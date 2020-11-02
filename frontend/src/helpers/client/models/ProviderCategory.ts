@@ -76,8 +76,6 @@ export function ProviderCategoryToJSON(value?: ProviderCategory | null): any {
     return {
         name: value.name,
         id: value.id,
-        subcategories: (value.subcategories as Array<any>).map(
-            ProviderCategorySubcategoriesToJSON
-        ),
+        subcategories: (value.subcategories as Array<any>).map(ProviderCategorySubcategoriesToJSON),
     }
 }

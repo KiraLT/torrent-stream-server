@@ -14,8 +14,7 @@
 
 export const BASE_PATH = 'http://127.0.0.1:3000'.replace(/\/+$/, '')
 
-const isBlob = (value: any) =>
-    typeof Blob !== 'undefined' && value instanceof Blob
+const isBlob = (value: any) => typeof Blob !== 'undefined' && value instanceof Blob
 
 /**
  * This is the base class for all generated API classes.
@@ -33,18 +32,12 @@ export class BaseAPI {
         return next
     }
 
-    withPreMiddleware<T extends BaseAPI>(
-        this: T,
-        ...preMiddlewares: Array<Middleware['pre']>
-    ) {
+    withPreMiddleware<T extends BaseAPI>(this: T, ...preMiddlewares: Array<Middleware['pre']>) {
         const middlewares = preMiddlewares.map((pre) => ({ pre }))
         return this.withMiddleware<T>(...middlewares)
     }
 
-    withPostMiddleware<T extends BaseAPI>(
-        this: T,
-        ...postMiddlewares: Array<Middleware['post']>
-    ) {
+    withPostMiddleware<T extends BaseAPI>(this: T, ...postMiddlewares: Array<Middleware['post']>) {
         const middlewares = postMiddlewares.map((post) => ({ post }))
         return this.withMiddleware<T>(...middlewares)
     }
@@ -60,28 +53,20 @@ export class BaseAPI {
 
     private createFetchParams(context: RequestOpts) {
         let url = this.configuration.basePath + context.path
-        if (
-            context.query !== undefined &&
-            Object.keys(context.query).length !== 0
-        ) {
+        if (context.query !== undefined && Object.keys(context.query).length !== 0) {
             // only add the querystring to the URL if there are query parameters.
             // this is done to avoid urls ending with a "?" character which buggy webservers
             // do not handle correctly sometimes.
             url += '?' + this.configuration.queryParamsStringify(context.query)
         }
         const body =
-            (typeof FormData !== 'undefined' &&
-                context.body instanceof FormData) ||
+            (typeof FormData !== 'undefined' && context.body instanceof FormData) ||
             context.body instanceof URLSearchParams ||
             isBlob(context.body)
                 ? context.body
                 : JSON.stringify(context.body)
 
-        const headers = Object.assign(
-            {},
-            this.configuration.headers,
-            context.headers
-        )
+        const headers = Object.assign({}, this.configuration.headers, context.headers)
         const init = {
             method: context.method,
             headers: headers,
@@ -102,10 +87,7 @@ export class BaseAPI {
                     })) || fetchParams
             }
         }
-        let response = await this.configuration.fetchApi(
-            fetchParams.url,
-            fetchParams.init
-        )
+        let response = await this.configuration.fetchApi(fetchParams.url, fetchParams.init)
         for (const middleware of this.middleware) {
             if (middleware.post) {
                 response =
@@ -165,9 +147,7 @@ export class Configuration {
     constructor(private configuration: ConfigurationParameters = {}) {}
 
     get basePath(): string {
-        return this.configuration.basePath != null
-            ? this.configuration.basePath
-            : BASE_PATH
+        return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH
     }
 
     get fetchApi(): FetchAPI {
@@ -198,14 +178,10 @@ export class Configuration {
         return undefined
     }
 
-    get accessToken():
-        | ((name: string, scopes?: string[]) => string)
-        | undefined {
+    get accessToken(): ((name: string, scopes?: string[]) => string) | undefined {
         const accessToken = this.configuration.accessToken
         if (accessToken) {
-            return typeof accessToken === 'function'
-                ? accessToken
-                : () => accessToken
+            return typeof accessToken === 'function' ? accessToken : () => accessToken
         }
         return undefined
     }
@@ -220,14 +196,7 @@ export class Configuration {
 }
 
 export type Json = any
-export type HTTPMethod =
-    | 'GET'
-    | 'POST'
-    | 'PUT'
-    | 'PATCH'
-    | 'DELETE'
-    | 'OPTIONS'
-    | 'HEAD'
+export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS' | 'HEAD'
 export type HTTPHeaders = { [key: string]: string }
 export type HTTPQuery = {
     [key: string]:
@@ -239,11 +208,7 @@ export type HTTPQuery = {
         | HTTPQuery
 }
 export type HTTPBody = Json | FormData | URLSearchParams
-export type ModelPropertyNaming =
-    | 'camelCase'
-    | 'snake_case'
-    | 'PascalCase'
-    | 'original'
+export type ModelPropertyNaming = 'camelCase' | 'snake_case' | 'PascalCase' | 'original'
 
 export interface FetchParams {
     url: string
@@ -270,28 +235,21 @@ export function querystring(params: HTTPQuery, prefix: string = ''): string {
             const value = params[key]
             if (value instanceof Array) {
                 const multiValue = value
-                    .map((singleValue) =>
-                        encodeURIComponent(String(singleValue))
-                    )
+                    .map((singleValue) => encodeURIComponent(String(singleValue)))
                     .join(`&${encodeURIComponent(fullKey)}=`)
                 return `${encodeURIComponent(fullKey)}=${multiValue}`
             }
             if (value instanceof Object) {
                 return querystring(value as HTTPQuery, fullKey)
             }
-            return `${encodeURIComponent(fullKey)}=${encodeURIComponent(
-                String(value)
-            )}`
+            return `${encodeURIComponent(fullKey)}=${encodeURIComponent(String(value))}`
         })
         .filter((part) => part.length > 0)
         .join('&')
 }
 
 export function mapValues(data: any, fn: (item: any) => any) {
-    return Object.keys(data).reduce(
-        (acc, key) => ({ ...acc, [key]: fn(data[key]) }),
-        {}
-    )
+    return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {})
 }
 
 export function canConsumeForm(consumes: Consume[]): boolean {
@@ -337,8 +295,7 @@ export interface ResponseTransformer<T> {
 export class JSONApiResponse<T> {
     constructor(
         public raw: Response,
-        private transformer: ResponseTransformer<T> = (jsonValue: any) =>
-            jsonValue
+        private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue
     ) {}
 
     async value(): Promise<T> {

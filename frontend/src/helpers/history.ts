@@ -11,20 +11,14 @@ export function addHistoryItem(value: HistoryItem): void {
     localStorage.setItem(
         historyKey,
         JSON.stringify(
-            [value, ...items.filter((v) => v.link !== value.link)].slice(
-                0,
-                historyLimit
-            )
+            [value, ...items.filter((v) => v.link !== value.link)].slice(0, historyLimit)
         )
     )
 }
 
 export function removeHistoryItem(value: HistoryItem): void {
     const items = getHistoryItems()
-    localStorage.setItem(
-        historyKey,
-        JSON.stringify(items.filter((v) => v.link !== value.link))
-    )
+    localStorage.setItem(historyKey, JSON.stringify(items.filter((v) => v.link !== value.link)))
 }
 
 export function getHistoryItems(): HistoryItem[] {

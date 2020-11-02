@@ -19,9 +19,9 @@ export const PlayComponent = withBearer(({ bearer }) => {
     useEffect(() => {
         const action = async () => {
             if (link) {
-                const newTorrent = await new TorrentsApi(
-                    getApiConfig({ bearer })
-                ).createTorrent({ torrent: link })
+                const newTorrent = await new TorrentsApi(getApiConfig({ bearer })).createTorrent({
+                    torrent: link,
+                })
                 setTorrent(newTorrent)
                 addHistoryItem({
                     name: newTorrent.name,
@@ -66,48 +66,40 @@ export const PlayComponent = withBearer(({ bearer }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {sortBy(torrent.files, (v) => v.name).map(
-                                    (v) => (
-                                        <tr>
-                                            <td>
-                                                {v.path
-                                                    .split('/')
-                                                    .map((part, index, arr) =>
-                                                        index + 1 <
-                                                        arr.length ? (
-                                                            <span className="text-muted">
-                                                                {part} /{' '}
-                                                            </span>
-                                                        ) : (
-                                                            part
-                                                        )
-                                                    )}
-                                            </td>
-                                            <td>{formatBytes(v.length)}</td>
-                                            <td>
-                                                <Link
-                                                    to={`?torrent=${encodeURIComponent(
-                                                        link
-                                                    )}&file=${encodeURIComponent(
-                                                        v.path
-                                                    )}`}
-                                                    className="btn btn-outline-primary ti-control-play"
-                                                ></Link>
-                                            </td>
-                                            <td>
-                                                <a
-                                                    href={getSteamUrl(
-                                                        link,
-                                                        v.path
-                                                    )}
-                                                    className="btn btn-outline-primary ti-cloud-down"
-                                                >
-                                                    {' '}
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    )
-                                )}
+                                {sortBy(torrent.files, (v) => v.name).map((v) => (
+                                    <tr>
+                                        <td>
+                                            {v.path
+                                                .split('/')
+                                                .map((part, index, arr) =>
+                                                    index + 1 < arr.length ? (
+                                                        <span className="text-muted">
+                                                            {part} /{' '}
+                                                        </span>
+                                                    ) : (
+                                                        part
+                                                    )
+                                                )}
+                                        </td>
+                                        <td>{formatBytes(v.length)}</td>
+                                        <td>
+                                            <Link
+                                                to={`?torrent=${encodeURIComponent(
+                                                    link
+                                                )}&file=${encodeURIComponent(v.path)}`}
+                                                className="btn btn-outline-primary ti-control-play"
+                                            ></Link>
+                                        </td>
+                                        <td>
+                                            <a
+                                                href={getSteamUrl(link, v.path)}
+                                                className="btn btn-outline-primary ti-cloud-down"
+                                            >
+                                                {' '}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     ) : (
@@ -120,12 +112,7 @@ export const PlayComponent = withBearer(({ bearer }) => {
                                 >
                                     {' '}
                                 </a>{' '}
-                                -{' '}
-                                <Link
-                                    to={`?torrent=${encodeURIComponent(link)}`}
-                                >
-                                    view all
-                                </Link>
+                                - <Link to={`?torrent=${encodeURIComponent(link)}`}>view all</Link>
                             </h5>
                         </>
                     )}
@@ -133,19 +120,13 @@ export const PlayComponent = withBearer(({ bearer }) => {
                         <>
                             <div className="embed-responsive embed-responsive-16by9">
                                 <video width="720" controls>
-                                    <source
-                                        src={getSteamUrl(link, file)}
-                                        type="video/mp4"
-                                    />
+                                    <source src={getSteamUrl(link, file)} type="video/mp4" />
                                     Your browser does not support HTML5 video.
                                 </video>
                             </div>
                             <br />
                             <div className="form-group">
-                                <input
-                                    className="form-control"
-                                    value={getSteamUrl(link, file)}
-                                />
+                                <input className="form-control" value={getSteamUrl(link, file)} />
                             </div>
                         </>
                     )}

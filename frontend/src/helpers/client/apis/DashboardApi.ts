@@ -28,8 +28,7 @@ export class DashboardApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`
@@ -42,9 +41,7 @@ export class DashboardApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) =>
-            UsageFromJSON(jsonValue)
-        )
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsageFromJSON(jsonValue))
     }
 
     /**

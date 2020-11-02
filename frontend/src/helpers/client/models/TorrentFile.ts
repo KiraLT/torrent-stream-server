@@ -43,10 +43,7 @@ export function TorrentFileFromJSON(json: any): TorrentFile {
     return TorrentFileFromJSONTyped(json, false)
 }
 
-export function TorrentFileFromJSONTyped(
-    json: any,
-    ignoreDiscriminator: boolean
-): TorrentFile {
+export function TorrentFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): TorrentFile {
     if (json === undefined || json === null) {
         return json
     }

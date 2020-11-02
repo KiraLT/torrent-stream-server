@@ -63,7 +63,7 @@
     "node": "12.x"
   },
   "prettier": {
-    "printWidth": 80,
+    "printWidth": 100,
     "semi": false,
     "singleQuote": true,
     "jsxSingleQuote": false,

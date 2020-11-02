@@ -3,9 +3,7 @@ import { __RouterContext } from 'react-router'
 
 export function useSearchParam<T extends string>(key: string): T | undefined {
     const { location } = useContext(__RouterContext)
-    const params = useMemo(() => new URLSearchParams(location.search), [
-        location.search,
-    ])
+    const params = useMemo(() => new URLSearchParams(location.search), [location.search])
 
     return params.get(key) as T
 }

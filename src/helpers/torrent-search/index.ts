@@ -1,8 +1,4 @@
-import {
-    ProviderMeta,
-    ProviderSearchOptions,
-    ProviderResult,
-} from './providers'
+import { ProviderMeta, ProviderSearchOptions, ProviderResult } from './providers'
 import { NyaaProvider } from './providers/nyaa'
 import { ThepiratebayProvider } from './providers/thepiratebay'
 

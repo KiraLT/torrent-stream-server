@@ -28,9 +28,7 @@ export const HomeComponent = withBearer(
                     className="btn btn-outline-primary"
                     onClick={() => {
                         if (input.trim()) {
-                            history.push(
-                                `/play?torrent=${encodeURIComponent(input)}`
-                            )
+                            history.push(`/play?torrent=${encodeURIComponent(input)}`)
                         }
                     }}
                 >
@@ -45,9 +43,7 @@ export const HomeComponent = withBearer(
                                     <>
                                         <tr>
                                             <td>{item.name}</td>
-                                            <td
-                                                style={{ whiteSpace: 'nowrap' }}
-                                            >
+                                            <td style={{ whiteSpace: 'nowrap' }}>
                                                 <Link
                                                     to={`/play?torrent=${encodeURIComponent(
                                                         item.link
@@ -58,9 +54,7 @@ export const HomeComponent = withBearer(
                                                     className="btn btn-outline-danger ti-close ml-1"
                                                     onClick={() => {
                                                         removeHistoryItem(item)
-                                                        setHistoryItems(
-                                                            getHistoryItems()
-                                                        )
+                                                        setHistoryItems(getHistoryItems())
                                                     }}
                                                 ></button>
                                             </td>

@@ -13,12 +13,7 @@
  */
 
 import { exists, mapValues } from '../helpers'
-import {
-    TorrentFile,
-    TorrentFileFromJSON,
-    TorrentFileFromJSONTyped,
-    TorrentFileToJSON,
-} from './'
+import { TorrentFile, TorrentFileFromJSON, TorrentFileFromJSONTyped, TorrentFileToJSON } from './'
 
 /**
  *
@@ -80,10 +75,7 @@ export function TorrentFromJSON(json: any): Torrent {
     return TorrentFromJSONTyped(json, false)
 }
 
-export function TorrentFromJSONTyped(
-    json: any,
-    ignoreDiscriminator: boolean
-): Torrent {
+export function TorrentFromJSONTyped(json: any, ignoreDiscriminator: boolean): Torrent {
     if (json === undefined || json === null) {
         return json
     }

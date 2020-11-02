@@ -26,9 +26,7 @@ export interface GetStreamRequest {
 export class StreamApi extends runtime.BaseAPI {
     /**
      */
-    async getStreamRaw(
-        requestParameters: GetStreamRequest
-    ): Promise<runtime.ApiResponse<Blob>> {
+    async getStreamRaw(requestParameters: GetStreamRequest): Promise<runtime.ApiResponse<Blob>> {
         const queryParameters: runtime.HTTPQuery = {}
 
         if (requestParameters.torrent !== undefined) {
@@ -47,8 +45,7 @@ export class StreamApi extends runtime.BaseAPI {
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken
-            const tokenString =
-                typeof token === 'function' ? token('apiKey', []) : token
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
 
             if (tokenString) {
                 headerParameters['Authorization'] = `Bearer ${tokenString}`

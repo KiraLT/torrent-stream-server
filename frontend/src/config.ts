@@ -7,9 +7,7 @@ export const apiDomain =
 export const streamUrl = `${apiDomain}/stream`
 
 export function getSteamUrl(link: string, file: string): string {
-    return `${streamUrl}?torrent=${encodeURIComponent(
-        link
-    )}&file=${encodeURIComponent(file)}`
+    return `${streamUrl}?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(file)}`
 }
 
 export function getApiConfig(options?: { bearer?: string }): Configuration {
