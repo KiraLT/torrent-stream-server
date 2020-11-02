@@ -12,7 +12,7 @@ RUN npm ci --prefix frontend/
 COPY frontend/tsconfig.json frontend/
 COPY frontend/src/ frontend/src/
 COPY frontend/public/ frontend/public/
-RUN npm run --prefix ./frontend build
+RUN npm run --prefix ./frontend build && rm -rf ./frontend/node_modules
 
 EXPOSE 3000
 CMD node lib/index.js
