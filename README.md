@@ -64,7 +64,7 @@ Available parameters:
 * **trustProxy** - get ip from `X-Forwarded-*` header, [check more](https://expressjs.com/en/guide/behind-proxies.html), Default is `true` if running inside App Engine or Heroku else `false`
 * **logging**
   * **level** - debug, info, warn or error. Default info.
-  * **transports** - `{"type": "console"}` or `{"type": "loggly","subdomain": "my-subdomain","token": "abc","tags":["my-anime-stream]}`. Default `console`.
+  * **transports** - `{"type": "console"}` or `{"type": "loggly","subdomain": "my-subdomain","token": "abc","tags":["my-tag"]}`. Default `console`.
 * **torrents**
   * **path** - torrents storage path. Default `/tmp/torrent-stream-server`.
   * **autocleanInternal** - how many seconds downloaded from last stream torrent is kept before deleting. Default is 1 hour. 
@@ -83,7 +83,7 @@ API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/src/swagg
 2. To generate frontend client (`frontend/src/helpers/client`)
 3. To generate backend models (`src/models`)
 
-> [Check documentation](https://kiralt.github.io/torrent-stream-server/src/swagger.htmll)
+> [Check documentation](https://kiralt.github.io/torrent-stream-server/src/swagger.html)
 
 ## JWT tokens
 
