@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 
-import { TorrentMeta, createTorrent, getSteamUrl } from '../helpers/client'
-import { formatBytes, sortBy } from '../helpers'
+import { TorrentsApi, Torrent } from '../helpers/client'
+import { getSteamUrl, getApiConfig } from '../config'
+import { formatBytes, sortBy, parseError } from '../helpers'
 import { addHistoryItem } from '../helpers/history'
+import { withBearer } from './parts/auth'
 
-export function PlayComponent(): JSX.Element {
-    const [torrent, setTorrent] = useState<TorrentMeta>()
+export const PlayComponent = withBearer(({ bearer }) => {
+    const [torrent, setTorrent] = useState<Torrent>()
     const [error, setError] = useState('')
     const location = useLocation()
 
@@ -17,7 +19,7 @@ export function PlayComponent(): JSX.Element {
     useEffect(() => {
         const action = async () => {
             if (link) {
-                const newTorrent = await createTorrent({ link })
+                const newTorrent = await new TorrentsApi(getApiConfig({ bearer })).createTorrent({ torrent: link })
                 setTorrent(newTorrent)
                 addHistoryItem({
                     name: newTorrent.name,
@@ -27,10 +29,10 @@ export function PlayComponent(): JSX.Element {
                 setError('Torrent link is not specified')
             }
         }
-        action().catch(err => {
-            setError(String(err))
+        action().catch(async err => {
+            setError(await parseError(err))
         })
-    }, [link])
+    }, [link, bearer])
 
     return <div className="container">
         {error && <div className="alert alert-danger" role="alert">
@@ -85,4 +87,4 @@ export function PlayComponent(): JSX.Element {
             </>}
         </>}
     </div>
-}
+})

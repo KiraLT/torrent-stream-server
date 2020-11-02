@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { useHistory, Link } from 'react-router-dom'
-import { getHistoryItems, removeHistoryItem } from '../helpers/history'
 
-export function HomeComponent(): JSX.Element {
+import { getHistoryItems, removeHistoryItem } from '../helpers/history'
+import { withBearer } from './parts/auth'
+
+export const HomeComponent = withBearer((): JSX.Element => {
     const [input, setInput] = useState('')
     const [historyItems, setHistoryItems] = useState(getHistoryItems())
     const history = useHistory()
@@ -40,4 +42,4 @@ export function HomeComponent(): JSX.Element {
             </table>
         </>}
     </div>
-}
+})

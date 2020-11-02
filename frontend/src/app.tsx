@@ -1,11 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
+import { setGlobal } from 'reactn'
 
+import { defaultState } from './config'
 import { ContentComponent } from './components/content'
 import { register } from './serviceWorker'
 
 export function initApp(target: HTMLElement | null): void {
+    setupState()
     registerWebworker()
 
     ReactDOM.render(
@@ -14,6 +17,10 @@ export function initApp(target: HTMLElement | null): void {
         </BrowserRouter>,
         target
     )
+}
+
+function setupState(): void {
+    setGlobal(defaultState)
 }
 
 function registerWebworker(): void {

@@ -1,5 +1,5 @@
-export enum ProviderFeatures {
-    SEARCH = 'search'
+export enum ProviderFeature {
+    Search = 'search'
 } 
 
 export interface ProviderResult {
@@ -23,7 +23,7 @@ export interface ProviderCategory {
 
 export interface ProviderMeta {
     categories: ProviderCategory[]
-    features: ProviderFeatures[]
+    features: ProviderFeature[]
 }
 
 export interface ProviderSearchOptions {

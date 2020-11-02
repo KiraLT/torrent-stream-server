@@ -1,6 +1,6 @@
 import { si } from 'nyaapi'
 
-import { Provider, ProviderSearchOptions, ProviderFeatures, ProviderMeta } from '.'
+import { Provider, ProviderSearchOptions, ProviderFeature, ProviderMeta } from '.'
 
 export class NyaaProvider extends Provider {
     static providerName = 'Nyaa' as const
@@ -114,7 +114,7 @@ export class NyaaProvider extends Provider {
                 }
             ],
             features: [
-                ProviderFeatures.SEARCH
+                ProviderFeature.Search
             ]
         }
     }

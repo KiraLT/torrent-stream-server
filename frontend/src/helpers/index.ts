@@ -36,3 +36,18 @@ export function sortBy<T>(arr: T[], key: (item: T) => unknown = v => v, order: '
     })
     return order === 'desc' ? sorted.reverse() : sorted
 }
+
+export async function parseError(err: unknown): Promise<string> {
+    if (err instanceof Response) {
+        try {
+            const data = (await err.json()).error
+            if (!data) {
+                throw new Error()
+            }
+            return data
+        } catch {
+            return `Server returned error: ${err.statusText}`
+        }
+    }
+    return String(err)
+}

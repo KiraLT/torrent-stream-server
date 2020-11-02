@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 
-import { Provider, ProviderSearchOptions, ProviderFeatures } from '.'
+import { Provider, ProviderSearchOptions, ProviderFeature } from '.'
 import { formatMagnet } from '../helpers'
 import { formatBytes } from '../../../utils'
 
@@ -249,7 +249,7 @@ export class ThepiratebayProvider extends Provider {
                 }
             ],
             features: [
-                ProviderFeatures.SEARCH
+                ProviderFeature.Search
             ]
         }
     }

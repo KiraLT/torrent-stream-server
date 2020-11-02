@@ -1,44 +1,30 @@
 import { Express } from 'express'
 import { Logger } from 'winston'
+import { BadRequest } from 'http-errors'
 
 import { TorrentClient } from '../torrent'
 import { Config } from '../config'
-import { getProvidersInfo, ProviderInfo, search, isProviderSupported } from '../helpers/torrent-search'
-
-export interface BrowseTorrent {
-    name: string
-    magnet: string
-    seeds?: number
-    peers?: number
-    downloads?: number
-    size: string
-    time: string
-}
-
-export interface BrowseProvider {
-    name: string
-    categories: string[]
-}
-
+import { getProvidersInfo, search, isProviderSupported } from '../helpers/torrent-search'
+import { Provider, ProviderTorrent } from '../models'
+import { validateString } from '../helpers'
 
 export function setupBrowseApi(app: Express, _config: Config, _logger: Logger, _client: TorrentClient): Express {
-    app.get<{}, BrowseTorrent[], {}, {q: unknown; c: unknown; p: string}>('/api/browse/search', async (req, res) => {
-        const query = req.query.q
-        const category = req.query.c
-        const provider = req.query.p
+    app.get<{}, ProviderTorrent[], {}, Record<'query' | 'category' | 'provider', unknown>>('/api/browse/search', async (req, res) => {
+        const query = validateString(req.query.query, 'query')
+        const category = req.query.category ? validateString(req.query.category, 'category') : undefined
+        const provider = validateString(req.query.provider, 'provider')
 
-        if (typeof query !== 'string' || typeof category !== 'string' || !isProviderSupported(provider)) {
-            return res.json([])
+        if (!isProviderSupported(provider)) {
+            throw new BadRequest(`Provider ${provider} is not supported`)
         }
     
-        const result = await search([provider], query, {
+        return res.json(await search([provider], query, {
             category: category,
             limit: 50
-        })
-        return res.json(result)
+        }))
     })
 
-    app.get<{}, ProviderInfo[], {}, {}>('/api/browse/providers', async (_req, res) => {
+    app.get<{}, Provider[], {}, {}>('/api/browse/providers', async (_req, res) => {
         return res.json(await getProvidersInfo())
     })
 

@@ -28,6 +28,7 @@ export interface Config {
             maxAge: string
         }
         frontendEnabled: boolean
+        apiEnabled: boolean
         apiKey?: string
     }
     trustProxy: boolean
@@ -57,7 +58,8 @@ const defaultConfig: Config = {
     security: {
         streamApi: undefined,
         apiKey: undefined,
-        frontendEnabled: true
+        frontendEnabled: true,
+        apiEnabled: true
     }
 }
 

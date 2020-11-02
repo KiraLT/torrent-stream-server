@@ -77,85 +77,13 @@ Available parameters:
 
 ## API
 
-### GET /api/torrents
+API uses [swagger.yaml](./src/swagger.yaml) to:
 
-```ts
-type Response = Array<{
-    link: string
-    infoHash: string
-    name: string
-    started: number
-    updated: number
-    files: {
-        name: string
-        path: string
-        length: number
-    }[]
-    downloaded: number
-    downloadSpeed: number
-}>
-```
+1. To generate API documentation page, which can be accesed when using `npm run dev` on http://127.0.0.1:3000/api-docs. 
+2. To generate frontend client (`frontend/src/helpers/client`)
+3. To generate backend models (`src/models`)
 
-
-### POST /api/torrents?link={magnetOrUrl}
-
-```ts
-type Response = {
-    link: string
-    infoHash: string
-    name: string
-    started: number
-    updated: number
-    files: {
-        name: string
-        path: string
-        length: number
-    }[]
-    downloaded: number
-    downloadSpeed: number
-}
-```
-
-### GET /api/torrents/{infoHash}
-
-```ts
-type Response = {
-    link: string
-    infoHash: string
-    name: string
-    started: number
-    updated: number
-    files: {
-        name: string
-        path: string
-        length: number
-    }[]
-    downloaded: number
-    downloadSpeed: number
-}
-```
-
-### GET /api/usage
-
-```ts
-type Response = {
-  totalDiskSpace: number,
-  freeDiskSpace: number,
-  usedTorrentSpace: number,
-}
-```
-
-### GET /stream
-
-URL GET params:
-
-* `torrent` - magnet or torrent link
-* `file` (optional) - file name to stream, by default takes first file
-
-Or:
-
-* `token` - JWT token with above parameters as payload
-
+> [Check documentation](./src/swagger.yaml)
 
 ## JWT tokens
 

@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'timeago.js'
 
-import { TorrentMeta, getTorrents, getUsage, Usage } from '../helpers/client'
-import { formatBytes } from '../helpers'
+import { DashboardApi, TorrentsApi, Torrent, Usage } from '../helpers/client'
+import { formatBytes, parseError } from '../helpers'
+import { getApiConfig } from '../config'
+import { withBearer } from './parts/auth'
 
-export function DashboardComponent(): JSX.Element {
-    const [torrents, setTorrents] = useState<TorrentMeta[]>()
+export const DashboardComponent = withBearer(({ bearer }) => {
+    const [torrents, setTorrents] = useState<Torrent[]>()
     const [usage, setUsage] = useState<Usage>()
     const [error, setError] = useState('')
 
-    const updateTorrents = () => getTorrents().then(v => setTorrents(v)).catch(err => {
-        setError(String(err))
+    const updateTorrents = async () => new TorrentsApi(getApiConfig({ bearer })).getTorrents().then(v => setTorrents(v)).catch(async err =>{
+        setError(await parseError(err))
     })
-    const updateUsage = () => getUsage().then(v => setUsage(v)).catch(err => {
-        setError(String(err))
+    const updateUsage = async () => new DashboardApi(getApiConfig({ bearer })).getUsage().then(v => setUsage(v)).catch(async err => {
+        setError(await parseError(err))
     })
 
     useEffect(() => {
@@ -36,6 +38,7 @@ export function DashboardComponent(): JSX.Element {
             clearInterval(torrentsInterval)
             clearInterval(usageInterval)
         }
+    // eslint-disable-next-line
     }, [])
 
     return <div className="container">
@@ -108,4 +111,4 @@ export function DashboardComponent(): JSX.Element {
             </div>}
         </>}
     </div>
-}
+})

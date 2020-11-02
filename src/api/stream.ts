@@ -3,10 +3,12 @@ import rangeParser from 'range-parser'
 import { Express } from 'express'
 import { Logger } from 'winston'
 import { lookup } from 'mime-types'
+import { Forbidden, BadRequest, NotFound } from 'http-errors'
 
 import { TorrentClient, Torrent } from '../torrent'
 import { Config } from '../config'
 import { verifyJwrRoken } from '../utils'
+import { validateString } from '../helpers'
 
 type UrlParams = {
     torrent?: string
@@ -18,12 +20,14 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
         const data: UrlParams = config.security.streamApi ?
             verifyJwrRoken(String(req.query.token), config.security.streamApi.key, config.security.streamApi.maxAge) :
             req.query
+    
         if (!data) {
-            logger.warn(`Access denied`)
-            return res.send(403)
+            throw new Forbidden()
         }
     
-        const link = data.torrent
+        const link = validateString(data.torrent, 'torrent')
+        const fileName = validateString(data.file, 'file')
+    
         if (!link) {
             return res.send(400)
         }
@@ -32,16 +36,15 @@ export function setupStreamApi(app: Express, config: Config, logger: Logger, cli
         try {
             torrent = await client.addAndGet(link)
         } catch (error) {
-            logger.warn(`Bad torrent: ${error}`)
-            return res.sendStatus(400).send(String(error))
+            return new BadRequest(String(error))
         }
 
-        const file = torrent.files.find(f => f.path === data.file)
-            || torrent.files.find(f => f.name === data.file)
+        const file = torrent.files.find(f => f.path === fileName)
+            || torrent.files.find(f => f.name === fileName)
             || torrent.files[0]
 
         if (!file) {
-            return res.send(400)
+            return new NotFound()
         }
 
         res.setHeader('Content-Disposition', `inline; filename="${file.name}"`)

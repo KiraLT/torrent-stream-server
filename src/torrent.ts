@@ -1,13 +1,11 @@
 import { setInterval, clearInterval } from 'timers'
 import { mkdir } from 'fs'
 import { promisify } from 'util'
-
 import torrentStream from 'torrent-stream'
 import parseTorrent from 'parse-torrent'
 import { Logger } from 'winston'
 
 import { Config } from './config'
-import { ValidationError } from './errors'
 
 export interface Torrent {
     link: string
@@ -35,7 +33,7 @@ export interface TorrentMeta {
     downloadSpeed: number
 }
 
-export class TorrentError extends ValidationError {}
+export class TorrentError extends Error {}
 
 export class TorrentClient {
     protected torrents: Record<string, Torrent>

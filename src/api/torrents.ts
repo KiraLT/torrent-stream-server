@@ -1,31 +1,34 @@
 import { Express } from 'express'
 import { Logger } from 'winston'
+import { NotFound } from 'http-errors'
 
 import { TorrentClient } from '../torrent'
 import { Config } from '../config'
+import { Torrent } from '../models'
+import { validateString } from '../helpers'
 
-export function setupTorrentsApi(app: Express, config: Config, logger: Logger, client: TorrentClient): Express {
-    app.post('/api/torrents', async (req, res) => {
-        const link = req.query.torrent 
-        if (!(typeof link === 'string')) {
-            return res.status(400).send({
-                'error': 'Incorrect torrent parameter'
-            })
-        }
+export function setupTorrentsApi(app: Express, _config: Config, _logger: Logger, client: TorrentClient): Express {
+    app.post<{}, Torrent, {}, {torrent: unknown}>('/api/torrents', async (req, res) => {
+        const link = validateString(req.query.torrent, 'torrent') 
         const torrent = await client.addAndGet(link)
-        res.send(torrent.getMeta())
+    
+        res.json(torrent.getMeta())
     })
-    app.get('/api/torrents', (req, res) => res.send(client.getAll().map(v => v.getMeta())))
-    app.get('/api/torrents/:id', (req, res) => {
-        const torrent = client.get(req.params.id)
+
+    app.get<{}, Torrent[], {}, {}>('/api/torrents', (_req, res) => {
+        return res.json(client.getAll().map(v => v.getMeta()))
+    })
+
+    app.get<{id: string}, Torrent, {}, {}>('/api/torrents/:id', (req, res) => {
+        const torrent = client.get(validateString(req.params.id, 'id'))
+    
         if (torrent) {
-            res.send(torrent.getMeta())
-        } else {
-            res.status(404).send({
-                'error': 'Torrent not found'
-            })
+            return res.json(torrent.getMeta())
         }
+    
+        throw new NotFound()
         
     })
+
     return app
 }

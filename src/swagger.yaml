@@ -1,0 +1,350 @@
+openapi: '3.0.2'
+info:
+    title: Torrents Stream Server
+    version: '1.0'
+paths:
+    /api/auth:
+        post:
+            operationId: auth
+            tags:
+                - auth
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Success'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+    /api/usage:
+        get:
+            operationId: getUsage
+            tags:
+                - dashboard
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Usage'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+    /api/torrents:
+        get:
+            operationId: getTorrents
+            tags:
+                - torrents
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Torrent'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+        post:
+            operationId: createTorrent
+            tags:
+                - torrents
+            parameters:
+                - in: query
+                  name: torrent
+                  description: magnet or torrent link
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Torrent'
+                400:
+                    $ref: '#/components/responses/400'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+    /api/torrents/:infoHash:
+        get:
+            operationId: getTorrent
+            tags:
+                - torrents
+            parameters:
+                - in: path
+                  name: infoHash
+                  description: torrent info hash
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Torrent'
+                404:
+                    $ref: '#/components/responses/404'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+    /stream:
+        get:
+            operationId: getStream
+            tags:
+                - stream
+            parameters:
+                - in: query
+                  name: torrent
+                  description: magnet or torrent link
+                  schema:
+                      type: string
+                - in: query
+                  name: file
+                  description: file name to stream, by default takes first file
+                  schema:
+                      type: string
+                - in: query
+                  name: token
+                  description: JWT token with `torrent` & `file` parameters as payload
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/octet-stream:
+                            schema:
+                                type: string
+                                format: binary
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+    /api/browse/providers:
+        get:
+            operationId: getProviders
+            tags:
+                - browse
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Provider'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+    /api/browse/search:
+        get:
+            operationId: searchTorrents
+            tags:
+                - browse
+            parameters:
+                - in: query
+                  name: query
+                  description: search query
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: provider
+                  description: provider name
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: category
+                  description: provider category
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/ProviderTorrent'
+                400:
+                    $ref: '#/components/responses/400'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+components:
+    schemas:
+        Usage:
+            type: object
+            properties:
+                totalDiskSpace:
+                    type: number
+                freeDiskSpace:
+                    type: number
+                usedTorrentSpace:
+                    type: number
+            required: ['totalDiskSpace', 'freeDiskSpace', 'usedTorrentSpace']
+        Torrent:
+            type: object
+            properties:
+                link:
+                    type: string
+                infoHash:
+                    type: string
+                name:
+                    type: string
+                started:
+                    type: number
+                updated:
+                    type: number
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/TorrentFile'
+                downloaded:
+                    type: number
+                downloadSpeed:
+                    type: number
+            required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed']
+        TorrentFile:
+            type: object
+            properties:
+                name:
+                    type: string
+                path:
+                    type: string
+                length:
+                    type: number
+            required: ['name', 'path', 'length']
+        Provider:
+            type: object
+            properties:
+                name:
+                    type: string
+                categories:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ProviderCategory'
+                features:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ProviderFeature'
+            required: ['name', 'categories', 'features']
+        ProviderCategory:
+            type: object
+            properties:
+                name:
+                    type: string
+                id:
+                    type: string
+                subcategories:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            name:
+                                type: string
+                            id:
+                                type: string
+                        required: ['name', 'id']
+            required: ['name', 'id', 'subcategories']
+        ProviderFeature:
+            type: string
+            enum: ['search']
+        ProviderTorrent:
+            type: object
+            properties:
+                name:
+                    type: string
+                magnet:
+                    type: string
+                seeds:
+                    type: number
+                downloads:
+                    type: number
+                peers:
+                    type: number
+                size:
+                    type: string
+                time:
+                    type: string
+            required: ['name', 'magnet', 'seeds', 'peers', 'size']
+        ApiError:
+            type: object
+            properties:
+                error:
+                    type: string
+            required: ['error']
+        Success:
+            type: object
+            properties:
+                success:
+                    type: boolean
+            required: ['success']
+    responses:
+        204:
+            description: Successful operation
+        400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+        401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+        403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+        404:
+            description: Resourse not found
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+        409:
+            description: Conflict
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+        503:
+            description: Server is busy
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+    securitySchemes:
+        apiKey:
+            type: http
+            scheme: bearer
+servers:
+    - url: http://127.0.0.1:3000/
+      description: Dev server
+security:
+    - apiKey: []

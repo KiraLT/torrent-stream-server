@@ -2,6 +2,9 @@ import express, { Express } from 'express'
 import { resolve, join } from 'path'
 import { exists } from 'fs'
 import cors from 'cors'
+import YAML from 'yamljs'
+import swaggerUi from 'swagger-ui-express'
+import { Unauthorized, Forbidden } from 'http-errors'
 
 import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
@@ -11,17 +14,21 @@ import { createLogger } from './logging'
 import { setupUsageApi } from './api/usage'
 import { handleApiErrors } from './errors'
 import { setupBrowseApi } from './api/browse'
+import { setupAuthApi } from './api/auth'
 
 import 'express-async-errors'
 import { Logger } from 'winston'
 
 function createApp(config: Config, logger: Logger): Express {
+    logger.info(`Starting app in ${config.environment} environment`)
+
     const app = express()
     app.use(cors())
     app.use(express.json())
 
     if (config.environment === 'development') {
-        logger.info(`Starting app in ${config.environment} environment`)
+        const swaggerDocument = YAML.load(resolve(__dirname, 'swagger.yaml'))
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
     }
 
     if (config.trustProxy) {
@@ -41,16 +48,22 @@ export async function setup(): Promise<void> {
     
     app.get('/status', (_req, res) => res.send({'status': 'ok'}))
 
-    if (!config.security.streamApi || (config.security.streamApi && config.security.apiKey)) {
-        if (config.security.apiKey) {
-            app.use('/api/', (req, res, next) => {
+    if (config.security.apiEnabled) {
+        if (config.security.apiKey || config.security.streamApi) {
+            logger.info('Enabled API security')
+
+            app.use('/api/', (req, _res, next) => {
                 const [type, token] = (req.headers.authorization || '').split(' ')
-                if (type.toLowerCase() === 'bearer' && token === config.security.apiKey) {
+                const correctKey = config.security.apiKey || (config.security.streamApi && config.security.streamApi.key)
+
+                if (type === '') {
+                    throw new Unauthorized() 
+                }
+
+                if (type.toLowerCase() === 'bearer' && correctKey && token === correctKey) {
                     next()
                 } else {
-                    res.status(403).send({
-                        'error': 'Incorect authorization header'
-                    })
+                    throw new Forbidden()
                 }
             })
         }
@@ -59,6 +72,9 @@ export async function setup(): Promise<void> {
         setupStreamApi(app, config, logger, client)
         setupUsageApi(app, config, logger, client)
         setupBrowseApi(app, config, logger, client)
+        setupAuthApi(app, config, logger, client)
+    } else {
+        logger.info('API is disabled according to the config')
     }
 
     if (config.security.frontendEnabled) {
@@ -89,6 +105,11 @@ export async function setup(): Promise<void> {
 
     app.listen(config.port, config.host, () => {
         logger.info(`Listening on ${config.host}:${config.port}`)
+        
+        if (config.environment === 'development') {
+            logger.info(`* Website on http://127.0.0.1:${config.port}`)
+            logger.info(`* Docs on http://127.0.0.1:${config.port}/api-docs`)
+        }
     })
 }
 

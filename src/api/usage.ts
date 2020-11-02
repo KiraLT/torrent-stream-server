@@ -1,20 +1,23 @@
 import { Express } from 'express'
 import { Logger } from 'winston'
 import checkDiskSpace from 'check-disk-space'
-const trammel = require('trammel')
 
 import { TorrentClient } from '../torrent'
 import { Config } from '../config'
+import { getUsedSpace } from '../helpers'
+import { Usage } from '../models'
 
-export function setupUsageApi(app: Express, config: Config, logger: Logger, client: TorrentClient): Express {
-    app.get('/api/usage', async (req, res) => {
+export function setupUsageApi(app: Express, config: Config, _logger: Logger, _client: TorrentClient): Express {
+    app.get<{}, Usage, {}, {}>('/api/usage', async (_req, res) => {
         const space = await checkDiskSpace(config.torrents.path)
-        const usedSpace = await trammel(config.torrents.path, {type: 'raw'})
-        res.send({
+        const usedSpace = await getUsedSpace(config.torrents.path)
+
+        res.json({
             totalDiskSpace: space.size,
             freeDiskSpace: space.free,
             usedTorrentSpace: usedSpace,
         })
     })
+
     return app
 }

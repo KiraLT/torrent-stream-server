@@ -1,15 +1,19 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { Container, Row, Col, FormControl, Alert, Button, InputGroup, Form, Table } from 'react-bootstrap'
-import { getProviders, BrowseProvider, BrowseTorrent, searchTorrents } from '../helpers/client'
-import { useSearchParam, useSearchParamsHandler } from '../helpers/hooks'
 import { Link } from 'react-router-dom'
+import { Container, Row, Col, FormControl, Alert, Button, InputGroup, Form, Table } from 'react-bootstrap'
 
-export function BrowseComponent(): JSX.Element {
+import { BrowseApi, Provider, ProviderTorrent } from '../helpers/client'
+import { useSearchParam, useSearchParamsHandler } from '../helpers/hooks'
+import { parseError } from '../helpers'
+import { withBearer } from './parts/auth'
+import { getApiConfig } from '../config'
+
+export const BrowseComponent = withBearer(({ bearer }) => {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const [providers, setProviders] = useState<BrowseProvider[]>([])
-    const [torrents, setTorrents] = useState<BrowseTorrent[]>()
+    const [providers, setProviders] = useState<Provider[]>([])
+    const [torrents, setTorrents] = useState<ProviderTorrent[]>()
 
     const handler = useSearchParamsHandler()
     const provider = useSearchParam('provider') ?? ''
@@ -18,10 +22,10 @@ export function BrowseComponent(): JSX.Element {
 
     useEffect(() => {
         const doAction = async () => {
-            setProviders(await getProviders())
+            setProviders(await new BrowseApi(getApiConfig({ bearer })).getProviders())
         }
-        doAction().catch(err => setError(String(err)))
-    }, [])
+        doAction().catch(async err => setError(await parseError(err)))
+    }, [bearer])
 
     const canSearch = provider && query
 
@@ -31,14 +35,14 @@ export function BrowseComponent(): JSX.Element {
             if (canSearch) {
                 try {
                     setLoading(true)
-                    setTorrents(await searchTorrents(provider, query, category))
+                    setTorrents(await new BrowseApi(getApiConfig({ bearer })).searchTorrents({provider, query, category}))
                 } finally {
                     setLoading(false)
                 }
             }
         }
-        doAction().catch(err => setError(String(err)))
-    }, [provider, query, category, canSearch])
+        doAction().catch(async err => setError(await parseError(err)))
+    }, [provider, query, category, canSearch, bearer])
 
     const providerNames = providers.map(v => v.name).sort()
     const categories = provider ? providers.find(v => v.name === provider)?.categories ?? [] : []
@@ -151,4 +155,4 @@ export function BrowseComponent(): JSX.Element {
             </tbody>
         </Table>}
     </Container>
-}
+})
