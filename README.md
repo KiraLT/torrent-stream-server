@@ -14,6 +14,7 @@ HTTP server to convert any torrent to video stream
 
 **Whats new:**
 
+* Search & stream torrents - [preview](https://i.imgur.com/kSXYGrm.png)
 * Stream any file from the torrent - [preview](https://i.imgur.com/qRmicai.png)
 * Monitor activity - [preview](https://i.imgur.com/aPTcl9P.png)
 
