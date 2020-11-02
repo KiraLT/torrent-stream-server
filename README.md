@@ -22,24 +22,24 @@ HTTP server to convert any torrent to video stream
 
 _Run backend dev server_
 
-* `npm run dev` - it will run typescript server with live reload.
+* `npm run dev` - it will run TypeScript server with live reload.
 
-> Please not that it will use prebuild frontend. If you wish to change frontend, check [frontend readme](frontend/README.md)
+> Please notice that it will use the prebuilt frontend already present in the repo. If you wish to change frontend, check [frontend readme](frontend/README.md)
 
 _Build backend_
 
-* `npm run build` - it will compile typescript code to javascript, required for `npm run start`.
+* `npm run build` - it will compile TypeScript code to JavaScript, required for `npm run start`.
 
-> Please not that it will not build frontend. If you wish to build frontend, check [frontend readme](frontend/README.md)
+> Please notice that it will not build frontend. If you wish to build frontend, check [frontend readme](frontend/README.md)
 
 ## Production
 
-`npm run start` - run prebuild JS backend which includes prebuild frontend 
+`npm run start` - run prebuilt JS backend which includes prebuilt frontend
 
 ## Commands
 
-* `npm run build` - build typescript to javascript
-* `npm run start` - start HTTP server (javascript)
+* `npm run build` - build TypeScript to JavaScript
+* `npm run start` - start HTTP server (JavaScript)
 * `npm run dev` - start HTTP server from source with live reload
 
 ## Configuration
@@ -56,7 +56,7 @@ _Check bellow for descriptions_
 
 ### File
 
-You can pass json config file to any run command (`e.g. npm run start config.json`)
+You can pass JSON config file to any run command (e.g. `npm run start config.json`)
 
 Available parameters:
 
@@ -80,7 +80,7 @@ Available parameters:
 
 API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/src/swagger.html) to:
 
-1. To generate API documentation page, which can be accesed when using `npm run dev` on http://127.0.0.1:3000/api-docs. 
+1. To generate API documentation page, which can be accesed when using `npm run dev` on http://127.0.0.1:3000/api-docs.
 2. To generate frontend client (`frontend/src/helpers/client`)
 3. To generate backend models (`src/models`)
 
