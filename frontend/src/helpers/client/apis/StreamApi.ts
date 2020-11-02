@@ -13,6 +13,7 @@
  */
 
 import * as runtime from '../runtime'
+import { ApiError, ApiErrorFromJSON, ApiErrorToJSON } from '../models'
 
 export interface GetStreamRequest {
     torrent?: string

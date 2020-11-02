@@ -8,7 +8,7 @@
     "start": "node lib/index.js",
     "dev": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts",
     "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
-    "build-swagger-frontend": "openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client",
+    "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
     "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'",
     "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\""
   },

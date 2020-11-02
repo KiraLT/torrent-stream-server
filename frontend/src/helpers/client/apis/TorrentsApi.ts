@@ -104,7 +104,7 @@ export class TorrentsApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/api/torrents/:infoHash`.replace(
+            path: `/api/torrents/{infoHash}`.replace(
                 `{${'infoHash'}}`,
                 encodeURIComponent(String(requestParameters.infoHash))
             ),

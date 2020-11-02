@@ -13,7 +13,14 @@
  */
 
 import * as runtime from '../runtime'
-import { Usage, UsageFromJSON, UsageToJSON } from '../models'
+import {
+    ApiError,
+    ApiErrorFromJSON,
+    ApiErrorToJSON,
+    Usage,
+    UsageFromJSON,
+    UsageToJSON,
+} from '../models'
 
 /**
  *
