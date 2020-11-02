@@ -77,13 +77,13 @@ Available parameters:
 
 ## API
 
-API uses [swagger.yaml](./src/swagger.yaml) to:
+API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/src/swagger.html) to:
 
 1. To generate API documentation page, which can be accesed when using `npm run dev` on http://127.0.0.1:3000/api-docs. 
 2. To generate frontend client (`frontend/src/helpers/client`)
 3. To generate backend models (`src/models`)
 
-> [Check documentation](./src/swagger.yaml)
+> [Check documentation](https://kiralt.github.io/torrent-stream-server/src/swagger.htmll)
 
 ## JWT tokens
 
