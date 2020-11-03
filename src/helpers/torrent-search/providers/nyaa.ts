@@ -124,14 +124,27 @@ export class NyaaProvider extends Provider {
             category: category as si.Category | undefined,
         })
 
+        const categories = (await this.getMeta()).categories.flatMap(v => [
+            ...v.subcategories,
+            {
+                id: v.id,
+                name: v.name
+            }
+        ])
+
         return result.map((v) => ({
             name: v.name,
             magnet: v.magnet,
             seeds: parseInt(v.seeders, 10) || 0,
             peers: parseInt(v.leechers, 10) || 0,
             size: v.filesize,
-            time: v.date,
+            time: Date.parse(v.date),
             downloads: parseInt(v.completed, 10) || 0,
+            category: categories.find(c => c.id === v.sub_category) || {
+                name: 'All',
+                id: ''
+            },
+            link: `https://nyaa.si/view/${v.id}`
         }))
     }
 }

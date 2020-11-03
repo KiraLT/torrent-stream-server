@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime'
+import {
+    ProviderCategorySubcategories,
+    ProviderCategorySubcategoriesFromJSON,
+    ProviderCategorySubcategoriesFromJSONTyped,
+    ProviderCategorySubcategoriesToJSON,
+} from './'
+
 /**
  *
  * @export
@@ -57,10 +64,16 @@ export interface ProviderTorrent {
     size: string
     /**
      *
-     * @type {string}
+     * @type {number}
      * @memberof ProviderTorrent
      */
-    time?: string
+    time?: number
+    /**
+     *
+     * @type {ProviderCategorySubcategories}
+     * @memberof ProviderTorrent
+     */
+    category: ProviderCategorySubcategories
 }
 
 export function ProviderTorrentFromJSON(json: any): ProviderTorrent {
@@ -82,6 +95,7 @@ export function ProviderTorrentFromJSONTyped(
         peers: json['peers'],
         size: json['size'],
         time: !exists(json, 'time') ? undefined : json['time'],
+        category: ProviderCategorySubcategoriesFromJSON(json['category']),
     }
 }
 
@@ -100,5 +114,6 @@ export function ProviderTorrentToJSON(value?: ProviderTorrent | null): any {
         peers: value.peers,
         size: value.size,
         time: value.time,
+        category: ProviderCategorySubcategoriesToJSON(value.category),
     }
 }

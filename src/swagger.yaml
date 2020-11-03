@@ -286,8 +286,24 @@ components:
                 size:
                     type: string
                 time:
+                    type: number
+                link:
                     type: string
-            required: ['name', 'magnet', 'seeds', 'peers', 'size']
+                isVip:
+                    type: boolean
+                imdb:
+                    type: string
+                numFiles:
+                    type: number
+                category:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                        id:
+                            type: string
+                    required: ['name', 'id']
+            required: ['name', 'magnet', 'seeds', 'peers', 'size', 'category', 'link']
         ApiError:
             type: object
             properties:

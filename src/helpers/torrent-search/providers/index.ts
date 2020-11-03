@@ -8,8 +8,16 @@ export interface ProviderResult {
     seeds: number
     peers: number
     size: string
-    time: string
+    time: number
     downloads?: number
+    category: {
+        id: string
+        name: string
+    }
+    link: string
+    isVip?: boolean
+    imdb?: string
+    numFiles?: number
 }
 
 export interface ProviderCategory {

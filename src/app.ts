@@ -4,7 +4,7 @@ import { exists } from 'fs'
 import cors from 'cors'
 import YAML from 'yamljs'
 import swaggerUi from 'swagger-ui-express'
-import { Unauthorized, Forbidden } from 'http-errors'
+import { Unauthorized, Forbidden, NotFound } from 'http-errors'
 
 import { TorrentClient } from './torrent'
 import { setupStreamApi } from './api/stream'
@@ -75,9 +75,15 @@ export async function setup(): Promise<void> {
         setupUsageApi(app, config, logger, client)
         setupBrowseApi(app, config, logger, client)
         setupAuthApi(app, config, logger, client)
+
+        app.use('/api/?*', () => {
+            throw new NotFound()
+        })
     } else {
         logger.info('API is disabled according to the config')
     }
+
+    app.use(handleApiErrors(logger))
 
     if (config.security.frontendEnabled) {
         if (config.environment === 'production') {
@@ -85,24 +91,18 @@ export async function setup(): Promise<void> {
 
             const path = resolve(__dirname, '../frontend/build')
 
-            app.use((req, res, next) => {
+            app.use((req, res) => {
                 var file = path + req.path
                 exists(file, (fileExists) => {
                     if (fileExists) {
                         res.sendFile(file)
                     } else {
-                        next()
+                        res.sendFile(join(path, 'index.html'))
                     }
                 })
             })
-            app.get('/', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/play', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/dashboard', (_req, res) => res.sendFile(join(path, 'index.html')))
-            app.get('/browse', (_req, res) => res.sendFile(join(path, 'browse.html')))
         }
     }
-
-    app.use(handleApiErrors(logger))
 
     app.listen(config.port, config.host, () => {
         logger.info(`Listening on ${config.host}:${config.port}`)

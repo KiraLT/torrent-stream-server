@@ -266,13 +266,29 @@ export class ThepiratebayProvider extends Provider {
 
         const result = (await response.json()) as ThepiratebayItem[]
 
+        const categories = (await this.getMeta()).categories.flatMap(v => [
+            ...v.subcategories,
+            {
+                id: v.id,
+                name: v.name
+            }
+        ])
+
         return result.map((v) => ({
             name: v.name,
             magnet: formatMagnet(v.info_hash, v.name, this.trackers),
             seeds: parseInt(v.seeders, 10),
             peers: parseInt(v.leechers, 10),
             size: formatBytes(parseInt(v.size, 10)),
-            time: new Date(v.added).toString(),
+            time: new Date(parseInt(v.added) * 100).getTime(),
+            category: categories.find(c => c.id === v.category) || {
+                name: 'All',
+                id: ''
+            },
+            numFiles: parseInt(v.num_files),
+            isVip: v.status === 'vip',
+            imdb: v.imdb,
+            link: `https://thepiratebay.org/description.php?id=${v.id}`
         }))
     }
 }
