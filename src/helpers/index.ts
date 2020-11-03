@@ -27,3 +27,7 @@ export function validateString(value: unknown, name: string): string {
 
     throw new BadRequest(`${name} must be string`)
 }
+
+export function getSteamUrl(link: string, file: string): string {
+    return `/stream?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(file)}`
+}

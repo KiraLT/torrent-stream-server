@@ -4,8 +4,10 @@ import { promisify } from 'util'
 import torrentStream from 'torrent-stream'
 import parseTorrent from 'parse-torrent'
 import { Logger } from 'winston'
+import { lookup } from 'mime-types'
 
 import { Config } from './config'
+import { getSteamUrl } from './helpers'
 
 export interface Torrent {
     link: string
@@ -28,6 +30,8 @@ export interface TorrentMeta {
         name: string
         path: string
         length: number
+        type: string
+        stream: string
     }[]
     downloaded: number
     downloadSpeed: number
@@ -112,6 +116,8 @@ export class TorrentClient {
                                 name: v.name,
                                 length: v.length,
                                 path: v.path,
+                                type: lookup(v.name) || '',
+                                stream: getSteamUrl(torrent.link, v.path)
                             })),
                             started: torrent.started,
                             updated: torrent.updated,

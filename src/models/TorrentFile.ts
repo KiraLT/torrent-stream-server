@@ -33,10 +33,22 @@ export interface TorrentFile {
     path: string
     /**
      *
+     * @type {string}
+     * @memberof TorrentFile
+     */
+    type: string
+    /**
+     *
      * @type {number}
      * @memberof TorrentFile
      */
     length: number
+    /**
+     *
+     * @type {string}
+     * @memberof TorrentFile
+     */
+    stream: string
 }
 
 export function TorrentFileFromJSON(json: any): TorrentFile {
@@ -50,7 +62,9 @@ export function TorrentFileFromJSONTyped(json: any, ignoreDiscriminator: boolean
     return {
         name: json['name'],
         path: json['path'],
+        type: json['type'],
         length: json['length'],
+        stream: json['stream'],
     }
 }
 
@@ -64,6 +78,8 @@ export function TorrentFileToJSON(value?: TorrentFile | null): any {
     return {
         name: value.name,
         path: value.path,
+        type: value.type,
         length: value.length,
+        stream: value.stream,
     }
 }

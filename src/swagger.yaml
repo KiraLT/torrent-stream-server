@@ -232,9 +232,13 @@ components:
                     type: string
                 path:
                     type: string
+                type:
+                    type: string
                 length:
                     type: number
-            required: ['name', 'path', 'length']
+                stream:
+                    type: string
+            required: ['name', 'path', 'length', 'type', 'stream']
         Provider:
             type: object
             properties:
