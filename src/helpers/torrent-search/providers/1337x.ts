@@ -24,42 +24,42 @@ export class X1337Provider extends Provider {
                 {
                     name: 'Movies',
                     id: 'Movies',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'TV',
                     id: 'TV',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'Games',
                     id: 'Games',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'Anime',
                     id: 'Anime',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'Apps',
                     id: 'Apps',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'Documentaries',
                     id: 'Documentaries',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'XXX',
                     id: 'XXX',
-                    subcategories: []
+                    subcategories: [],
                 },
                 {
                     name: 'Other',
                     id: 'Other',
-                    subcategories: []
+                    subcategories: [],
                 },
             ],
             features: [ProviderFeature.Search],
@@ -70,15 +70,15 @@ export class X1337Provider extends Provider {
         const { category, limit } = options || {}
 
         const domain = 'http://www.1337x.to'
-        const url = category ? `${domain}/category-search/${encodeURIComponent(
-            query
-        )}/${encodeURIComponent(category || '')}/1` : `${domain}/search/${encodeURIComponent(
-            query
-        )}/1/`
+        const url = category
+            ? `${domain}/category-search/${encodeURIComponent(query)}/${encodeURIComponent(
+                  category || ''
+              )}/1`
+            : `${domain}/search/${encodeURIComponent(query)}/1/`
         const response = await fetch(url, {
             headers: {
-                'User-Agent': `torrent-stream-server (+https://github.com/KiraLT/torrent-stream-server)`
-            }
+                'User-Agent': `torrent-stream-server (+https://github.com/KiraLT/torrent-stream-server)`,
+            },
         })
 
         if (!response.ok) {
@@ -87,32 +87,34 @@ export class X1337Provider extends Provider {
 
         const $ = load(await response.text())
 
-        const categories = (await this.getMeta()).categories.flatMap(v => [
+        const categories = (await this.getMeta()).categories.flatMap((v) => [
             ...v.subcategories,
             {
                 id: v.id,
-                name: v.name
-            }
+                name: v.name,
+            },
         ])
 
-        return $('tbody > tr').get().map(v => {
-            const el = $(v)
+        return $('tbody > tr')
+            .get()
+            .map((v) => {
+                const el = $(v)
 
-            const id = (el.find('a:nth-child(2)').attr('href') || '').trim()
+                const id = (el.find('a:nth-child(2)').attr('href') || '').trim()
 
-            return {
-                name: el.find('a').text().trim(),
-                magnet: '',
-                seeds: parseInt(el.find('.seeds').text().trim(), 10) || 0,
-                peers: parseInt(el.find('.leeches').text().trim(), 10) || 0,
-                size: '',
-                time: 0,
-                category: categories.find(c => c.id === v.sub_category) || {
-                    name: 'All',
-                    id: ''
-                },
-                link: ''
-            }
-        })
+                return {
+                    name: el.find('a').text().trim(),
+                    magnet: '',
+                    seeds: parseInt(el.find('.seeds').text().trim(), 10) || 0,
+                    peers: parseInt(el.find('.leeches').text().trim(), 10) || 0,
+                    size: '',
+                    time: 0,
+                    category: categories.find((c) => c.id === v.sub_category) || {
+                        name: 'All',
+                        id: '',
+                    },
+                    link: '',
+                }
+            })
     }
 }

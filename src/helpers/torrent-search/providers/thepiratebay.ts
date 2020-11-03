@@ -266,12 +266,12 @@ export class ThepiratebayProvider extends Provider {
 
         const result = (await response.json()) as ThepiratebayItem[]
 
-        const categories = (await this.getMeta()).categories.flatMap(v => [
+        const categories = (await this.getMeta()).categories.flatMap((v) => [
             ...v.subcategories,
             {
                 id: v.id,
-                name: v.name
-            }
+                name: v.name,
+            },
         ])
 
         return result.map((v) => ({
@@ -280,15 +280,15 @@ export class ThepiratebayProvider extends Provider {
             seeds: parseInt(v.seeders, 10),
             peers: parseInt(v.leechers, 10),
             size: formatBytes(parseInt(v.size, 10)),
-            time: new Date(parseInt(v.added) * 100).getTime(),
-            category: categories.find(c => c.id === v.category) || {
+            time: new Date(parseInt(v.added) * 1000).getTime(),
+            category: categories.find((c) => c.id === v.category) || {
                 name: 'All',
-                id: ''
+                id: '',
             },
             numFiles: parseInt(v.num_files),
             isVip: v.status === 'vip',
             imdb: v.imdb,
-            link: `https://thepiratebay.org/description.php?id=${v.id}`
+            link: `https://thepiratebay.org/description.php?id=${v.id}`,
         }))
     }
 }

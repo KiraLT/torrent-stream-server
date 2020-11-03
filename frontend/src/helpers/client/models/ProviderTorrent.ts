@@ -70,6 +70,30 @@ export interface ProviderTorrent {
     time?: number
     /**
      *
+     * @type {string}
+     * @memberof ProviderTorrent
+     */
+    link: string
+    /**
+     *
+     * @type {boolean}
+     * @memberof ProviderTorrent
+     */
+    isVip?: boolean
+    /**
+     *
+     * @type {string}
+     * @memberof ProviderTorrent
+     */
+    imdb?: string
+    /**
+     *
+     * @type {number}
+     * @memberof ProviderTorrent
+     */
+    numFiles?: number
+    /**
+     *
      * @type {ProviderCategorySubcategories}
      * @memberof ProviderTorrent
      */
@@ -95,6 +119,10 @@ export function ProviderTorrentFromJSONTyped(
         peers: json['peers'],
         size: json['size'],
         time: !exists(json, 'time') ? undefined : json['time'],
+        link: json['link'],
+        isVip: !exists(json, 'isVip') ? undefined : json['isVip'],
+        imdb: !exists(json, 'imdb') ? undefined : json['imdb'],
+        numFiles: !exists(json, 'numFiles') ? undefined : json['numFiles'],
         category: ProviderCategorySubcategoriesFromJSON(json['category']),
     }
 }
@@ -114,6 +142,10 @@ export function ProviderTorrentToJSON(value?: ProviderTorrent | null): any {
         peers: value.peers,
         size: value.size,
         time: value.time,
+        link: value.link,
+        isVip: value.isVip,
+        imdb: value.imdb,
+        numFiles: value.numFiles,
         category: ProviderCategorySubcategoriesToJSON(value.category),
     }
 }

@@ -10,7 +10,9 @@ import {
     InputGroup,
     Form,
     Table,
+    Badge,
 } from 'react-bootstrap'
+import { format } from 'timeago.js'
 
 import { BrowseApi, Provider, ProviderTorrent } from '../helpers/client'
 import { useSearchParam, useSearchParamsHandler } from '../helpers/hooks'
@@ -198,51 +200,45 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                         {torrents?.map((torrent, ti) => (
                             <>
                                 <tr key={ti}>
-                                    <td>{torrent.name}</td>
+                                    <td>
+                                        {torrent.link ? (
+                                            <a
+                                                href={torrent.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {torrent.name}
+                                            </a>
+                                        ) : (
+                                            torrent.name
+                                        )}
+                                        {' '}
+                                        <Badge variant="secondary" pill={true} style={{cursor: 'pointer'}} onClick={() => {
+                                             handler({
+                                                set: {
+                                                    category: torrent.category.id,
+                                                },
+                                            })
+                                        }}>{torrent.category.name}</Badge>
+                                        {' '}
+                                        {torrent.isVip && <i className="ti-crown text-warning"></i>}
+                                    </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.size}
                                     </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
-                                        {torrent.time}
+                                        {!!torrent.time && format(new Date(torrent.time))}
                                     </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.seeds != null && (
                                             <span className="text-success">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width={16}
-                                                    height={16}
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="feather feather-arrow-up"
-                                                >
-                                                    <line x1={12} y1={19} x2={12} y2={5} />
-                                                    <polyline points="5 12 12 5 19 12" />
-                                                </svg>
+                                                <small className="ti-arrow-up"></small>
                                                 {torrent.seeds}
                                             </span>
                                         )}{' '}
                                         {torrent.peers != null && (
                                             <span className="text-danger">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width={16}
-                                                    height={16}
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="feather feather-arrow-down"
-                                                >
-                                                    <line x1={12} y1={5} x2={12} y2={19} />
-                                                    <polyline points="19 12 12 19 5 12" />
-                                                </svg>
+                                                <small className="ti-arrow-down"></small>
                                                 {torrent.peers}
                                             </span>
                                         )}{' '}
@@ -250,22 +246,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.downloads != null && (
                                             <span>
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width={16}
-                                                    height={16}
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth={2}
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="feather feather-download"
-                                                >
-                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                                    <polyline points="7 10 12 15 17 10" />
-                                                    <line x1={12} y1={15} x2={12} y2={3} />
-                                                </svg>
+                                                <small className="ti-download"></small>{' '}
                                                 {torrent.downloads}
                                             </span>
                                         )}
