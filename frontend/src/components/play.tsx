@@ -17,7 +17,7 @@ export const PlayComponent = withBearer(({ bearer }) => {
     const link = searchParams.get('torrent')
     const file = searchParams.get('file')
 
-    const torrentFile = torrent?.files.find(v => v.path === file)
+    const torrentFile = torrent?.files.find((v) => v.path === file)
 
     useEffect(() => {
         const action = async () => {
@@ -109,22 +109,27 @@ export const PlayComponent = withBearer(({ bearer }) => {
                         <>
                             <h5 className="text-muted">
                                 <small>{file}</small>
-                                {torrentFile && <a
-                                    href={apiDomain + torrentFile.stream}
-                                    className="btn ti-cloud-down text-primary"
-                                >
-                                    {' '}
-                                </a>}{' '}
+                                {torrentFile && (
+                                    <a
+                                        href={apiDomain + torrentFile.stream}
+                                        className="btn ti-cloud-down text-primary"
+                                    >
+                                        {' '}
+                                    </a>
+                                )}{' '}
                                 - <Link to={`?torrent=${encodeURIComponent(link)}`}>view all</Link>
                             </h5>
                         </>
                     )}
                     {file && link && torrentFile && (
                         <>
-                            <TorrentFileComponent file={torrentFile}/>
+                            <TorrentFileComponent file={torrentFile} />
                             <br />
                             <div className="form-group">
-                                <input className="form-control" value={apiDomain + torrentFile.stream} />
+                                <input
+                                    className="form-control"
+                                    value={apiDomain + torrentFile.stream}
+                                />
                             </div>
                         </>
                     )}
@@ -134,57 +139,67 @@ export const PlayComponent = withBearer(({ bearer }) => {
     )
 })
 
-function TorrentFileComponent({ file }: {file: TorrentFile}): JSX.Element {
+function TorrentFileComponent({ file }: { file: TorrentFile }): JSX.Element {
     if (file.type.includes('video')) {
-        return <VideoPlayerComponent video={apiDomain + file.stream} type={file.type}/>
+        return <VideoPlayerComponent video={apiDomain + file.stream} type={file.type} />
     }
     if (file.type.includes('image')) {
-        return <ImageComponent image={apiDomain + file.stream}/>
+        return <ImageComponent image={apiDomain + file.stream} name={file.name} />
     }
     if (file.type.includes('text')) {
-        return <TextComponent text={apiDomain + file.stream}/>
+        return <TextComponent text={apiDomain + file.stream} />
     }
-    return <div>
-        <Alert variant="warning">
-            Unknown file type: {file.type}
-            <a
-                href={apiDomain + file.stream}
-                className="btn btn-outline-primary ti-cloud-down ml-5"
-            >
-            Direct link
-            </a>
-        </Alert>
-    </div>
+    return (
+        <div>
+            <Alert variant="warning">
+                Unknown file type: {file.type}
+                <a
+                    href={apiDomain + file.stream}
+                    className="btn btn-outline-primary ti-cloud-down ml-5"
+                >
+                    Direct link
+                </a>
+            </Alert>
+        </div>
+    )
 }
 
-function ImageComponent({ image }: { image: string; }): JSX.Element {
-    return <div className="w-100 text-center">
-        <img src={image} />
-    </div>
+function ImageComponent({ image, name }: { image: string; name: string }): JSX.Element {
+    return (
+        <div className="w-100 text-center">
+            <img src={image} alt={name} />
+        </div>
+    )
 }
 
-function TextComponent({ text }: { text: string; }): JSX.Element {
+function TextComponent({ text }: { text: string }): JSX.Element {
     const [value, setValue] = useState<string>()
 
     useEffect(() => {
-        fetch(text).then(async v => setValue(await v.text()))
+        fetch(text).then(async (v) => setValue(await v.text()))
     })
 
-    return <div className="card card-body" style={{maxHeight: '500px'}}>
-        {value === undefined && <div className="text-center">
-            <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>
-        </div>}
-        <pre>{value}</pre>
-    </div>
+    return (
+        <div className="card card-body" style={{ maxHeight: '500px' }}>
+            {value === undefined && (
+                <div className="text-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            )}
+            <pre>{value}</pre>
+        </div>
+    )
 }
 
-function VideoPlayerComponent({ video, type  }: { video: string; type: string }): JSX.Element {
-    return <div className="embed-responsive embed-responsive-16by9">
-        <video width="720" controls>
-            <source src={video} type={type} />
-            Your browser does not support HTML5 video.
-        </video>
-    </div>
+function VideoPlayerComponent({ video, type }: { video: string; type: string }): JSX.Element {
+    return (
+        <div className="embed-responsive embed-responsive-16by9">
+            <video width="720" controls>
+                <source src={video} type={type} />
+                Your browser does not support HTML5 video.
+            </video>
+        </div>
+    )
 }

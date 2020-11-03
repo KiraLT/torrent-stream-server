@@ -117,7 +117,7 @@ export class TorrentClient {
                                 length: v.length,
                                 path: v.path,
                                 type: lookup(v.name) || '',
-                                stream: getSteamUrl(torrent.link, v.path)
+                                stream: getSteamUrl(torrent.link, v.path),
                             })),
                             started: torrent.started,
                             updated: torrent.updated,

@@ -211,16 +211,21 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                             </a>
                                         ) : (
                                             torrent.name
-                                        )}
-                                        {' '}
-                                        <Badge variant="secondary" pill={true} style={{cursor: 'pointer'}} onClick={() => {
-                                             handler({
-                                                set: {
-                                                    category: torrent.category.id,
-                                                },
-                                            })
-                                        }}>{torrent.category.name}</Badge>
-                                        {' '}
+                                        )}{' '}
+                                        <Badge
+                                            variant="secondary"
+                                            pill={true}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => {
+                                                handler({
+                                                    set: {
+                                                        category: torrent.category.id,
+                                                    },
+                                                })
+                                            }}
+                                        >
+                                            {torrent.category.name}
+                                        </Badge>{' '}
                                         {torrent.isVip && <i className="ti-crown text-warning"></i>}
                                     </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>

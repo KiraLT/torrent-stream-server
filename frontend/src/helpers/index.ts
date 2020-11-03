@@ -57,6 +57,6 @@ export async function parseError(err: unknown): Promise<string> {
 }
 
 export function getExtension(filename: string): string {
-    const parts = filename.split('.');
-    return parts[parts.length - 1];
+    const parts = filename.split('.')
+    return parts[parts.length - 1]
 }
