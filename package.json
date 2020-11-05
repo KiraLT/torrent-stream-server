@@ -7,7 +7,7 @@
     "build": "npm run build-backend && npm run build-frontend",
     "build-backend": "tsc",
     "build-frontend": "npm run --prefix frontend build",
-    "postinstall": "npm --prefix frontend install",
+    "postinstall": "NODE_ENV=development npm --prefix frontend install",
     "uninstall": "rm -rf frontend/node_mobules",
     "start": "node lib/index.js",
     "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts",
