@@ -4,6 +4,8 @@ HTTP server to convert any torrent to video stream
 
 ![Demo](https://i.imgur.com/mIzSYWV.png)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
+
 ## Demo
 
 * `npm install`
