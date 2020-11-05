@@ -4,8 +4,9 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "setup": "npm run setup-backend && npm run setup-frontend && echo 'done'",
-    "build": "tsc && npm run --prefix frontend build",
+    "build": "build-backend && build-frontend",
+    "build-backend": "tsc",
+    "build-frontend": "npm run --prefix frontend build",
     "postinstall": "npm --prefix frontend install",
     "uninstall": "rm -rf frontend/node_mobules",
     "start": "node lib/index.js",
@@ -14,7 +15,8 @@
     "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
     "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
     "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'",
-    "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\""
+    "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
+    "heroku-cleanup": "rm -rf frontend/node_modules"
   },
   "author": "",
   "license": "ISC",
