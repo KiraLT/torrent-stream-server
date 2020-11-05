@@ -6,9 +6,10 @@ HTTP server to convert any torrent to video stream
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
 
-## Demo
+## Installation
 
 * `npm install`
+* `npm build`
 * `npm run start`
 * Go to http://127.0.0.1:3000
 
@@ -22,27 +23,20 @@ HTTP server to convert any torrent to video stream
 
 ## Development
 
-_Run backend dev server_
+> Frontend & backend are separate packages.
 
-* `npm run dev` - it will run TypeScript server with live reload.
+So during developemnt you will need to run two dev servers with live reload:
 
-> Please notice that it will use the prebuilt frontend already present in the repo. If you wish to change frontend, check [frontend readme](frontend/README.md)
-
-_Build backend_
-
-* `npm run build` - it will compile TypeScript code to JavaScript, required for `npm run start`.
-
-> Please notice that it will not build frontend. If you wish to build frontend, check [frontend readme](frontend/README.md)
-
-## Production
-
-`npm run start` - run prebuilt JS backend which includes prebuilt frontend
+* `npm run dev-backend` - start dev server on `3000` port
+* `npm run dev-frontend` - start dev server on  `3001` port
 
 ## Commands
 
-* `npm run build` - build TypeScript to JavaScript
-* `npm run start` - start HTTP server (JavaScript)
-* `npm run dev` - start HTTP server from source with live reload
+* `npm install` - will install both: frontend & backend
+* `npm run build` - will build backend to `lib` directory & frontend to `frontend/build`
+* `npm run start` - start HTTP server with frontend support
+* `npm run dev-backend` - start `backend` server with live reload on `3000` port
+* `npm run dev-frontend` - start `frontend` server with live reload on `3001` port
 
 ## Configuration
 
