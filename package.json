@@ -34,8 +34,8 @@
     "range-parser": "^1.2.1",
     "swagger-ui-express": "^4.1.4",
     "timeago.js": "^4.0.2",
-    "torrent-stream": "^1.2.0",
     "trammel": "^4.0.0",
+    "webtorrent": "^0.110.1",
     "winston": "^3.3.3",
     "winston-loggly-bulk": "^3.1.0",
     "yamljs": "^0.3.0"
@@ -55,7 +55,7 @@
     "@types/parse-torrent": "^5.8.3",
     "@types/pump": "^1.1.0",
     "@types/swagger-ui-express": "^4.1.2",
-    "@types/torrent-stream": "0.0.5",
+    "@types/webtorrent": "^0.109.0",
     "@types/yamljs": "^0.2.31",
     "nodemon": "^2.0.4",
     "ts-node": "^9.0.0",

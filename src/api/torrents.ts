@@ -2,10 +2,29 @@ import { Express } from 'express'
 import { Logger } from 'winston'
 import { NotFound } from 'http-errors'
 
-import { TorrentClient } from '../torrent'
 import { Config } from '../config'
 import { Torrent } from '../models'
-import { validateString } from '../helpers'
+import { validateString, getSteamUrl } from '../helpers'
+import { TorrentClient, TorrentClientTorrent } from '../helpers/torrents'
+
+function torrentToJson(v: TorrentClientTorrent): Torrent {
+    return {
+        name: v.name,
+        infoHash: v.infoHash,
+        downloadSpeed: v.getDownloadSpeed(),
+        downloaded: v.getDownloaded(),
+        link: v.link,
+        started: v.created.getTime(),
+        updated: v.updated.getTime(),
+        files: v.files.map((f) => ({
+            name: f.name,
+            path: f.path,
+            type: f.type,
+            length: f.length,
+            stream: getSteamUrl(v.link, f.path),
+        })),
+    }
+}
 
 export function setupTorrentsApi(
     app: Express,
@@ -15,20 +34,20 @@ export function setupTorrentsApi(
 ): Express {
     app.post<{}, Torrent, {}, { torrent: unknown }>('/api/torrents', async (req, res) => {
         const link = validateString(req.query.torrent, 'torrent')
-        const torrent = await client.addAndGet(link)
+        const torrent = await client.addTorrent(link)
 
-        res.json(torrent.getMeta())
+        res.json(torrentToJson(torrent))
     })
 
     app.get<{}, Torrent[], {}, {}>('/api/torrents', (_req, res) => {
-        return res.json(client.getAll().map((v) => v.getMeta()))
+        return res.json(client.getTorrents().map(torrentToJson))
     })
 
     app.get<{ id: string }, Torrent, {}, {}>('/api/torrents/:id', (req, res) => {
-        const torrent = client.get(validateString(req.params.id, 'id'))
+        const torrent = client.getTorrent(validateString(req.params.id, 'id'))
 
         if (torrent) {
-            return res.json(torrent.getMeta())
+            return res.json(torrentToJson(torrent))
         }
 
         throw new NotFound()

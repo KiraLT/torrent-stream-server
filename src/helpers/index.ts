@@ -1,4 +1,3 @@
-import checkDiskSpace from 'check-disk-space'
 import { BadRequest } from 'http-errors'
 
 const trammel = require('trammel')
@@ -30,4 +29,20 @@ export function validateString(value: unknown, name: string): string {
 
 export function getSteamUrl(link: string, file: string): string {
     return `/stream?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(file)}`
+}
+
+export async function asyncReplaceError<T>(callback: () => Promise<T>, error: new(...args: any[]) => any): Promise<T> {
+    try {
+        return await callback()
+    } catch (err) {
+        throw new error(err instanceof Error ? err.message : err)
+    }
+}
+
+export function replaceError<T>(callback: () => T, error: new(...args: any[]) => any): T {
+    try {
+        return callback()
+    } catch (err) {
+        throw new error(err instanceof Error ? err.message : err)
+    }
 }

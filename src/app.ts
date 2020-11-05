@@ -6,7 +6,7 @@ import YAML from 'yamljs'
 import swaggerUi from 'swagger-ui-express'
 import { Unauthorized, Forbidden, NotFound } from 'http-errors'
 
-import { TorrentClient } from './torrent'
+import { TorrentClient, WebtorrentTorrentAdapter } from './helpers/torrents'
 import { setupStreamApi } from './api/stream'
 import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
@@ -44,19 +44,27 @@ export async function setup(): Promise<void> {
     const logger = createLogger(config)
 
     const app = createApp(config, logger)
-    const client = await TorrentClient.create(config, logger)
+    const client = new TorrentClient(
+        {
+            autocleanInternal: config.torrents.autocleanInternal,
+        },
+        new WebtorrentTorrentAdapter({
+            path: config.torrents.path,
+        }),
+        logger
+    )
 
     app.get('/status', (_req, res) => res.send({ status: 'ok' }))
 
     if (config.security.apiEnabled) {
-        if (config.security.apiKey || config.security.streamApi) {
+        if (config.security.apiKey || config.security.streamApi.key) {
             logger.info('Enabled API security')
 
             app.use('/api/', (req, _res, next) => {
                 const [type, token] = (req.headers.authorization || '').split(' ')
                 const correctKey =
                     config.security.apiKey ||
-                    (config.security.streamApi && config.security.streamApi.key)
+                    config.security.streamApi.key
 
                 if (type === '') {
                     throw new Unauthorized()
@@ -72,9 +80,9 @@ export async function setup(): Promise<void> {
 
         setupTorrentsApi(app, config, logger, client)
         setupStreamApi(app, config, logger, client)
-        setupUsageApi(app, config, logger, client)
-        setupBrowseApi(app, config, logger, client)
-        setupAuthApi(app, config, logger, client)
+        setupUsageApi(app, config, logger)
+        setupBrowseApi(app, config, logger)
+        setupAuthApi(app, config, logger)
 
         app.use('/api/?*', () => {
             throw new NotFound()

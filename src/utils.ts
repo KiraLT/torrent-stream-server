@@ -20,7 +20,7 @@ export function signJwtToken(data: object | string, key: string): string {
     return sign(data, key)
 }
 
-export function verifyJwrRoken<T extends object | string>(
+export function verifyJwtToken<T extends object | string>(
     token: string,
     key: string,
     maxAge: string

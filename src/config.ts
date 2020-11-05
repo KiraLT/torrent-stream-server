@@ -26,8 +26,8 @@ export interface Config {
         autocleanInternal: number
     }
     security: {
-        streamApi?: {
-            key: string
+        streamApi: {
+            key?: string
             maxAge: string
         }
         frontendEnabled: boolean
@@ -62,7 +62,9 @@ const defaultConfig: Config = {
         autocleanInternal: 60 * 60,
     },
     security: {
-        streamApi: undefined,
+        streamApi: {
+            maxAge: '6h'
+        },
         apiKey: undefined,
         frontendEnabled: true,
         apiEnabled: true,

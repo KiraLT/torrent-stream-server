@@ -2,18 +2,12 @@ import { Express } from 'express'
 import { Logger } from 'winston'
 import { BadRequest } from 'http-errors'
 
-import { TorrentClient } from '../torrent'
 import { Config } from '../config'
 import { getProvidersInfo, search, isProviderSupported } from '../helpers/torrent-search'
 import { Provider, ProviderTorrent } from '../models'
 import { validateString } from '../helpers'
 
-export function setupBrowseApi(
-    app: Express,
-    _config: Config,
-    _logger: Logger,
-    _client: TorrentClient
-): Express {
+export function setupBrowseApi(app: Express, _config: Config, _logger: Logger): Express {
     app.get<{}, ProviderTorrent[], {}, Record<'query' | 'category' | 'provider', unknown>>(
         '/api/browse/search',
         async (req, res) => {
