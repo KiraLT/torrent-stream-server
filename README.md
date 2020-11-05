@@ -1,4 +1,8 @@
-# torrent-stream-server
+# Torrent Stream Server
+
+![Docker](https://github.com/KiraLT/torrent-stream-server/workflows/Docker/badge.svg?branch=master)
+![CodeQL](https://github.com/KiraLT/torrent-stream-server/workflows/CodeQL/badge.svg?branch=master)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/KiraLT/torrent-stream-server)
 
 HTTP server to convert any torrent to video stream
 
