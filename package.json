@@ -23,6 +23,9 @@
         "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
         "heroku-cleanup": "rm -rf frontend/node_modules"
     },
+    "bin": {
+        "torrent-stream-server": "scripts/torrent-stream-server"
+    },
     "author": "",
     "license": "ISC",
     "dependencies": {
