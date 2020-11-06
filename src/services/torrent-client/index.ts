@@ -26,15 +26,14 @@ export interface TorrentClientConfig {
 }
 
 export class TorrentClient {
-    torrents: Record<string, TorrentClientTorrent> = {}
+    protected torrents: Record<string, TorrentClientTorrent> = {}
+    protected cleanLocked: boolean = false
 
     constructor(
         protected config: TorrentClientConfig,
         protected adapter: TorrentAdapter,
         protected logger: Logger
-    ) {
-        this.periodCheck()
-    }
+    ) {}
 
     getTorrents(): TorrentClientTorrent[] {
         return Object.values(this.torrents)
@@ -90,17 +89,32 @@ export class TorrentClient {
         }))
 
         this.torrents[torrent.infoHash] = torrent
+
+        setTimeout(() => {
+            this.checkForExpiredTorrents().catch(err => {
+                this.logger.error(err)
+            })
+        }, 1000)
+
         return torrent
     }
 
-    public async periodCheck(): Promise<void> {
-        const torrentToRemove = Object.values(this.torrents).filter(
-            (torrent) =>
-                Date.now() - torrent.updated.getTime() > this.config.autocleanInternal * 1000
-        )
-        for (const torrent of torrentToRemove) {
-            this.logger.info(`Removing expired ${torrent.name} torrent`)
-            await this.removeTorrent(torrent.infoHash)
+    protected async checkForExpiredTorrents(): Promise<void> {
+        if (this.cleanLocked) {
+            return
+        }
+        this.cleanLocked = true
+        try {
+            const torrentToRemove = Object.values(this.torrents).filter(
+                (torrent) =>
+                    Date.now() - torrent.updated.getTime() > this.config.autocleanInternal * 1000
+            )
+            for (const torrent of torrentToRemove) {
+                this.logger.info(`Removing expired ${torrent.name} torrent`)
+                await this.removeTorrent(torrent.infoHash)
+            }
+        } finally {
+            this.cleanLocked = false
         }
     }
 }
