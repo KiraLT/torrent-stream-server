@@ -1,5 +1,9 @@
-import yargs from 'yargs'
+import yargs, { Argv } from 'yargs'
 
 import { serveCommand } from './serve'
 
-yargs(process.argv.slice(2)).command(serveCommand).demandCommand().help().argv
+export const buildCli = (args: string[]) => yargs(args).command(serveCommand).demandCommand().help()
+
+if (!module.parent) {
+    buildCli(process.argv.slice(2)).argv
+}

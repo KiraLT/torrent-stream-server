@@ -15,4 +15,4 @@ COPY frontend/public/ frontend/public/
 RUN npm run build-frontend && rm -rf ./frontend/node_modules
 
 EXPOSE 3000
-CMD node lib/index.js
+CMD node lib/cli/index.js serve

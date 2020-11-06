@@ -63,9 +63,7 @@ export async function setup(options?: { configFile: string }): Promise<void> {
 
             app.use('/api/', (req, _res, next) => {
                 const [type, token] = (req.headers.authorization || '').split(' ')
-                const correctKey =
-                    config.security.apiKey ||
-                    config.security.streamApi.key
+                const correctKey = config.security.apiKey || config.security.streamApi.key
 
                 if (type === '') {
                     throw new Unauthorized()

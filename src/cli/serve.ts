@@ -14,16 +14,16 @@ export const serveCommand: CommandModule<{}, ServeArgs> = {
             type: 'string',
             alias: 'c',
             desc: 'path to JSON config',
-        }
+        },
     },
     async handler({ config }) {
         try {
             await setup({
-                configFile: config
+                configFile: config,
             })
         } catch (err) {
             console.error(String(err))
             process.exit(1)
         }
-    }
+    },
 }

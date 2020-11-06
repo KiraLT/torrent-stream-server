@@ -63,7 +63,7 @@ const defaultConfig: Config = {
     },
     security: {
         streamApi: {
-            maxAge: '6h'
+            maxAge: '6h',
         },
         apiKey: undefined,
         frontendEnabled: true,
@@ -74,7 +74,10 @@ const defaultConfig: Config = {
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
         return path
-            ? merge(defaultConfig, JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })))
+            ? merge(
+                  defaultConfig,
+                  JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' }))
+              )
             : defaultConfig
     } catch (error) {
         throw Error(`Failed to read config from ${path} - ${error}`)

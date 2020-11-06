@@ -91,7 +91,7 @@ export class TorrentClient {
         this.torrents[torrent.infoHash] = torrent
 
         setTimeout(() => {
-            this.checkForExpiredTorrents().catch(err => {
+            this.checkForExpiredTorrents().catch((err) => {
                 this.logger.error(err)
             })
         }, 1000)
