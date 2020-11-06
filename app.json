@@ -1,6 +1,6 @@
 {
     "name": "Torrent Stream Server",
-    "description": "Backend server for Live Torrent project",
+    "description": "HTTP server to convert any torrent to video stream",
     "repository": "https://github.com/KiraLT/torrent-stream-server",
     "logo": "https://raw.githubusercontent.com/KiraLT/torrent-stream-server/master/frontend/public/ico.png",
     "keywords": [
@@ -14,6 +14,5 @@
         "torrent-search",
         "video-stream"
     ],
-    "image": "davenchy/live-torrent-backend",
     "success_url": "/"
 }
