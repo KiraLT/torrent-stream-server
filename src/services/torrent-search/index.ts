@@ -7,7 +7,7 @@ export const providers = {
     [ThepiratebayProvider.providerName]: new ThepiratebayProvider(),
 }
 
-export type Provider = keyof typeof providers
+export type TorrentProvider = keyof typeof providers
 
 export interface ProviderInfo extends ProviderMeta {
     name: string
@@ -26,7 +26,7 @@ export async function getProvidersInfo(): Promise<ProviderInfo[]> {
 }
 
 export async function search(
-    searchProviders: Provider[],
+    searchProviders: TorrentProvider[],
     query: string,
     options: ProviderSearchOptions
 ): Promise<ProviderResult[]> {
@@ -38,7 +38,7 @@ export async function search(
     return providers[provider].search(query, options)
 }
 
-export function isProviderSupported(name: unknown): name is Provider {
+export function isProviderSupported(name: unknown): name is TorrentProvider {
     if (typeof name === 'string' && name in providers) {
         return true
     }

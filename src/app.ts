@@ -39,8 +39,9 @@ function createApp(config: Config, logger: Logger): Express {
     return app
 }
 
-export async function setup(): Promise<void> {
-    const config = await readConfig(process.argv[2])
+export async function setup(options?: { configFile: string }): Promise<void> {
+    const { configFile } = options || {}
+    const config = await readConfig(configFile)
     const logger = createLogger(config)
 
     const app = createApp(config, logger)

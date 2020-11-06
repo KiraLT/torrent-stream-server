@@ -1,3 +1,5 @@
-import { setup } from './app'
-
-setup()
+export * from './app'
+export * from './config'
+export * from './api'
+export * from './models'
+export * from './services'
