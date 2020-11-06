@@ -1,7 +1,7 @@
 {
     "name": "torrents-stream-server",
     "version": "1.4.0",
-    "description": "",
+    "description": "HTTP server to convert any torrent to video stream",
     "main": "lib/index.js",
     "files": [
         "lib/**/*",
@@ -15,7 +15,7 @@
         "postinstall": "NODE_ENV=development npm --prefix frontend install",
         "uninstall": "rm -rf frontend/node_mobules",
         "start": "node lib/cli/index.js serve",
-        "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts",
+        "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/cli/index.ts serve",
         "dev-frontend": "npm --prefix frontend run start",
         "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
         "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
