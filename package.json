@@ -1,33 +1,14 @@
 {
     "name": "torrents-stream-server",
-    "version": "1.4.0",
     "description": "HTTP server to convert any torrent to video stream",
-    "main": "lib/index.js",
-    "files": [
-        "lib/**/*",
-        "frontend/build/**/*",
-        "swagger.yaml"
-    ],
-    "scripts": {
-        "build": "npm run build-backend && npm run build-frontend",
-        "build-backend": "tsc",
-        "build-frontend": "npm run --prefix frontend build",
-        "postinstall": "NODE_ENV=development npm --prefix frontend install",
-        "uninstall": "rm -rf frontend/node_mobules",
-        "start": "node lib/cli/index.js serve",
-        "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/cli/index.ts serve",
-        "dev-frontend": "npm --prefix frontend run start",
-        "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
-        "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
-        "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'",
-        "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
-        "heroku-cleanup": "rm -rf frontend/node_modules"
-    },
+    "version": "1.4.0",
+    "author": "KiraLT",
     "bin": {
         "torrent-stream-server": "scripts/torrent-stream-server"
     },
-    "author": "",
-    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/KiraLT/torrent-stream-server/issues"
+    },
     "dependencies": {
         "check-disk-space": "^2.1.0",
         "cheerio": "^1.0.0-rc.3",
@@ -81,6 +62,26 @@
     "engines": {
         "node": "12.x"
     },
+    "files": [
+        "lib/**/*",
+        "scripts/**/*",
+        "frontend/build/**/*",
+        "swagger.yaml"
+    ],
+    "homepage": "https://github.com/KiraLT/torrent-stream-server",
+    "keywords": [
+        "html5-video",
+        "stream",
+        "torrent",
+        "torrent-client",
+        "torrent-downloader",
+        "torrent-search",
+        "torrents",
+        "video",
+        "video-stream"
+    ],
+    "license": "MIT",
+    "main": "lib/index.js",
     "prettier": {
         "printWidth": 100,
         "semi": false,
@@ -89,5 +90,24 @@
         "trailingComma": "es5",
         "arrowParens": "always",
         "proseWrap": "always"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/KiraLT/torrent-stream-server.git"
+    },
+    "scripts": {
+        "build": "npm run build-backend && npm run build-frontend",
+        "build-backend": "tsc",
+        "build-frontend": "npm run --prefix frontend build",
+        "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
+        "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'",
+        "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
+        "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/cli/index.ts serve",
+        "dev-frontend": "npm --prefix frontend run start",
+        "heroku-cleanup": "rm -rf frontend/node_modules",
+        "postinstall": "NODE_ENV=development npm --prefix frontend install",
+        "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
+        "start": "node lib/cli/index.js serve",
+        "uninstall": "rm -rf frontend/node_mobules"
     }
 }
