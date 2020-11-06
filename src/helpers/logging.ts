@@ -3,7 +3,7 @@ import winston, { Logger } from 'winston'
 import expressWinston from 'express-winston'
 const { Loggly } = require('winston-loggly-bulk')
 
-import { Config } from './config'
+import { Config } from '../config'
 
 export function createLogger(config: Config): Logger {
     return winston.createLogger(getLoggerParams(config))

@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 
 import { Provider, ProviderSearchOptions, ProviderFeature } from '.'
 import { formatMagnet } from '../helpers'
-import { formatBytes } from '../../../utils'
+import { formatBytes } from '../../../helpers'
 
 export interface ThepiratebayItem {
     id: string

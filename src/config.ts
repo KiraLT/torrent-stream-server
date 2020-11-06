@@ -1,7 +1,7 @@
 import { readFile } from 'fs'
 import { promisify } from 'util'
 
-import { merge } from './utils'
+import { merge } from './helpers'
 
 export interface Config {
     host: string
@@ -74,13 +74,9 @@ const defaultConfig: Config = {
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
         return path
-            ? mergeConfig(JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })))
+            ? merge(defaultConfig, JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })))
             : defaultConfig
     } catch (error) {
         throw Error(`Failed to read config from ${path} - ${error}`)
     }
-}
-
-function mergeConfig(config: {}): Config {
-    return merge(defaultConfig, config)
 }

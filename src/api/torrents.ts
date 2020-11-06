@@ -4,8 +4,9 @@ import { NotFound } from 'http-errors'
 
 import { Config } from '../config'
 import { Torrent } from '../models'
-import { validateString, getSteamUrl } from '../helpers'
-import { TorrentClient, TorrentClientTorrent } from '../helpers/torrents'
+import { getSteamUrl } from '../helpers'
+import { validateString } from '../helpers/validation'
+import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
 
 function torrentToJson(v: TorrentClientTorrent): Torrent {
     return {

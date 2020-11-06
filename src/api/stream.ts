@@ -4,10 +4,10 @@ import { Express } from 'express'
 import { Logger } from 'winston'
 import { Forbidden, NotFound } from 'http-errors'
 
-import { TorrentClient } from '../helpers/torrents'
+import { TorrentClient } from '../services/torrent-client'
 import { Config } from '../config'
-import { verifyJwtToken } from '../utils'
-import { validateString } from '../helpers'
+import { verifyJwtToken } from '../helpers'
+import { validateString } from '../helpers/validation'
 
 export function setupStreamApi(
     app: Express,

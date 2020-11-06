@@ -3,9 +3,9 @@ import { Logger } from 'winston'
 import { BadRequest } from 'http-errors'
 
 import { Config } from '../config'
-import { getProvidersInfo, search, isProviderSupported } from '../helpers/torrent-search'
+import { getProvidersInfo, search, isProviderSupported } from '../services/torrent-search'
 import { Provider, ProviderTorrent } from '../models'
-import { validateString } from '../helpers'
+import { validateString } from '../helpers/validation'
 
 export function setupBrowseApi(app: Express, _config: Config, _logger: Logger): Express {
     app.get<{}, ProviderTorrent[], {}, Record<'query' | 'category' | 'provider', unknown>>(

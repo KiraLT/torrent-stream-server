@@ -2,8 +2,6 @@ import fetch from 'node-fetch'
 import { load } from 'cheerio'
 
 import { Provider, ProviderSearchOptions, ProviderFeature } from '.'
-import { formatMagnet } from '../helpers'
-import { formatBytes } from '../../../utils'
 
 export class X1337Provider extends Provider {
     static providerName = '1337x' as const

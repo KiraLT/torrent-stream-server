@@ -1,6 +1,4 @@
-import { BadRequest } from 'http-errors'
-
-const trammel = require('trammel')
+import { sign, verify } from 'jsonwebtoken'
 
 export function exists(json: any, key: string) {
     const value = json[key]
@@ -11,38 +9,53 @@ export function mapValues(data: any, fn: (item: any) => any) {
     return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {})
 }
 
-export async function getUsedSpace(path: string): Promise<number> {
-    return await trammel(path, { type: 'raw' })
-}
-
-export function validateString(value: unknown, name: string): string {
-    if (value == null || !value) {
-        throw new BadRequest(`${name} is required`)
-    }
-
-    if (typeof value === 'string') {
-        return value
-    }
-
-    throw new BadRequest(`${name} must be string`)
-}
-
 export function getSteamUrl(link: string, file: string): string {
     return `/stream?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(file)}`
 }
 
-export async function asyncReplaceError<T>(callback: () => Promise<T>, error: new(...args: any[]) => any): Promise<T> {
+export function merge(current: any, update: any): any {
+    current = { ...current }
+    Object.keys(update).forEach(function (key) {
+        if (
+            current.hasOwnProperty(key) &&
+            typeof current[key] === 'object' &&
+            !(current[key] instanceof Array)
+        ) {
+            current[key] = merge(current[key], update[key])
+        } else {
+            current[key] = update[key]
+        }
+    })
+    return current
+}
+
+export function signJwtToken(data: object | string, key: string): string {
+    return sign(data, key)
+}
+
+export function verifyJwtToken<T extends object | string>(
+    token: string,
+    key: string,
+    maxAge: string
+): T | undefined {
     try {
-        return await callback()
-    } catch (err) {
-        throw new error(err instanceof Error ? err.message : err)
+        return verify(token, key, {
+            maxAge,
+        }) as any
+    } catch (error) {
+        console.log(error)
+        return undefined
     }
 }
 
-export function replaceError<T>(callback: () => T, error: new(...args: any[]) => any): T {
-    try {
-        return callback()
-    } catch (err) {
-        throw new error(err instanceof Error ? err.message : err)
-    }
+export function formatBytes(bytes: number, decimals: number = 2): string {
+    if (bytes === 0) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
