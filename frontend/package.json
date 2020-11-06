@@ -1,5 +1,5 @@
 {
-    "name": "demo",
+    "name": "torrents-stream-server-frontend",
     "version": "1.4.0",
     "private": true,
     "dependencies": {
