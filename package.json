@@ -3,6 +3,7 @@
     "version": "1.4.0",
     "description": "",
     "main": "lib/index.js",
+    "files": ["lib/**/*", "frontend/build/**/*", "swagger.yaml"],
     "scripts": {
         "build": "npm run build-backend && npm run build-frontend",
         "build-backend": "tsc",

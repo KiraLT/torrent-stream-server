@@ -27,7 +27,7 @@ function createApp(config: Config, logger: Logger): Express {
     app.use(express.json())
 
     if (config.environment === 'development') {
-        const swaggerDocument = YAML.load(resolve(__dirname, 'swagger.yaml'))
+        const swaggerDocument = YAML.load(resolve(__dirname, '../swagger.yaml'))
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
     }
 
