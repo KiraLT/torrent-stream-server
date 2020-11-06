@@ -1,4 +1,4 @@
-import yargs, { Argv } from 'yargs'
+import yargs from 'yargs'
 
 import { serveCommand } from './serve'
 
