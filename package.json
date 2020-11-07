@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "author": "KiraLT",
     "bin": {
-        "torrent-stream-server": "scripts/torrent-stream-server"
+        "torrent-stream-server": "lib/index.js"
     },
     "bugs": {
         "url": "https://github.com/KiraLT/torrent-stream-server/issues"
@@ -64,7 +64,6 @@
     },
     "files": [
         "lib/**/*",
-        "scripts/**/*",
         "frontend/build/**/*",
         "swagger.yaml"
     ],
