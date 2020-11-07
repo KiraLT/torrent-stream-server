@@ -18,6 +18,8 @@ import { ApiError, ApiErrorFromJSON, ApiErrorToJSON } from '../models'
 export interface GetStreamRequest {
     torrent?: string
     file?: string
+    fileType?: string
+    fileIndex?: string
     token?: string
 }
 
@@ -36,6 +38,14 @@ export class StreamApi extends runtime.BaseAPI {
 
         if (requestParameters.file !== undefined) {
             queryParameters['file'] = requestParameters.file
+        }
+
+        if (requestParameters.fileType !== undefined) {
+            queryParameters['fileType'] = requestParameters.fileType
+        }
+
+        if (requestParameters.fileIndex !== undefined) {
+            queryParameters['fileIndex'] = requestParameters.fileIndex
         }
 
         if (requestParameters.token !== undefined) {

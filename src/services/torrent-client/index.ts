@@ -3,6 +3,7 @@ import parseTorrent from 'parse-torrent'
 import { Logger } from 'winston'
 import { lookup } from 'mime-types'
 import { BadRequest } from 'http-errors'
+import { extname } from 'path'
 
 import { TorrentAdapter, TorrentAdapterTorrent, TorrentAdapterFile } from './adapters'
 
@@ -117,4 +118,44 @@ export class TorrentClient {
             this.cleanLocked = false
         }
     }
+}
+
+export interface FindFileOptions {
+    /**
+     * Case insensitive file name or path
+     */
+    file?: string
+    /**
+     * File index (starting from `1`)
+     */
+    fileIndex?: number
+    /**
+     * Case insensitive file mime type (e.g. `video`, `video/mp4`, `mp4`) or file extension (e.g. `.mp4`, `mp4`)
+     */
+    fileType?: string
+}
+
+/**
+ * Find a file by given options, returns the biggest file
+ * @param files
+ * @param options
+ */
+export function findFile(
+    files: TorrentClientFile[],
+    options: FindFileOptions
+): TorrentClientFile | undefined {
+    const filteredFiles = files.filter(
+        (f, i) =>
+            (options.fileIndex === undefined || options.fileIndex == i + 1) &&
+            (options.file === undefined ||
+                [f.name, f.path.replace(/^\//, '')]
+                    .map((v) => v.toLowerCase())
+                    .includes(options.file.replace(/^\//, '').toLowerCase())) &&
+            (options.fileType === undefined ||
+                [...f.type.split('/'), f.type, extname(f.name)]
+                    .map((v) => v.toLowerCase().replace('.', ''))
+                    .includes(options.fileType.toLowerCase().replace('.', '')))
+    )
+
+    return filteredFiles.find((f) => options.file && f.path === options.file) || [...filteredFiles].sort((a, b) => b.length - a.length)[0]
 }

@@ -100,7 +100,7 @@
         "build-frontend": "npm run --prefix frontend build",
         "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
         "build-swagger-backend": "cp frontend/src/helpers/client/models/* src/models && find src/models -name '*.ts' -print0 | xargs -0 sed -i 's/..\\/runtime/..\\/helpers/g'",
-        "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i src/swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
+        "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i swagger.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
         "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts serve",
         "dev-frontend": "npm --prefix frontend run start",
         "heroku-cleanup": "rm -rf frontend/node_modules",

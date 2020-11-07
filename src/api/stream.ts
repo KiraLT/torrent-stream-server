@@ -4,10 +4,10 @@ import { Express } from 'express'
 import { Logger } from 'winston'
 import { Forbidden, NotFound } from 'http-errors'
 
-import { TorrentClient } from '../services/torrent-client'
+import { TorrentClient, findFile } from '../services/torrent-client'
 import { Config } from '../config'
 import { verifyJwtToken } from '../helpers'
-import { validateString } from '../helpers/validation'
+import { validateString, validateInt } from '../helpers/validation'
 
 export function setupStreamApi(
     app: Express,
@@ -15,13 +15,13 @@ export function setupStreamApi(
     _logger: Logger,
     client: TorrentClient
 ): Express {
-    app.get<{}, {}, {}, Record<'torrent' | 'file' | 'token', unknown>>(
+    app.get<{}, {}, {}, Record<'torrent' | 'file' | 'token' | 'fileType' | 'fileIndex', unknown>>(
         '/stream',
         async (req, res) => {
             const encodeToken = config.security.streamApi.key || config.security.apiKey
 
             const data = encodeToken
-                ? verifyJwtToken<Record<'torrent' | 'file', unknown>>(
+                ? verifyJwtToken<Record<'torrent' | 'file' | 'fileType' | 'fileIndex', unknown>>(
                       validateString(req.query.token, 'token'),
                       encodeToken,
                       config.security.streamApi.maxAge
@@ -33,15 +33,16 @@ export function setupStreamApi(
             }
 
             const link = validateString(data.torrent, 'torrent')
-            const fileName = validateString(data.file, 'file')
 
             const torrent = await client.addTorrent(link)
 
-            const file =
-                torrent.files.find((f) => f.path === fileName) ||
-                torrent.files.find((f) => f.name === fileName) ||
-                torrent.files.find((f) => f.type.includes('video')) ||
-                torrent.files[0]
+            const file = findFile(torrent.files, {
+                file: 'file' in data ? validateString(data.file, 'file') : undefined,
+                fileIndex:
+                    'fileIndex' in data ? validateInt(data.fileIndex, 'fileIndex') : undefined,
+                fileType:
+                    'fileType' in data ? validateString(data.fileType, 'fileType') : undefined,
+            })
 
             if (!file) {
                 throw new NotFound()

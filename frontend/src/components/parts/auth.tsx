@@ -30,10 +30,14 @@ export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>)
         }, [bearerRequired, setBearerRequired])
 
         if (bearerRequired === undefined) {
-            return (
-                error ? <Container><Alert variant="danger" className="mt-2">
-                    {error}
-                </Alert></Container> : <div className="d-flex justify-content-center mt-5">
+            return error ? (
+                <Container>
+                    <Alert variant="danger" className="mt-2">
+                        {error}
+                    </Alert>
+                </Container>
+            ) : (
+                <div className="d-flex justify-content-center mt-5">
                     <div className="spinner-border" role="status">
                         <span className="sr-only">Loading...</span>
                     </div>

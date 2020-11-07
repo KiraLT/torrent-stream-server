@@ -105,6 +105,7 @@ paths:
     /stream:
         get:
             operationId: getStream
+            description: 'Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).'
             tags:
                 - stream
             parameters:
@@ -115,12 +116,22 @@ paths:
                       type: string
                 - in: query
                   name: file
-                  description: file name to stream, by default takes first file
+                  description: Case insensitive file name or path
+                  schema:
+                      type: string
+                - in: query
+                  name: fileType
+                  description: Case insensitive file mime type (e.g. `video`, `video/mp4`, `mp4`) or file extension (e.g. `.mp4`, `mp4`)
+                  schema:
+                      type: string
+                - in: query
+                  name: fileIndex
+                  description: File index (starting from `1`)
                   schema:
                       type: string
                 - in: query
                   name: token
-                  description: JWT token with `torrent` & `file` parameters as payload
+                  description: JWT token with other parameters as payload
                   schema:
                       type: string
             responses:
