@@ -1,24 +1,9 @@
 # Torrent Stream Server
 
-![Docker](https://github.com/KiraLT/torrent-stream-server/workflows/Docker/badge.svg?branch=master)
-![CodeQL](https://github.com/KiraLT/torrent-stream-server/workflows/CodeQL/badge.svg?branch=master)
+[![Docker](https://github.com/KiraLT/torrent-stream-server/workflows/Docker/badge.svg?branch=master)](https://github.com/users/KiraLT/packages/container/package/torrent-stream-server)
+[![CodeQL](https://github.com/KiraLT/torrent-stream-server/workflows/CodeQL/badge.svg?branch=master)](https://github.com/KiraLT/torrent-stream-server/actions?query=workflow%3ACodeQL)
 [![Dependencies](https://david-dm.org/KiraLT/torrent-stream-server.svg)](https://david-dm.org/KiraLT/torrent-stream-server)
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
-
-HTTP server to convert any torrent to video stream
-
-![Demo](https://i.imgur.com/mIzSYWV.png)
-
-## Installation
-
-* `npm install`
-* `npm build`
-* `npm run start`
-* Go to http://127.0.0.1:3000
-
-> This will run prebuild server
+[![npm version](https://badge.fury.io/js/torrent-stream-server.svg)](https://www.npmjs.com/package/torrent-stream-server)
 
 **Whats new:**
 
@@ -26,7 +11,25 @@ HTTP server to convert any torrent to video stream
 * Stream any file from the torrent - [preview](https://i.imgur.com/qRmicai.png)
 * Monitor activity - [preview](https://i.imgur.com/aPTcl9P.png)
 
+HTTP server to convert any torrent to video stream
+
+![Demo](https://i.imgur.com/mIzSYWV.png)
+
+## Installation
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
+
+### NPM package:
+
+* `npm install -g torrent-stream-server`
+* `torrent-stream-server serve`
+* Go to http://127.0.0.1:3000
+
 ## Development
+
+One-click ready-to-code development environments:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
 
 > Frontend & backend are separate packages.
 
