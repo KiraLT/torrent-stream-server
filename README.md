@@ -85,7 +85,7 @@ API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/docs/swag
 2. To generate frontend client (`frontend/src/helpers/client`)
 3. To generate backend models (`src/models`)
 
-> [Check documentation](https://kiralt.github.io/torrent-stream-server/src/swagger.html)
+> [Check documentation](https://kiralt.github.io/torrent-stream-server/docs/swagger.html)
 
 ### Example
 Running the following command from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
