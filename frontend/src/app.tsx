@@ -7,6 +7,8 @@ import { defaultState } from './config'
 import { ContentComponent } from './components/content'
 import { register } from './serviceWorker'
 
+import 'bootstrap/dist/css/bootstrap.css'
+
 export function initApp(target: HTMLElement | null): void {
     setupState()
     registerWebworker()
