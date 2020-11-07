@@ -1,6 +1,6 @@
 {
     "name": "torrents-stream-server-frontend",
-    "version": "1.4.0",
+    "version": "0.0.0",
     "private": true,
     "dependencies": {
         "bootstrap": "^4.5.3",
