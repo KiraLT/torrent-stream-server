@@ -53,6 +53,9 @@ export async function parseError(err: unknown): Promise<string> {
             return `Server returned error: ${err.statusText}`
         }
     }
+    if (err instanceof Error) {
+        return err.message
+    }
     return String(err)
 }
 

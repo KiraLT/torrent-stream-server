@@ -4,6 +4,7 @@ import { Container, Form, Col, Button, Alert } from 'react-bootstrap'
 
 import { AuthApi } from '../../helpers/client'
 import { getApiConfig } from '../../config'
+import { parseError } from '../../helpers'
 
 export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>): ComponentType<T> {
     return (props) => {
@@ -18,11 +19,11 @@ export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>)
                     .then(() => {
                         setBearerRequired(false)
                     })
-                    .catch((err) => {
+                    .catch(async (err) => {
                         if (err instanceof Response && err.status === 401) {
                             setBearerRequired(true)
                         } else {
-                            setError('Failed to authorize')
+                            setError(`Failed to authorize: ${await parseError(err)}`)
                         }
                     })
             }
@@ -30,7 +31,9 @@ export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>)
 
         if (bearerRequired === undefined) {
             return (
-                <div className="d-flex justify-content-center mt-5">
+                error ? <Container><Alert variant="danger" className="mt-2">
+                    {error}
+                </Alert></Container> : <div className="d-flex justify-content-center mt-5">
                     <div className="spinner-border" role="status">
                         <span className="sr-only">Loading...</span>
                     </div>
