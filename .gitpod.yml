@@ -1,0 +1,11 @@
+tasks:
+- init: npm install --ignore-scripts
+  command: npm run dev-backend
+- init: npm install --prefix frontend
+  command: npm run dev-frontend
+  openMode: split-bottom
+ports:
+  - port: 3000
+    onOpen: notify
+  - port: 3001
+    onOpen: open-browser
