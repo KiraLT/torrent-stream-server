@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { Alert } from 'react-bootstrap'
+import isMobile from 'ismobilejs'
 
 import { TorrentsApi, Torrent, TorrentFile } from '../helpers/client'
 import { getApiConfig, apiDomain } from '../config'
@@ -194,12 +195,24 @@ function TextComponent({ text }: { text: string }): JSX.Element {
 }
 
 function VideoPlayerComponent({ video, type }: { video: string; type: string }): JSX.Element {
-    return (
+    const device = isMobile(window.navigator)
+
+    return <>
+        {type === 'video/x-matroska' && <Alert variant="warning" className="mt-2">
+                Browser does not support Matroska subtitles, it's recommended to use native player.<br />
+            {device.any ? <>
+                {device.android.device && <>
+                    In <a href="https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.ad" target="_blank" rel="noreferrer">MX Player</a> click Network stream and paste stream link.
+                </>}
+            </> : <>
+                In <a href="https://www.videolan.org/vlc/index.html" target="_blank" rel="noreferrer">VLC</a> click Media {'>'} Open Network Stream and paste stream link.
+            </>}
+        </Alert>}
         <div className="embed-responsive embed-responsive-16by9">
             <video width="720" controls>
-                <source src={video} type={type} />
+                <source src={video} />
                 Your browser does not support HTML5 video.
             </video>
         </div>
-    )
+    </>
 }
