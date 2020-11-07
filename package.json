@@ -1,5 +1,5 @@
 {
-    "name": "torrents-stream-server",
+    "name": "torrent-stream-server",
     "description": "HTTP server to convert any torrent to video stream",
     "version": "0.0.0",
     "author": "KiraLT",
