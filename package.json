@@ -106,7 +106,7 @@
         "heroku-cleanup": "rm -rf frontend/node_modules",
         "postinstall": "[ ! -d frontend/src ] || (NODE_ENV=development npm --prefix frontend install)",
         "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
-        "start": "node lib/cli/index.js serve",
+        "start": "node lib/index.js serve",
         "uninstall": "rm -rf frontend/node_mobules"
     }
 }
