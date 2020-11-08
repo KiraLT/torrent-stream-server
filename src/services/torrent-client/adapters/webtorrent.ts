@@ -1,7 +1,8 @@
-import { TorrentAdapter, TorrentAdapterTorrent, TorrentAdapterConfig } from '.'
 import WebTorrent from 'webtorrent'
 import { promisify } from 'util'
 import { mkdir } from 'fs'
+
+import { TorrentAdapter, TorrentAdapterTorrent, TorrentAdapterConfig, TorrentAdapterAddOptions } from '.'
 
 export class WebtorrentTorrentAdapter extends TorrentAdapter {
     protected client: WebTorrent.Instance
@@ -11,11 +12,12 @@ export class WebtorrentTorrentAdapter extends TorrentAdapter {
         this.client = new WebTorrent()
     }
 
-    async add(magnet: string): Promise<TorrentAdapterTorrent> {
+    async add(magnet: string, options: TorrentAdapterAddOptions): Promise<TorrentAdapterTorrent> {
         await promisify(mkdir)(this.config.path, { recursive: true })
 
         const torrent = this.client.add(magnet, {
             path: this.config.path,
+            announce: options.trackers
         })
 
         return new Promise((resolve, reject) => {

@@ -20,8 +20,12 @@ export interface TorrentAdapterFile {
     stop(): void
 }
 
+export interface TorrentAdapterAddOptions {
+    trackers: string[]
+}
+
 export abstract class TorrentAdapter {
     constructor(protected config: TorrentAdapterConfig) {}
 
-    public abstract async add(magnet: string): Promise<TorrentAdapterTorrent>
+    public abstract async add(magnet: string, options: TorrentAdapterAddOptions): Promise<TorrentAdapterTorrent>
 }

@@ -6,6 +6,7 @@ import { BadRequest } from 'http-errors'
 import { extname } from 'path'
 
 import { TorrentAdapter, TorrentAdapterTorrent, TorrentAdapterFile } from './adapters'
+import { downloadTrackers } from './trackers'
 
 export * from './adapters'
 export * from './adapters/webtorrent'
@@ -29,12 +30,18 @@ export interface TorrentClientConfig {
 export class TorrentClient {
     protected torrents: Record<string, TorrentClientTorrent> = {}
     protected cleanLocked: boolean = false
+    protected trackers: Promise<string[]>
 
     constructor(
         protected config: TorrentClientConfig,
         protected adapter: TorrentAdapter,
         protected logger: Logger
-    ) {}
+    ) {
+        this.trackers = downloadTrackers().catch(() => {
+            logger.warn('Failed to load tracker list')
+            return []
+        })
+    }
 
     getTorrents(): TorrentClientTorrent[] {
         return Object.values(this.torrents)
@@ -77,7 +84,9 @@ export class TorrentClient {
             return this.torrents[infoHash]
         }
 
-        const torrent = await this.adapter.add(magnet).then((v) => ({
+        const torrent = await this.adapter.add(magnet, {
+            trackers: await this.trackers
+        }).then((v) => ({
             ...v,
             link,
             infoHash,
