@@ -17,7 +17,7 @@
     "success_url": "/",
     "env": {
         "API_KEY": {
-            "description": "Protect API with a key. In the frontend you will be required to enter the key after each page reload.",
+            "description": "(optional) protect API with a key. In the frontend you will be required to enter the key after each page reload.",
             "value": "",
             "required": false
         }
