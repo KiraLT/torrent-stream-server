@@ -15,13 +15,10 @@ export interface ProviderInfo extends ProviderMeta {
 
 export async function getProvidersInfo(): Promise<ProviderInfo[]> {
     return Promise.all(
-        Object.entries(providers).map(async ([name, provider]) => {
-            const meta = await provider.getMeta()
-            return {
-                name,
-                ...meta,
-            }
-        })
+        Object.entries(providers).map(async ([name, provider]) => ({
+            name,
+            ...await provider.getMeta(),
+        }))
     )
 }
 
@@ -39,8 +36,5 @@ export async function search(
 }
 
 export function isProviderSupported(name: unknown): name is TorrentProvider {
-    if (typeof name === 'string' && name in providers) {
-        return true
-    }
-    return false
+    return typeof name === 'string' && name in providers
 }

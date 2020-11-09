@@ -2,22 +2,21 @@ import WebTorrent from 'webtorrent'
 import { promisify } from 'util'
 import { mkdir } from 'fs'
 
-import { TorrentAdapter, TorrentAdapterTorrent, TorrentAdapterConfig, TorrentAdapterAddOptions } from '.'
+import { TorrentAdapter, TorrentAdapterTorrent } from '.'
 
-export class WebtorrentTorrentAdapter extends TorrentAdapter {
+export class WebtorrentAdapter extends TorrentAdapter {
     protected client: WebTorrent.Instance
 
-    constructor(config: TorrentAdapterConfig) {
-        super(config)
+    constructor() {
+        super()
         this.client = new WebTorrent()
     }
 
-    async add(magnet: string, options: TorrentAdapterAddOptions): Promise<TorrentAdapterTorrent> {
-        await promisify(mkdir)(this.config.path, { recursive: true })
+    async add(magnet: string, path: string): Promise<TorrentAdapterTorrent> {
+        await promisify(mkdir)(path, { recursive: true })
 
         const torrent = this.client.add(magnet, {
-            path: this.config.path,
-            announce: options.trackers
+            path,
         })
 
         return new Promise((resolve, reject) => {
@@ -62,13 +61,17 @@ export class WebtorrentTorrentAdapter extends TorrentAdapter {
                 },
             })),
             async remove() {
-                new Promise((resolve) => {
+                new Promise((resolve, reject) => {
                     torrent.destroy(
                         {
                             destroyStore: true,
                         },
-                        () => {
-                            resolve()
+                        err => {
+                            if (err instanceof Error) {
+                                reject(err)
+                            } else {
+                                resolve()
+                            }
                         }
                     )
                 })

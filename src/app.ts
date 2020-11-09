@@ -6,7 +6,7 @@ import YAML from 'yamljs'
 import swaggerUi from 'swagger-ui-express'
 import { Unauthorized, Forbidden, NotFound } from 'http-errors'
 
-import { TorrentClient, WebtorrentTorrentAdapter } from './services/torrent-client'
+import { TorrentClient } from './services/torrent-client'
 import { setupStreamApi } from './api/stream'
 import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
@@ -45,14 +45,12 @@ export async function setup(options?: { configFile: string }): Promise<void> {
     const logger = createLogger(config)
 
     const app = createApp(config, logger)
-    const client = new TorrentClient(
+    const client = await TorrentClient.create(
         {
-            autocleanInternal: config.torrents.autocleanInternal,
+            logger,
+            ...config.torrents,
+
         },
-        new WebtorrentTorrentAdapter({
-            path: config.torrents.path,
-        }),
-        logger
     )
 
     app.get('/status', (_req, res) => res.send({ status: 'ok' }))
