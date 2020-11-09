@@ -88,7 +88,7 @@ const defaultConfig: Config = {
         streamApi: {
             maxAge: '6h',
         },
-        apiKey: undefined,
+        apiKey: process.env.API_KEY || undefined,
         frontendEnabled: true,
         apiEnabled: true,
     },
