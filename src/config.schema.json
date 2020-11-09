@@ -19,10 +19,7 @@
         },
         "environment": {
             "description": "Project environment.\n\nDefault:  `production`",
-            "enum": [
-                "development",
-                "production"
-            ],
+            "enum": ["development", "production"],
             "type": "string",
             "title": "environment"
         },
@@ -42,15 +39,11 @@
                                     "type": {
                                         "description": "Log to console",
                                         "type": "string",
-                                        "enum": [
-                                            "console"
-                                        ],
+                                        "enum": ["console"],
                                         "title": "type"
                                     }
                                 },
-                                "required": [
-                                    "type"
-                                ]
+                                "required": ["type"]
                             },
                             {
                                 "type": "object",
@@ -59,9 +52,7 @@
                                     "type": {
                                         "description": "Enable [loggly](https://www.loggly.com/) logging",
                                         "type": "string",
-                                        "enum": [
-                                            "loggly"
-                                        ],
+                                        "enum": ["loggly"],
                                         "title": "type"
                                     },
                                     "subdomain": {
@@ -83,11 +74,7 @@
                                         "title": "tags"
                                     }
                                 },
-                                "required": [
-                                    "subdomain",
-                                    "token",
-                                    "type"
-                                ]
+                                "required": ["subdomain", "token", "type"]
                             }
                         ]
                     },
@@ -95,12 +82,7 @@
                 },
                 "level": {
                     "description": "Logging level.\n\nDefault:  `info`",
-                    "enum": [
-                        "debug",
-                        "error",
-                        "info",
-                        "warn"
-                    ],
+                    "enum": ["debug", "error", "info", "warn"],
                     "type": "string",
                     "title": "level"
                 }

@@ -241,14 +241,18 @@ const defaultConfig: Config = {
 
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
-        return validateSchema(configSchema, path
-            ? merge(
-                  defaultConfig,
-                  JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' }))
-              )
-            : defaultConfig, {
-                name: path || 'config'
-            })
+        return validateSchema(
+            configSchema,
+            path
+                ? merge(
+                      defaultConfig,
+                      JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' }))
+                  )
+                : defaultConfig,
+            {
+                name: path || 'config',
+            }
+        )
     } catch (error) {
         throw Error(`Failed to read config from ${path} - ${error}`)
     }

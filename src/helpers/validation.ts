@@ -38,7 +38,7 @@ export function validateSchema<T>(schema: object, data: unknown, options?: { nam
     if (!ajv.validate(schema, data)) {
         throw new BadRequest(
             ajv.errorsText(null, {
-                dataVar: name
+                dataVar: name,
             })
         )
     }
