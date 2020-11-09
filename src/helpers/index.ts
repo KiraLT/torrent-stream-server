@@ -9,8 +9,20 @@ export function mapValues(data: any, fn: (item: any) => any) {
     return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {})
 }
 
-export function getSteamUrl(link: string, file: string): string {
-    return `/stream?torrent=${encodeURIComponent(link)}&file=${encodeURIComponent(file)}`
+export function getSteamUrl(torrent: string, file: string, encodeToken?: string): string {
+    if (encodeToken) {
+        return `/stream/${encodeURIComponent(
+            signJwtToken(
+                {
+                    torrent,
+                    file,
+                },
+                encodeToken
+            )
+        )}`
+    }
+
+    return `/stream/${encodeURIComponent(torrent)}?file=${encodeURIComponent(file)}`
 }
 
 export function merge(current: any, update: any): any {

@@ -17,7 +17,7 @@ export async function getProvidersInfo(): Promise<ProviderInfo[]> {
     return Promise.all(
         Object.entries(providers).map(async ([name, provider]) => ({
             name,
-            ...await provider.getMeta(),
+            ...(await provider.getMeta()),
         }))
     )
 }

@@ -45,13 +45,10 @@ export async function setup(options?: { configFile: string }): Promise<void> {
     const logger = createLogger(config)
 
     const app = createApp(config, logger)
-    const client = await TorrentClient.create(
-        {
-            logger,
-            ...config.torrents,
-
-        },
-    )
+    const client = await TorrentClient.create({
+        logger,
+        ...config.torrents,
+    })
 
     app.get('/status', (_req, res) => res.send({ status: 'ok' }))
 

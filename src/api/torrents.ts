@@ -4,11 +4,27 @@ import { NotFound } from 'http-errors'
 
 import { Config } from '../config'
 import { Torrent } from '../models'
-import { getSteamUrl } from '../helpers'
 import { validateString } from '../helpers/validation'
 import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
+import { signJwtToken } from '../helpers'
 
-function torrentToJson(v: TorrentClientTorrent): Torrent {
+function getSteamUrl(torrent: string, file: string, encodeToken?: string): string {
+    if (encodeToken) {
+        return `/stream/${encodeURIComponent(
+            signJwtToken(
+                {
+                    torrent,
+                    file,
+                },
+                encodeToken
+            )
+        )}`
+    }
+
+    return `/stream/${encodeURIComponent(torrent)}?file=${encodeURIComponent(file)}`
+}
+
+function torrentToJson(v: TorrentClientTorrent, encodeToken?: string): Torrent {
     return {
         name: v.name,
         infoHash: v.infoHash,
@@ -22,33 +38,35 @@ function torrentToJson(v: TorrentClientTorrent): Torrent {
             path: f.path,
             type: f.type,
             length: f.length,
-            stream: getSteamUrl(v.link, f.path),
+            stream: getSteamUrl(v.link, f.path, encodeToken),
         })),
     }
 }
 
 export function setupTorrentsApi(
     app: Express,
-    _config: Config,
+    config: Config,
     _logger: Logger,
     client: TorrentClient
 ): Express {
+    const encodeToken = config.security.streamApi.key || config.security.apiKey
+
     app.post<{}, Torrent, {}, { torrent: unknown }>('/api/torrents', async (req, res) => {
         const link = validateString(req.query.torrent, 'torrent')
         const torrent = await client.addTorrent(link)
 
-        res.json(torrentToJson(torrent))
+        res.json(torrentToJson(torrent, encodeToken))
     })
 
     app.get<{}, Torrent[], {}, {}>('/api/torrents', (_req, res) => {
-        return res.json(client.getTorrents().map(torrentToJson))
+        return res.json(client.getTorrents().map((v) => torrentToJson(v, encodeToken)))
     })
 
     app.get<{ id: string }, Torrent, {}, {}>('/api/torrents/:id', (req, res) => {
         const torrent = client.getTorrent(validateString(req.params.id, 'id'))
 
         if (torrent) {
-            return res.json(torrentToJson(torrent))
+            return res.json(torrentToJson(torrent, encodeToken))
         }
 
         throw new NotFound()

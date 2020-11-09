@@ -66,7 +66,7 @@ export class WebtorrentAdapter extends TorrentAdapter {
                         {
                             destroyStore: true,
                         },
-                        err => {
+                        (err) => {
                             if (err instanceof Error) {
                                 reject(err)
                             } else {

@@ -102,16 +102,17 @@ paths:
                     $ref: '#/components/responses/401'
                 403:
                     $ref: '#/components/responses/403'
-    /stream:
+    /stream/{torrent}:
         get:
             operationId: getStream
             description: 'Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).'
             tags:
                 - stream
             parameters:
-                - in: query
+                - in: path
                   name: torrent
-                  description: magnet or torrent link
+                  required: true
+                  description: Can be torrent infoHash, magnet or link to torrent file. If security is enabled, it should be JWT encoded whole payload (including all `query` parameters) with extra `torrent` parameter.
                   schema:
                       type: string
                 - in: query
@@ -127,11 +128,6 @@ paths:
                 - in: query
                   name: fileIndex
                   description: File index (starting from `1`)
-                  schema:
-                      type: string
-                - in: query
-                  name: token
-                  description: JWT token with other parameters as payload
                   schema:
                       type: string
             responses:

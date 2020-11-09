@@ -6,7 +6,7 @@ import { TorrentClientFile } from '.'
 export const mirrors = [
     'https://ngosang.github.io/trackerslist/trackers_all.txt',
     'https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt',
-    'https://cdn.jsdelivr.net/gh/ngosang/trackerslist/trackers_all.txt'
+    'https://cdn.jsdelivr.net/gh/ngosang/trackerslist/trackers_all.txt',
 ]
 
 /**
@@ -16,8 +16,15 @@ export async function downloadTrackers(): Promise<string[]> {
     for (const mirror of mirrors) {
         try {
             return fetch(mirror, {
-                timeout: 3000
-            }).then(v => v.text()).then(v => v.split('\n').map(v => v.trim()).filter(v => !!v))
+                timeout: 3000,
+            })
+                .then((v) => v.text())
+                .then((v) =>
+                    v
+                        .split('\n')
+                        .map((v) => v.trim())
+                        .filter((v) => !!v)
+                )
         } catch {
             continue
         }
@@ -62,5 +69,8 @@ export function findFile(
                     .includes(options.fileType.toLowerCase().replace('.', '')))
     )
 
-    return filteredFiles.find((f) => options.file && f.path === options.file) || [...filteredFiles].sort((a, b) => b.length - a.length)[0]
+    return (
+        filteredFiles.find((f) => options.file && f.path === options.file) ||
+        [...filteredFiles].sort((a, b) => b.length - a.length)[0]
+    )
 }

@@ -4,7 +4,13 @@ import { Logger } from 'winston'
 import { lookup } from 'mime-types'
 import { BadRequest } from 'http-errors'
 
-import { downloadTrackers, TorrentAdapter, TorrentAdapterTorrent, TorrentAdapterFile, WebtorrentAdapter } from '.'
+import {
+    downloadTrackers,
+    TorrentAdapter,
+    TorrentAdapterTorrent,
+    TorrentAdapterFile,
+    WebtorrentAdapter,
+} from '.'
 
 export interface TorrentClientTorrent extends TorrentAdapterTorrent {
     created: Date
@@ -32,22 +38,27 @@ export class TorrentClient {
     protected torrents: Record<string, TorrentClientTorrent> = {}
     protected cleanLocked: boolean = false
 
-    constructor(
-        protected config: TorrentClientConfig,
-        protected adapter: TorrentAdapter
-    ) {}
+    constructor(protected config: TorrentClientConfig, protected adapter: TorrentAdapter) {}
 
-    static async create(config: TorrentClientConfig, adapter?: TorrentAdapter): Promise<TorrentClient> {
-        return new TorrentClient({
-            ...config,
-            announce: [
-                ...(config.announce || []),
-                ...(config.useDefaultTrackers ? await downloadTrackers().catch(() => {
-                    config.logger.warn('Failed to load tracker list')
-                    return []
-                }) : [])
-            ]
-        }, adapter || new WebtorrentAdapter())
+    static async create(
+        config: TorrentClientConfig,
+        adapter?: TorrentAdapter
+    ): Promise<TorrentClient> {
+        return new TorrentClient(
+            {
+                ...config,
+                announce: [
+                    ...(config.announce || []),
+                    ...(config.useDefaultTrackers
+                        ? await downloadTrackers().catch(() => {
+                              config.logger.warn('Failed to load tracker list')
+                              return []
+                          })
+                        : []),
+                ],
+            },
+            adapter || new WebtorrentAdapter()
+        )
     }
 
     getTorrents(): TorrentClientTorrent[] {
@@ -81,20 +92,18 @@ export class TorrentClient {
         }
         const magnet = parseTorrent.toMagnetURI({
             ...parsedLink,
-            announce: [...new Set([
-                ...(parsedLink.announce || []),
-                ...(this.config.announce || [])
-            ])],
-            urlList: [...new Set([
-                ...(parsedLink.urlList || []),
-                ...(this.config.urlList || [])
-            ])],
+            announce: [
+                ...new Set([...(parsedLink.announce || []), ...(this.config.announce || [])]),
+            ],
+            urlList: [...new Set([...(parsedLink.urlList || []), ...(this.config.urlList || [])])],
             // @ts-ignore
-            peerAddresses: [...new Set([
-                // @ts-ignore
-                ...(parsedLink.peerAddresses || []),
-                ...(this.config.peerAddresses || [])
-            ])]
+            peerAddresses: [
+                ...new Set([
+                    // @ts-ignore
+                    ...(parsedLink.peerAddresses || []),
+                    ...(this.config.peerAddresses || []),
+                ]),
+            ],
         })
 
         const infoHash = parsedLink.infoHash
@@ -137,8 +146,7 @@ export class TorrentClient {
         this.cleanLocked = true
         try {
             const torrentToRemove = Object.values(this.torrents).filter(
-                (torrent) =>
-                    Date.now() - torrent.updated.getTime() > this.config.ttl * 1000
+                (torrent) => Date.now() - torrent.updated.getTime() > this.config.ttl * 1000
             )
             for (const torrent of torrentToRemove) {
                 this.config.logger.info(`Removing expired ${torrent.name} torrent`)
@@ -149,4 +157,3 @@ export class TorrentClient {
         }
     }
 }
-

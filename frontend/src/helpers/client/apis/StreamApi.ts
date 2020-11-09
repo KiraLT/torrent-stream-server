@@ -16,11 +16,10 @@ import * as runtime from '../runtime'
 import { ApiError, ApiErrorFromJSON, ApiErrorToJSON } from '../models'
 
 export interface GetStreamRequest {
-    torrent?: string
+    torrent: string
     file?: string
     fileType?: string
     fileIndex?: string
-    token?: string
 }
 
 /**
@@ -28,13 +27,17 @@ export interface GetStreamRequest {
  */
 export class StreamApi extends runtime.BaseAPI {
     /**
+     * Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).
      */
     async getStreamRaw(requestParameters: GetStreamRequest): Promise<runtime.ApiResponse<Blob>> {
-        const queryParameters: runtime.HTTPQuery = {}
-
-        if (requestParameters.torrent !== undefined) {
-            queryParameters['torrent'] = requestParameters.torrent
+        if (requestParameters.torrent === null || requestParameters.torrent === undefined) {
+            throw new runtime.RequiredError(
+                'torrent',
+                'Required parameter requestParameters.torrent was null or undefined when calling getStream.'
+            )
         }
+
+        const queryParameters: runtime.HTTPQuery = {}
 
         if (requestParameters.file !== undefined) {
             queryParameters['file'] = requestParameters.file
@@ -48,10 +51,6 @@ export class StreamApi extends runtime.BaseAPI {
             queryParameters['fileIndex'] = requestParameters.fileIndex
         }
 
-        if (requestParameters.token !== undefined) {
-            queryParameters['token'] = requestParameters.token
-        }
-
         const headerParameters: runtime.HTTPHeaders = {}
 
         if (this.configuration && this.configuration.accessToken) {
@@ -63,7 +62,10 @@ export class StreamApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/stream`,
+            path: `/stream/{torrent}`.replace(
+                `{${'torrent'}}`,
+                encodeURIComponent(String(requestParameters.torrent))
+            ),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -73,6 +75,7 @@ export class StreamApi extends runtime.BaseAPI {
     }
 
     /**
+     * Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).
      */
     async getStream(requestParameters: GetStreamRequest): Promise<Blob> {
         const response = await this.getStreamRaw(requestParameters)

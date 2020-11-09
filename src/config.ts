@@ -82,7 +82,7 @@ const defaultConfig: Config = {
         useDefaultTrackers: true,
         announce: [],
         urlList: [],
-        peerAddresses: []
+        peerAddresses: [],
     },
     security: {
         streamApi: {
