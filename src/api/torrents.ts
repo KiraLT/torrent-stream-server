@@ -1,4 +1,4 @@
-import { Express } from 'express'
+import { Router } from 'express'
 import { Logger } from 'winston'
 import { NotFound } from 'http-errors'
 
@@ -43,34 +43,26 @@ function torrentToJson(v: TorrentClientTorrent, encodeToken?: string): Torrent {
     }
 }
 
-export function setupTorrentsApi(
-    app: Express,
-    config: Config,
-    _logger: Logger,
-    client: TorrentClient
-): Express {
+export function getTorrentsRouter(config: Config, _logger: Logger, client: TorrentClient): Router {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
-    app.post<{}, Torrent, {}, { torrent: unknown }>('/api/torrents', async (req, res) => {
-        const link = validateString(req.query.torrent, 'torrent')
-        const torrent = await client.addTorrent(link)
+    return Router()
+        .post<{}, Torrent, {}, { torrent: unknown }>('/torrents', async (req, res) => {
+            const link = validateString(req.query.torrent, 'torrent')
+            const torrent = await client.addTorrent(link)
 
-        res.json(torrentToJson(torrent, encodeToken))
-    })
+            res.json(torrentToJson(torrent, encodeToken))
+        })
+        .get<{}, Torrent[], {}, {}>('/torrents', (_req, res) => {
+            return res.json(client.getTorrents().map((v) => torrentToJson(v, encodeToken)))
+        })
+        .get<{ id: string }, Torrent, {}, {}>('/torrents/:id', (req, res) => {
+            const torrent = client.getTorrent(validateString(req.params.id, 'id'))
 
-    app.get<{}, Torrent[], {}, {}>('/api/torrents', (_req, res) => {
-        return res.json(client.getTorrents().map((v) => torrentToJson(v, encodeToken)))
-    })
+            if (torrent) {
+                return res.json(torrentToJson(torrent, encodeToken))
+            }
 
-    app.get<{ id: string }, Torrent, {}, {}>('/api/torrents/:id', (req, res) => {
-        const torrent = client.getTorrent(validateString(req.params.id, 'id'))
-
-        if (torrent) {
-            return res.json(torrentToJson(torrent, encodeToken))
-        }
-
-        throw new NotFound()
-    })
-
-    return app
+            throw new NotFound()
+        })
 }

@@ -1,4 +1,4 @@
-import { Express } from 'express'
+import { Router } from 'express'
 import { Logger } from 'winston'
 import { BadRequest } from 'http-errors'
 
@@ -7,32 +7,30 @@ import { getProvidersInfo, search, isProviderSupported } from '../services/torre
 import { Provider, ProviderTorrent } from '../models'
 import { validateString } from '../helpers/validation'
 
-export function setupBrowseApi(app: Express, _config: Config, _logger: Logger): Express {
-    app.get<{}, ProviderTorrent[], {}, Record<'query' | 'category' | 'provider', unknown>>(
-        '/api/browse/search',
-        async (req, res) => {
-            const query = validateString(req.query.query, 'query')
-            const category = req.query.category
-                ? validateString(req.query.category, 'category')
-                : undefined
-            const provider = validateString(req.query.provider, 'provider')
+export function getBrowseRouter(_config: Config, _logger: Logger): Router {
+    return Router()
+        .get<{}, ProviderTorrent[], {}, Record<'query' | 'category' | 'provider', unknown>>(
+            '/browse/search',
+            async (req, res) => {
+                const query = validateString(req.query.query, 'query')
+                const category = req.query.category
+                    ? validateString(req.query.category, 'category')
+                    : undefined
+                const provider = validateString(req.query.provider, 'provider')
 
-            if (!isProviderSupported(provider)) {
-                throw new BadRequest(`Provider ${provider} is not supported`)
+                if (!isProviderSupported(provider)) {
+                    throw new BadRequest(`Provider ${provider} is not supported`)
+                }
+
+                return res.json(
+                    await search([provider], query, {
+                        category: category,
+                        limit: 50,
+                    })
+                )
             }
-
-            return res.json(
-                await search([provider], query, {
-                    category: category,
-                    limit: 50,
-                })
-            )
-        }
-    )
-
-    app.get<{}, Provider[], {}, {}>('/api/browse/providers', async (_req, res) => {
-        return res.json(await getProvidersInfo())
-    })
-
-    return app
+        )
+        .get<{}, Provider[], {}, {}>('/browse/providers', async (_req, res) => {
+            return res.json(await getProvidersInfo())
+        })
 }

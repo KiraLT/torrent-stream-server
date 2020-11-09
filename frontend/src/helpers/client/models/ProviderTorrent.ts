@@ -73,7 +73,7 @@ export interface ProviderTorrent {
      * @type {string}
      * @memberof ProviderTorrent
      */
-    link: string
+    link?: string
     /**
      *
      * @type {boolean}
@@ -119,7 +119,7 @@ export function ProviderTorrentFromJSONTyped(
         peers: json['peers'],
         size: json['size'],
         time: !exists(json, 'time') ? undefined : json['time'],
-        link: json['link'],
+        link: !exists(json, 'link') ? undefined : json['link'],
         isVip: !exists(json, 'isVip') ? undefined : json['isVip'],
         imdb: !exists(json, 'imdb') ? undefined : json['imdb'],
         numFiles: !exists(json, 'numFiles') ? undefined : json['numFiles'],

@@ -7,14 +7,16 @@ import swaggerUi from 'swagger-ui-express'
 import { Unauthorized, Forbidden, NotFound } from 'http-errors'
 
 import { TorrentClient } from './services/torrent-client'
-import { setupStreamApi } from './api/stream'
-import { setupTorrentsApi } from './api/torrents'
 import { readConfig, Config } from './config'
 import { createLogger } from './helpers/logging'
-import { setupUsageApi } from './api/usage'
 import { handleApiErrors } from './helpers/errors'
-import { setupBrowseApi } from './api/browse'
-import { setupAuthApi } from './api/auth'
+import {
+    getAuthRouter,
+    getBrowseRouter,
+    getUsageRouter,
+    getStreamRouter,
+    getTorrentsRouter,
+} from './api'
 
 import 'express-async-errors'
 import { Logger } from 'winston'
@@ -72,11 +74,14 @@ export async function setup(options?: { configFile: string }): Promise<void> {
             })
         }
 
-        setupTorrentsApi(app, config, logger, client)
-        setupStreamApi(app, config, logger, client)
-        setupUsageApi(app, config, logger)
-        setupBrowseApi(app, config, logger)
-        setupAuthApi(app, config, logger)
+        app.use(
+            '/api',
+            getAuthRouter(config, logger),
+            getBrowseRouter(config, logger),
+            getUsageRouter(config, logger),
+            getTorrentsRouter(config, logger, client)
+        )
+        app.use('/', getStreamRouter(config, logger, client))
 
         app.use('/api/?*', () => {
             throw new NotFound()

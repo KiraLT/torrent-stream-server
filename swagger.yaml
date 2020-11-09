@@ -314,7 +314,7 @@ components:
                         id:
                             type: string
                     required: ['name', 'id']
-            required: ['name', 'magnet', 'seeds', 'peers', 'size', 'category', 'link']
+            required: ['name', 'magnet', 'seeds', 'peers', 'size', 'category']
         ApiError:
             type: object
             properties:

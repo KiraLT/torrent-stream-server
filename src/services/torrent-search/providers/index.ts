@@ -8,13 +8,13 @@ export interface ProviderResult {
     seeds: number
     peers: number
     size: string
-    time: number
+    time?: number
     downloads?: number
     category: {
         id: string
         name: string
     }
-    link: string
+    link?: string
     isVip?: boolean
     imdb?: string
     numFiles?: number

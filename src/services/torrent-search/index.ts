@@ -1,10 +1,12 @@
 import { ProviderMeta, ProviderSearchOptions, ProviderResult } from './providers'
 import { NyaaProvider } from './providers/nyaa'
 import { ThepiratebayProvider } from './providers/thepiratebay'
+import { TorrentParadiseProvider } from './providers/torrentparadise'
 
 export const providers = {
     [NyaaProvider.providerName]: new NyaaProvider(),
     [ThepiratebayProvider.providerName]: new ThepiratebayProvider(),
+    [TorrentParadiseProvider.providerName]: new TorrentParadiseProvider(),
 }
 
 export type TorrentProvider = keyof typeof providers
