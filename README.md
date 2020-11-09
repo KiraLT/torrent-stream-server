@@ -90,62 +90,41 @@ API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/docs/swag
 
 > [Check documentation](https://kiralt.github.io/torrent-stream-server/docs/swagger.html)
 
-### Example
+## Example
+
 Running the following command from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
 ```
-$ vlc "http://localhost:3000/stream?torrent=magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&file=Sintel.mp4"
+$ vlc "http://localhost:3000/stream/08ada5a7a6183aae1e09d831df6748d566095a10"
 ```
 
-## JWT tokens
+## Security
 
-You can protect stream API with [JWT token](https://jwt.io/).
+API can be protected with `security.apiKey`, stream api can have additional [JSON Web Token](https://jwt.io/) (configurable via `security.streamApi.key`).
 
-### Add key to config:
+If only only one key specified in the config, it will be used as both: `API key` & `streamApi.key`.
 
-```json
-{
-    "secury": {
-        "streamApi": {
-            "key": "secret key",
-            "maxAge": "5h"
-        }
-    }
-}
+### API protection
+
+When api or stream key is enabled, each API call will require `Authorization` header:
+
+```js
+Authorization: Bearer <token>
 ```
 
-### Create signed key:
+### Generate stream API URL
 
-#### Headers
+```js
+import { sign } from 'jsonwebtoken'
 
-```json
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
+const url = `/stream/${encodeURIComponent(
+    sign(
+        {
+            torrent: '08ada5a7a6183aae1e09d831df6748d566095a10',
+            fileType: 'video',
+        },
+        key
+    )
+)}`
 ```
 
-#### Payload
-
-```json
-{
-   "iat": 1554577257,
-   "torrent": "magnet:?xt=urn:btih:4GOZACR2HENLSNHA7K6GSOFSTDWGOENJ&tr=http://nyaa.tracker.wf:7777/announce&tr=udp://tracker.coppersurfer.tk:6969/announce&tr=udp://tracker.internetwarriors.net:1337/announce&tr=udp://tracker.leechersparadise.org:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://open.stealth.si:80/announce&tr=udp://p4p.arenabg.com:1337/announce&tr=udp://mgtracker.org:6969/announce&tr=udp://tracker.tiny-vps.com:6969/announce&tr=udp://peerfect.org:6969/announce&tr=http://share.camoe.cn:8080/announce&tr=http://t.nyaatracker.com:80/announce&tr=https://open.kickasstracker.com:443/announce"
-}
-```
-
-* `iat` - unix timestamp, which indicates when was the key generated
-* `torrent` - torrent magent link 
-
-#### Signature
-
-```
-HMACSHA256(
-  base64UrlEncode(header) + "." +
-  base64UrlEncode(payload),
-  "ENTER KEY HERE"
-)
-```
-
-#### Use generated token
-
-http://127.0.0.1:3000/stream?token=JWT_TOKEN
+This API will have encoded parameters, so it's safe to share it publicly. It will automatically expire (configurable via `security.streamApi.maxAge`)
