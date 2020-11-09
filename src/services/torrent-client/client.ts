@@ -19,8 +19,11 @@ export interface TorrentClientFile extends TorrentAdapterFile {
 }
 
 export interface TorrentClientConfig {
-    trackers?: string[]
-    autocleanInternal: number
+    useDefaultTrackers?: boolean
+    announce?: string[]
+    urlList?: string[]
+    peerAddresses?: string[]
+    ttl: number
     path: string
     logger: Logger
 }
@@ -37,10 +40,13 @@ export class TorrentClient {
     static async create(config: TorrentClientConfig, adapter?: TorrentAdapter): Promise<TorrentClient> {
         return new TorrentClient({
             ...config,
-            trackers: await downloadTrackers().catch(() => {
-                config.logger.warn('Failed to load tracker list')
-                return []
-            })
+            announce: [
+                ...(config.announce || []),
+                ...(config.useDefaultTrackers ? await downloadTrackers().catch(() => {
+                    config.logger.warn('Failed to load tracker list')
+                    return []
+                }) : [])
+            ]
         }, adapter || new WebtorrentAdapter())
     }
 
@@ -73,8 +79,24 @@ export class TorrentClient {
         if (!parsedLink) {
             throw new BadRequest(`Cannot parse torrent: ${link}`)
         }
+        const magnet = parseTorrent.toMagnetURI({
+            ...parsedLink,
+            announce: [...new Set([
+                ...(parsedLink.announce || []),
+                ...(this.config.announce || [])
+            ])],
+            urlList: [...new Set([
+                ...(parsedLink.urlList || []),
+                ...(this.config.urlList || [])
+            ])],
+            // @ts-ignore
+            peerAddresses: [...new Set([
+                // @ts-ignore
+                ...(parsedLink.peerAddresses || []),
+                ...(this.config.peerAddresses || [])
+            ])]
+        })
 
-        const magnet = parseTorrent.toMagnetURI(parsedLink)
         const infoHash = parsedLink.infoHash
 
         if (infoHash in this.torrents) {
@@ -116,7 +138,7 @@ export class TorrentClient {
         try {
             const torrentToRemove = Object.values(this.torrents).filter(
                 (torrent) =>
-                    Date.now() - torrent.updated.getTime() > this.config.autocleanInternal * 1000
+                    Date.now() - torrent.updated.getTime() > this.config.ttl * 1000
             )
             for (const torrent of torrentToRemove) {
                 this.config.logger.info(`Removing expired ${torrent.name} torrent`)

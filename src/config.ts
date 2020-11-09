@@ -23,7 +23,26 @@ export interface Config {
     }
     torrents: {
         path: string
-        autocleanInternal: number
+        /**
+         * Delete torrent data if it is inactive for X seconds
+         */
+        ttl: number
+        /**
+         * Load defaul trackers list & use it for each torrents
+         */
+        useDefaultTrackers: boolean
+        /**
+         * Additional trackers (`tr` parameter) which will be appened to each torrent
+         */
+        announce: string[]
+        /**
+         * Web Seed (`ws` parameter) which will be appened to each torrent
+         */
+        urlList: string[]
+        /**
+         * Peer addresses (`x.pe` parameter)
+         */
+        peerAddresses: string[]
     }
     security: {
         streamApi: {
@@ -59,7 +78,11 @@ const defaultConfig: Config = {
     },
     torrents: {
         path: '/tmp/torrent-stream-server',
-        autocleanInternal: 60 * 60,
+        ttl: 60 * 60,
+        useDefaultTrackers: true,
+        announce: [],
+        urlList: [],
+        peerAddresses: []
     },
     security: {
         streamApi: {
