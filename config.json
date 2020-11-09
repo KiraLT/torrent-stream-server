@@ -1,0 +1,8 @@
+{
+    "$schema": "./src/config.schema.json",
+    "host": "w",
+    "torrents": {
+        "useDefaultTrackers": false,
+        "peerAddresses": ["wqwe"]
+    }
+}

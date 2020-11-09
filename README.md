@@ -50,35 +50,15 @@ So during developemnt you will need to run two dev servers with live reload:
 
 ### ENV variables
 
-_Check bellow for descriptions_
+You can pass env variables to configurate certain ares.
 
-* `PORT`
-* `HOST`
-* `TRUST_PROXY`
-
-> Configuration file can overwrite ENV variables
+> Check [EnvVariables interface](./src/config.ts) to see available ENV variables
 
 ### File
 
-You can pass JSON config file to any run command (e.g. `npm run start config.json`)
+You can pass JSON config file to any run command with `-c` option (e.g. `npm run start -c config.json`).
 
-Available parameters:
-
-* **host** - server host. Default is `process.env.HOST` or `0.0.0.0`
-* **port** - server port. Default `process.env.PORT` or 3000.
-* **trustProxy** - get ip from `X-Forwarded-*` header, [check more](https://expressjs.com/en/guide/behind-proxies.html), Default is `true` if running inside App Engine or Heroku else `false`
-* **logging**
-  * **level** - debug, info, warn or error. Default info.
-  * **transports** - `{"type": "console"}` or `{"type": "loggly","subdomain": "my-subdomain","token": "abc","tags":["my-tag"]}`. Default `console`.
-* **torrents**
-  * **path** - torrents storage path. Default `/tmp/torrent-stream-server`.
-  * **autocleanInternal** - how many seconds downloaded from last stream torrent is kept before deleting. Default is 1 hour. 
-* **security**
-  * **streamApi** - API is disabled when using this option unless `apiKey` is set.
-    * **key** - JWT token.
-    * **maxAge** - the maximum allowed age for tokens to still be valid.
-  * **frontendEnabled** - enable demo page. Default is `true`.
-  * **apiKey** - key which should be passed to headers to access the API (`authorization: bearer ${apiKey}`).
+> Check [Config interface](./src/config.ts) to see available configuration options
 
 ## API
 

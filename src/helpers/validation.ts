@@ -1,4 +1,5 @@
 import { BadRequest } from 'http-errors'
+import Ajv from 'ajv'
 
 export function validateString(value: unknown, name: string): string {
     if (value == null || !value) {
@@ -29,4 +30,17 @@ export function validateInt(value: unknown, name: string): number {
     }
 
     throw new BadRequest(`${name} must be number`)
+}
+
+export function validateSchema<T>(schema: object, data: unknown, options?: { name: string }): T {
+    const { name = 'data' } = options || {}
+    const ajv = new Ajv({ allErrors: true, jsonPointers: true })
+    if (!ajv.validate(schema, data)) {
+        throw new BadRequest(
+            ajv.errorsText(null, {
+                dataVar: name
+            })
+        )
+    }
+    return data as T
 }

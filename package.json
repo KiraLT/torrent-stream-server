@@ -10,6 +10,7 @@
         "url": "https://github.com/KiraLT/torrent-stream-server/issues"
     },
     "dependencies": {
+        "ajv": "^6.12.6",
         "check-disk-space": "^2.1.0",
         "cheerio": "^1.0.0-rc.3",
         "cors": "^2.8.5",
