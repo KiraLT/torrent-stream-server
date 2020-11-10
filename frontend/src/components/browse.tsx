@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import {
     Container,
     Row,
@@ -14,18 +14,20 @@ import {
 } from 'react-bootstrap'
 import { format } from 'timeago.js'
 
-import { BrowseApi, Provider, ProviderTorrent } from '../helpers/client'
+import { BrowseApi, ProviderModel, ProviderTorrentModel } from '../helpers/client'
 import { useSearchParam, useSearchParamsHandler } from '../helpers/hooks'
 import { parseError } from '../helpers'
 import { withBearer } from './parts/auth'
 import { getApiConfig } from '../config'
+import { AsyncButton } from './parts/button'
 
 export const BrowseComponent = withBearer(({ bearer }) => {
+    const history = useHistory()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const [providers, setProviders] = useState<Provider[]>([])
-    const [torrents, setTorrents] = useState<ProviderTorrent[]>()
+    const [providers, setProviders] = useState<ProviderModel[]>([])
+    const [torrents, setTorrents] = useState<ProviderTorrentModel[]>()
 
     const handler = useSearchParamsHandler()
     const provider = useSearchParam('provider') ?? ''
@@ -212,12 +214,12 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                         ) : (
                                             torrent.name
                                         )}{' '}
-                                        <Badge
+                                        {torrent.category && <Badge
                                             variant="secondary"
                                             pill={true}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => {
-                                                handler({
+                                                torrent.category && handler({
                                                     set: {
                                                         category: torrent.category.id,
                                                     },
@@ -225,8 +227,12 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                             }}
                                         >
                                             {torrent.category.name}
-                                        </Badge>{' '}
+                                        </Badge>}{' '}
                                         {torrent.isVip && <i className="ti-crown text-warning"></i>}
+                                        {' '}
+                                        {!!torrent.comments && <Badge className="text-secondary" variant="light">
+                                            <i className="ti-comments"></i> {torrent.comments}
+                                        </Badge>}
                                     </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.size}
@@ -257,12 +263,21 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                         )}
                                     </td>
                                     <td className="text-right">
-                                        <Link
+                                        {torrent.magnet ? <Link
                                             to={`/play?torrent=${encodeURIComponent(
                                                 torrent.magnet
                                             )}`}
                                             className="btn btn-outline-primary ti-control-play"
-                                        ></Link>
+                                        ></Link> : <AsyncButton variant="outline-primary" className="ti-control-play" onClick={async () => {
+                                            const { magnet } = await new BrowseApi(getApiConfig({ bearer })).getMagnet({
+                                                provider,
+                                                torrentId: torrent.id
+                                            })
+                                            console.log(magnet)
+                                            history.push(`/play?torrent=${encodeURIComponent(magnet)}`)
+                                        }}>
+
+                                        </AsyncButton>}
                                     </td>
                                 </tr>
                             </>

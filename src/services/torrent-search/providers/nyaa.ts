@@ -1,6 +1,6 @@
 import { si } from 'nyaapi'
 
-import { Provider, ProviderSearchOptions, ProviderFeature, ProviderMeta } from '.'
+import { Provider, ProviderSearchOptions, ProviderMeta } from '.'
 
 export class NyaaProvider extends Provider {
     static providerName = 'Nyaa' as const
@@ -113,7 +113,6 @@ export class NyaaProvider extends Provider {
                     ],
                 },
             ],
-            features: [ProviderFeature.Search],
         }
     }
 
@@ -133,6 +132,7 @@ export class NyaaProvider extends Provider {
         ])
 
         return result.map((v) => ({
+            id: v.id,
             name: v.name,
             magnet: v.magnet,
             seeds: parseInt(v.seeders, 10) || 0,

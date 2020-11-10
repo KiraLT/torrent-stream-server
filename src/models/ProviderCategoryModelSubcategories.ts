@@ -12,35 +12,37 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime'
+import { exists, mapValues } from '../helpers'
 /**
  *
  * @export
- * @interface ProviderCategorySubcategories
+ * @interface ProviderCategoryModelSubcategories
  */
-export interface ProviderCategorySubcategories {
+export interface ProviderCategoryModelSubcategories {
     /**
      *
      * @type {string}
-     * @memberof ProviderCategorySubcategories
+     * @memberof ProviderCategoryModelSubcategories
      */
     name: string
     /**
      *
      * @type {string}
-     * @memberof ProviderCategorySubcategories
+     * @memberof ProviderCategoryModelSubcategories
      */
     id: string
 }
 
-export function ProviderCategorySubcategoriesFromJSON(json: any): ProviderCategorySubcategories {
-    return ProviderCategorySubcategoriesFromJSONTyped(json, false)
+export function ProviderCategoryModelSubcategoriesFromJSON(
+    json: any
+): ProviderCategoryModelSubcategories {
+    return ProviderCategoryModelSubcategoriesFromJSONTyped(json, false)
 }
 
-export function ProviderCategorySubcategoriesFromJSONTyped(
+export function ProviderCategoryModelSubcategoriesFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean
-): ProviderCategorySubcategories {
+): ProviderCategoryModelSubcategories {
     if (json === undefined || json === null) {
         return json
     }
@@ -50,8 +52,8 @@ export function ProviderCategorySubcategoriesFromJSONTyped(
     }
 }
 
-export function ProviderCategorySubcategoriesToJSON(
-    value?: ProviderCategorySubcategories | null
+export function ProviderCategoryModelSubcategoriesToJSON(
+    value?: ProviderCategoryModelSubcategories | null
 ): any {
     if (value === undefined) {
         return undefined

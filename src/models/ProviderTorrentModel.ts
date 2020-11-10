@@ -14,112 +14,112 @@
 
 import { exists, mapValues } from '../helpers'
 import {
-    ProviderCategorySubcategories,
-    ProviderCategorySubcategoriesFromJSON,
-    ProviderCategorySubcategoriesFromJSONTyped,
-    ProviderCategorySubcategoriesToJSON,
+    ProviderCategoryModelSubcategories,
+    ProviderCategoryModelSubcategoriesFromJSON,
+    ProviderCategoryModelSubcategoriesFromJSONTyped,
+    ProviderCategoryModelSubcategoriesToJSON,
 } from './'
 
 /**
  *
  * @export
- * @interface ProviderTorrent
+ * @interface ProviderTorrentModel
  */
-export interface ProviderTorrent {
+export interface ProviderTorrentModel {
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     id: string
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     name: string
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     magnet?: string
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     seeds: number
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     downloads?: number
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     peers: number
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     comments?: number
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     size: string
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     time?: number
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     link?: string
     /**
      *
      * @type {boolean}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     isVip?: boolean
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     imdb?: string
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     numFiles?: number
     /**
      *
-     * @type {ProviderCategorySubcategories}
-     * @memberof ProviderTorrent
+     * @type {ProviderCategoryModelSubcategories}
+     * @memberof ProviderTorrentModel
      */
-    category?: ProviderCategorySubcategories
+    category?: ProviderCategoryModelSubcategories
 }
 
-export function ProviderTorrentFromJSON(json: any): ProviderTorrent {
-    return ProviderTorrentFromJSONTyped(json, false)
+export function ProviderTorrentModelFromJSON(json: any): ProviderTorrentModel {
+    return ProviderTorrentModelFromJSONTyped(json, false)
 }
 
-export function ProviderTorrentFromJSONTyped(
+export function ProviderTorrentModelFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean
-): ProviderTorrent {
+): ProviderTorrentModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -139,11 +139,11 @@ export function ProviderTorrentFromJSONTyped(
         numFiles: !exists(json, 'numFiles') ? undefined : json['numFiles'],
         category: !exists(json, 'category')
             ? undefined
-            : ProviderCategorySubcategoriesFromJSON(json['category']),
+            : ProviderCategoryModelSubcategoriesFromJSON(json['category']),
     }
 }
 
-export function ProviderTorrentToJSON(value?: ProviderTorrent | null): any {
+export function ProviderTorrentModelToJSON(value?: ProviderTorrentModel | null): any {
     if (value === undefined) {
         return undefined
     }
@@ -164,6 +164,6 @@ export function ProviderTorrentToJSON(value?: ProviderTorrent | null): any {
         isVip: value.isVip,
         imdb: value.imdb,
         numFiles: value.numFiles,
-        category: ProviderCategorySubcategoriesToJSON(value.category),
+        category: ProviderCategoryModelSubcategoriesToJSON(value.category),
     }
 }

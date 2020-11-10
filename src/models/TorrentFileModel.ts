@@ -12,50 +12,53 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime'
+import { exists, mapValues } from '../helpers'
 /**
  *
  * @export
- * @interface TorrentFile
+ * @interface TorrentFileModel
  */
-export interface TorrentFile {
+export interface TorrentFileModel {
     /**
      *
      * @type {string}
-     * @memberof TorrentFile
+     * @memberof TorrentFileModel
      */
     name: string
     /**
      *
      * @type {string}
-     * @memberof TorrentFile
+     * @memberof TorrentFileModel
      */
     path: string
     /**
      *
      * @type {string}
-     * @memberof TorrentFile
+     * @memberof TorrentFileModel
      */
     type: string
     /**
      *
      * @type {number}
-     * @memberof TorrentFile
+     * @memberof TorrentFileModel
      */
     length: number
     /**
      *
      * @type {string}
-     * @memberof TorrentFile
+     * @memberof TorrentFileModel
      */
     stream: string
 }
 
-export function TorrentFileFromJSON(json: any): TorrentFile {
-    return TorrentFileFromJSONTyped(json, false)
+export function TorrentFileModelFromJSON(json: any): TorrentFileModel {
+    return TorrentFileModelFromJSONTyped(json, false)
 }
 
-export function TorrentFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): TorrentFile {
+export function TorrentFileModelFromJSONTyped(
+    json: any,
+    ignoreDiscriminator: boolean
+): TorrentFileModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -68,7 +71,7 @@ export function TorrentFileFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
 }
 
-export function TorrentFileToJSON(value?: TorrentFile | null): any {
+export function TorrentFileModelToJSON(value?: TorrentFileModel | null): any {
     if (value === undefined) {
         return undefined
     }

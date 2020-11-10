@@ -17,21 +17,21 @@
  * @export
  * @enum {string}
  */
-export enum ProviderFeature {
+export enum ProviderFeatureModel {
     Search = 'search',
 }
 
-export function ProviderFeatureFromJSON(json: any): ProviderFeature {
-    return ProviderFeatureFromJSONTyped(json, false)
+export function ProviderFeatureModelFromJSON(json: any): ProviderFeatureModel {
+    return ProviderFeatureModelFromJSONTyped(json, false)
 }
 
-export function ProviderFeatureFromJSONTyped(
+export function ProviderFeatureModelFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean
-): ProviderFeature {
-    return json as ProviderFeature
+): ProviderFeatureModel {
+    return json as ProviderFeatureModel
 }
 
-export function ProviderFeatureToJSON(value?: ProviderFeature | null): any {
+export function ProviderFeatureModelToJSON(value?: ProviderFeatureModel | null): any {
     return value as any
 }

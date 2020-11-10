@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'timeago.js'
 
-import { DashboardApi, TorrentsApi, Torrent, Usage } from '../helpers/client'
+import { DashboardApi, TorrentsApi, TorrentModel, UsageModel } from '../helpers/client'
 import { formatBytes, parseError } from '../helpers'
 import { getApiConfig } from '../config'
 import { withBearer } from './parts/auth'
 
 export const DashboardComponent = withBearer(({ bearer }) => {
-    const [torrents, setTorrents] = useState<Torrent[]>()
-    const [usage, setUsage] = useState<Usage>()
+    const [torrents, setTorrents] = useState<TorrentModel[]>()
+    const [usage, setUsage] = useState<UsageModel>()
     const [error, setError] = useState('')
 
     const updateTorrents = async () =>

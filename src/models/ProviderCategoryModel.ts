@@ -12,48 +12,48 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime'
+import { exists, mapValues } from '../helpers'
 import {
-    ProviderCategorySubcategories,
-    ProviderCategorySubcategoriesFromJSON,
-    ProviderCategorySubcategoriesFromJSONTyped,
-    ProviderCategorySubcategoriesToJSON,
+    ProviderCategoryModelSubcategories,
+    ProviderCategoryModelSubcategoriesFromJSON,
+    ProviderCategoryModelSubcategoriesFromJSONTyped,
+    ProviderCategoryModelSubcategoriesToJSON,
 } from './'
 
 /**
  *
  * @export
- * @interface ProviderCategory
+ * @interface ProviderCategoryModel
  */
-export interface ProviderCategory {
+export interface ProviderCategoryModel {
     /**
      *
      * @type {string}
-     * @memberof ProviderCategory
+     * @memberof ProviderCategoryModel
      */
     name: string
     /**
      *
      * @type {string}
-     * @memberof ProviderCategory
+     * @memberof ProviderCategoryModel
      */
     id: string
     /**
      *
-     * @type {Array<ProviderCategorySubcategories>}
-     * @memberof ProviderCategory
+     * @type {Array<ProviderCategoryModelSubcategories>}
+     * @memberof ProviderCategoryModel
      */
-    subcategories: Array<ProviderCategorySubcategories>
+    subcategories: Array<ProviderCategoryModelSubcategories>
 }
 
-export function ProviderCategoryFromJSON(json: any): ProviderCategory {
-    return ProviderCategoryFromJSONTyped(json, false)
+export function ProviderCategoryModelFromJSON(json: any): ProviderCategoryModel {
+    return ProviderCategoryModelFromJSONTyped(json, false)
 }
 
-export function ProviderCategoryFromJSONTyped(
+export function ProviderCategoryModelFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean
-): ProviderCategory {
+): ProviderCategoryModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -61,12 +61,12 @@ export function ProviderCategoryFromJSONTyped(
         name: json['name'],
         id: json['id'],
         subcategories: (json['subcategories'] as Array<any>).map(
-            ProviderCategorySubcategoriesFromJSON
+            ProviderCategoryModelSubcategoriesFromJSON
         ),
     }
 }
 
-export function ProviderCategoryToJSON(value?: ProviderCategory | null): any {
+export function ProviderCategoryModelToJSON(value?: ProviderCategoryModel | null): any {
     if (value === undefined) {
         return undefined
     }
@@ -76,6 +76,8 @@ export function ProviderCategoryToJSON(value?: ProviderCategory | null): any {
     return {
         name: value.name,
         id: value.id,
-        subcategories: (value.subcategories as Array<any>).map(ProviderCategorySubcategoriesToJSON),
+        subcategories: (value.subcategories as Array<any>).map(
+            ProviderCategoryModelSubcategoriesToJSON
+        ),
     }
 }

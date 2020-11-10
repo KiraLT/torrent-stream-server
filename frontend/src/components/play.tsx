@@ -3,14 +3,14 @@ import { useLocation, Link } from 'react-router-dom'
 import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 
-import { TorrentsApi, Torrent, TorrentFile } from '../helpers/client'
+import { TorrentsApi, TorrentModel, TorrentFileModel } from '../helpers/client'
 import { getApiConfig, apiDomain } from '../config'
 import { formatBytes, sortBy, parseError } from '../helpers'
 import { addHistoryItem } from '../helpers/history'
 import { withBearer } from './parts/auth'
 
 export const PlayComponent = withBearer(({ bearer }) => {
-    const [torrent, setTorrent] = useState<Torrent>()
+    const [torrent, setTorrent] = useState<TorrentModel>()
     const [error, setError] = useState('')
     const location = useLocation()
 
@@ -140,7 +140,7 @@ export const PlayComponent = withBearer(({ bearer }) => {
     )
 })
 
-function TorrentFileComponent({ file }: { file: TorrentFile }): JSX.Element {
+function TorrentFileComponent({ file }: { file: TorrentFileModel }): JSX.Element {
     if (file.type.includes('video')) {
         return <VideoPlayerComponent video={apiDomain + file.stream} type={file.type} />
     }

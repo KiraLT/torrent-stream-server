@@ -14,12 +14,12 @@
 
 import * as runtime from '../runtime'
 import {
-    ApiError,
-    ApiErrorFromJSON,
-    ApiErrorToJSON,
-    Success,
-    SuccessFromJSON,
-    SuccessToJSON,
+    ApiErrorModel,
+    ApiErrorModelFromJSON,
+    ApiErrorModelToJSON,
+    SuccessModel,
+    SuccessModelFromJSON,
+    SuccessModelToJSON,
 } from '../models'
 
 /**
@@ -28,7 +28,7 @@ import {
 export class AuthApi extends runtime.BaseAPI {
     /**
      */
-    async authRaw(): Promise<runtime.ApiResponse<Success>> {
+    async authRaw(): Promise<runtime.ApiResponse<SuccessModel>> {
         const queryParameters: runtime.HTTPQuery = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
@@ -48,12 +48,12 @@ export class AuthApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => SuccessFromJSON(jsonValue))
+        return new runtime.JSONApiResponse(response, (jsonValue) => SuccessModelFromJSON(jsonValue))
     }
 
     /**
      */
-    async auth(): Promise<Success> {
+    async auth(): Promise<SuccessModel> {
         const response = await this.authRaw()
         return await response.value()
     }

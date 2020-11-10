@@ -3,7 +3,7 @@ import { Logger } from 'winston'
 import { NotFound } from 'http-errors'
 
 import { Config } from '../config'
-import { Torrent } from '../models'
+import { TorrentModel } from '../models'
 import { validateString } from '../helpers/validation'
 import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
 import { signJwtToken } from '../helpers'
@@ -24,7 +24,7 @@ function getSteamUrl(torrent: string, file: string, encodeToken?: string): strin
     return `/stream/${encodeURIComponent(torrent)}?file=${encodeURIComponent(file)}`
 }
 
-function torrentToJson(v: TorrentClientTorrent, encodeToken?: string): Torrent {
+function torrentToJson(v: TorrentClientTorrent, encodeToken?: string): TorrentModel {
     return {
         name: v.name,
         infoHash: v.infoHash,
@@ -47,16 +47,16 @@ export function getTorrentsRouter(config: Config, _logger: Logger, client: Torre
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
     return Router()
-        .post<{}, Torrent, {}, { torrent: unknown }>('/torrents', async (req, res) => {
+        .post<{}, TorrentModel, {}, { torrent: unknown }>('/torrents', async (req, res) => {
             const link = validateString(req.query.torrent, 'torrent')
             const torrent = await client.addTorrent(link)
 
             res.json(torrentToJson(torrent, encodeToken))
         })
-        .get<{}, Torrent[], {}, {}>('/torrents', (_req, res) => {
+        .get<{}, TorrentModel[], {}, {}>('/torrents', (_req, res) => {
             return res.json(client.getTorrents().map((v) => torrentToJson(v, encodeToken)))
         })
-        .get<{ id: string }, Torrent, {}, {}>('/torrents/:id', (req, res) => {
+        .get<{ id: string }, TorrentModel, {}, {}>('/torrents/:id', (req, res) => {
             const torrent = client.getTorrent(validateString(req.params.id, 'id'))
 
             if (torrent) {

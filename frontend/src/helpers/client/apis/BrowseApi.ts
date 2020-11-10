@@ -14,16 +14,24 @@
 
 import * as runtime from '../runtime'
 import {
-    ApiError,
-    ApiErrorFromJSON,
-    ApiErrorToJSON,
-    Provider,
-    ProviderFromJSON,
-    ProviderToJSON,
-    ProviderTorrent,
-    ProviderTorrentFromJSON,
-    ProviderTorrentToJSON,
+    ApiErrorModel,
+    ApiErrorModelFromJSON,
+    ApiErrorModelToJSON,
+    MagnetModel,
+    MagnetModelFromJSON,
+    MagnetModelToJSON,
+    ProviderModel,
+    ProviderModelFromJSON,
+    ProviderModelToJSON,
+    ProviderTorrentModel,
+    ProviderTorrentModelFromJSON,
+    ProviderTorrentModelToJSON,
 } from '../models'
+
+export interface GetMagnetRequest {
+    provider: string
+    torrentId: string
+}
 
 export interface SearchTorrentsRequest {
     query: string
@@ -37,7 +45,60 @@ export interface SearchTorrentsRequest {
 export class BrowseApi extends runtime.BaseAPI {
     /**
      */
-    async getProvidersRaw(): Promise<runtime.ApiResponse<Array<Provider>>> {
+    async getMagnetRaw(
+        requestParameters: GetMagnetRequest
+    ): Promise<runtime.ApiResponse<MagnetModel>> {
+        if (requestParameters.provider === null || requestParameters.provider === undefined) {
+            throw new runtime.RequiredError(
+                'provider',
+                'Required parameter requestParameters.provider was null or undefined when calling getMagnet.'
+            )
+        }
+
+        if (requestParameters.torrentId === null || requestParameters.torrentId === undefined) {
+            throw new runtime.RequiredError(
+                'torrentId',
+                'Required parameter requestParameters.torrentId was null or undefined when calling getMagnet.'
+            )
+        }
+
+        const queryParameters: runtime.HTTPQuery = {}
+
+        const headerParameters: runtime.HTTPHeaders = {}
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken
+            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
+
+            if (tokenString) {
+                headerParameters['Authorization'] = `Bearer ${tokenString}`
+            }
+        }
+        const response = await this.request({
+            path: `/api/browse/providers/{provider}/magnet/{torrentId}`
+                .replace(`{${'provider'}}`, encodeURIComponent(String(requestParameters.provider)))
+                .replace(
+                    `{${'torrentId'}}`,
+                    encodeURIComponent(String(requestParameters.torrentId))
+                ),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        })
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MagnetModelFromJSON(jsonValue))
+    }
+
+    /**
+     */
+    async getMagnet(requestParameters: GetMagnetRequest): Promise<MagnetModel> {
+        const response = await this.getMagnetRaw(requestParameters)
+        return await response.value()
+    }
+
+    /**
+     */
+    async getProvidersRaw(): Promise<runtime.ApiResponse<Array<ProviderModel>>> {
         const queryParameters: runtime.HTTPQuery = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
@@ -57,12 +118,14 @@ export class BrowseApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ProviderFromJSON))
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            jsonValue.map(ProviderModelFromJSON)
+        )
     }
 
     /**
      */
-    async getProviders(): Promise<Array<Provider>> {
+    async getProviders(): Promise<Array<ProviderModel>> {
         const response = await this.getProvidersRaw()
         return await response.value()
     }
@@ -71,7 +134,7 @@ export class BrowseApi extends runtime.BaseAPI {
      */
     async searchTorrentsRaw(
         requestParameters: SearchTorrentsRequest
-    ): Promise<runtime.ApiResponse<Array<ProviderTorrent>>> {
+    ): Promise<runtime.ApiResponse<Array<ProviderTorrentModel>>> {
         if (requestParameters.query === null || requestParameters.query === undefined) {
             throw new runtime.RequiredError(
                 'query',
@@ -118,7 +181,7 @@ export class BrowseApi extends runtime.BaseAPI {
         })
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            jsonValue.map(ProviderTorrentFromJSON)
+            jsonValue.map(ProviderTorrentModelFromJSON)
         )
     }
 
@@ -126,7 +189,7 @@ export class BrowseApi extends runtime.BaseAPI {
      */
     async searchTorrents(
         requestParameters: SearchTorrentsRequest
-    ): Promise<Array<ProviderTorrent>> {
+    ): Promise<Array<ProviderTorrentModel>> {
         const response = await this.searchTorrentsRaw(requestParameters)
         return await response.value()
     }

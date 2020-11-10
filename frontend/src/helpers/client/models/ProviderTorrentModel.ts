@@ -14,120 +14,136 @@
 
 import { exists, mapValues } from '../runtime'
 import {
-    ProviderCategorySubcategories,
-    ProviderCategorySubcategoriesFromJSON,
-    ProviderCategorySubcategoriesFromJSONTyped,
-    ProviderCategorySubcategoriesToJSON,
+    ProviderCategoryModelSubcategories,
+    ProviderCategoryModelSubcategoriesFromJSON,
+    ProviderCategoryModelSubcategoriesFromJSONTyped,
+    ProviderCategoryModelSubcategoriesToJSON,
 } from './'
 
 /**
  *
  * @export
- * @interface ProviderTorrent
+ * @interface ProviderTorrentModel
  */
-export interface ProviderTorrent {
+export interface ProviderTorrentModel {
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
+     */
+    id: string
+    /**
+     *
+     * @type {string}
+     * @memberof ProviderTorrentModel
      */
     name: string
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
-    magnet: string
+    magnet?: string
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     seeds: number
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     downloads?: number
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     peers: number
     /**
      *
+     * @type {number}
+     * @memberof ProviderTorrentModel
+     */
+    comments?: number
+    /**
+     *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     size: string
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     time?: number
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     link?: string
     /**
      *
      * @type {boolean}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     isVip?: boolean
     /**
      *
      * @type {string}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     imdb?: string
     /**
      *
      * @type {number}
-     * @memberof ProviderTorrent
+     * @memberof ProviderTorrentModel
      */
     numFiles?: number
     /**
      *
-     * @type {ProviderCategorySubcategories}
-     * @memberof ProviderTorrent
+     * @type {ProviderCategoryModelSubcategories}
+     * @memberof ProviderTorrentModel
      */
-    category: ProviderCategorySubcategories
+    category?: ProviderCategoryModelSubcategories
 }
 
-export function ProviderTorrentFromJSON(json: any): ProviderTorrent {
-    return ProviderTorrentFromJSONTyped(json, false)
+export function ProviderTorrentModelFromJSON(json: any): ProviderTorrentModel {
+    return ProviderTorrentModelFromJSONTyped(json, false)
 }
 
-export function ProviderTorrentFromJSONTyped(
+export function ProviderTorrentModelFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean
-): ProviderTorrent {
+): ProviderTorrentModel {
     if (json === undefined || json === null) {
         return json
     }
     return {
+        id: json['id'],
         name: json['name'],
-        magnet: json['magnet'],
+        magnet: !exists(json, 'magnet') ? undefined : json['magnet'],
         seeds: json['seeds'],
         downloads: !exists(json, 'downloads') ? undefined : json['downloads'],
         peers: json['peers'],
+        comments: !exists(json, 'comments') ? undefined : json['comments'],
         size: json['size'],
         time: !exists(json, 'time') ? undefined : json['time'],
         link: !exists(json, 'link') ? undefined : json['link'],
         isVip: !exists(json, 'isVip') ? undefined : json['isVip'],
         imdb: !exists(json, 'imdb') ? undefined : json['imdb'],
         numFiles: !exists(json, 'numFiles') ? undefined : json['numFiles'],
-        category: ProviderCategorySubcategoriesFromJSON(json['category']),
+        category: !exists(json, 'category')
+            ? undefined
+            : ProviderCategoryModelSubcategoriesFromJSON(json['category']),
     }
 }
 
-export function ProviderTorrentToJSON(value?: ProviderTorrent | null): any {
+export function ProviderTorrentModelToJSON(value?: ProviderTorrentModel | null): any {
     if (value === undefined) {
         return undefined
     }
@@ -135,17 +151,19 @@ export function ProviderTorrentToJSON(value?: ProviderTorrent | null): any {
         return null
     }
     return {
+        id: value.id,
         name: value.name,
         magnet: value.magnet,
         seeds: value.seeds,
         downloads: value.downloads,
         peers: value.peers,
+        comments: value.comments,
         size: value.size,
         time: value.time,
         link: value.link,
         isVip: value.isVip,
         imdb: value.imdb,
         numFiles: value.numFiles,
-        category: ProviderCategorySubcategoriesToJSON(value.category),
+        category: ProviderCategoryModelSubcategoriesToJSON(value.category),
     }
 }

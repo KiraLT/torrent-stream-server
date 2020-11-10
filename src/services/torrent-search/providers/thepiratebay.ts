@@ -1,7 +1,5 @@
-import fetch from 'node-fetch'
-
-import { Provider, ProviderSearchOptions, ProviderFeature } from '.'
-import { formatMagnet } from '../helpers'
+import { Provider, ProviderSearchOptions } from '.'
+import { formatMagnet, loadJson } from '../helpers'
 import { formatBytes } from '../../../helpers'
 
 export interface ThepiratebayItem {
@@ -21,6 +19,8 @@ export interface ThepiratebayItem {
 
 export class ThepiratebayProvider extends Provider {
     static providerName = 'ThePirateBay' as const
+
+    protected domain: string = 'https://apibay.org'
 
     trackers = [
         'udp://tracker.coppersurfer.tk:6969/announce',
@@ -248,23 +248,17 @@ export class ThepiratebayProvider extends Provider {
                     ],
                 },
             ],
-            features: [ProviderFeature.Search],
         }
     }
 
     async search(query: string, options?: ProviderSearchOptions) {
         const { category, limit } = options || {}
 
-        const url = `https://apibay.org/q.php?q=${encodeURIComponent(
+        const url = `${this.domain}/q.php?q=${encodeURIComponent(
             query
         )}&cat=${encodeURIComponent(category || '')}`
-        const response = await fetch(url)
 
-        if (!response.ok) {
-            throw new Error('Failed to load results')
-        }
-
-        const result = (await response.json()) as ThepiratebayItem[]
+        const result = await loadJson<ThepiratebayItem[]>(url)
 
         const categories = (await this.getMeta()).categories.flatMap((v) => [
             ...v.subcategories,
@@ -275,6 +269,7 @@ export class ThepiratebayProvider extends Provider {
         ])
 
         return result.map((v) => ({
+            id: v.id,
             name: v.name,
             magnet: formatMagnet(v.info_hash, v.name, this.trackers),
             seeds: parseInt(v.seeders, 10),

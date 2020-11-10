@@ -14,12 +14,12 @@
 
 import * as runtime from '../runtime'
 import {
-    ApiError,
-    ApiErrorFromJSON,
-    ApiErrorToJSON,
-    Torrent,
-    TorrentFromJSON,
-    TorrentToJSON,
+    ApiErrorModel,
+    ApiErrorModelFromJSON,
+    ApiErrorModelToJSON,
+    TorrentModel,
+    TorrentModelFromJSON,
+    TorrentModelToJSON,
 } from '../models'
 
 export interface CreateTorrentRequest {
@@ -38,7 +38,7 @@ export class TorrentsApi extends runtime.BaseAPI {
      */
     async createTorrentRaw(
         requestParameters: CreateTorrentRequest
-    ): Promise<runtime.ApiResponse<Torrent>> {
+    ): Promise<runtime.ApiResponse<TorrentModel>> {
         if (requestParameters.torrent === null || requestParameters.torrent === undefined) {
             throw new runtime.RequiredError(
                 'torrent',
@@ -69,12 +69,12 @@ export class TorrentsApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => TorrentFromJSON(jsonValue))
+        return new runtime.JSONApiResponse(response, (jsonValue) => TorrentModelFromJSON(jsonValue))
     }
 
     /**
      */
-    async createTorrent(requestParameters: CreateTorrentRequest): Promise<Torrent> {
+    async createTorrent(requestParameters: CreateTorrentRequest): Promise<TorrentModel> {
         const response = await this.createTorrentRaw(requestParameters)
         return await response.value()
     }
@@ -83,7 +83,7 @@ export class TorrentsApi extends runtime.BaseAPI {
      */
     async getTorrentRaw(
         requestParameters: GetTorrentRequest
-    ): Promise<runtime.ApiResponse<Torrent>> {
+    ): Promise<runtime.ApiResponse<TorrentModel>> {
         if (requestParameters.infoHash === null || requestParameters.infoHash === undefined) {
             throw new runtime.RequiredError(
                 'infoHash',
@@ -113,19 +113,19 @@ export class TorrentsApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => TorrentFromJSON(jsonValue))
+        return new runtime.JSONApiResponse(response, (jsonValue) => TorrentModelFromJSON(jsonValue))
     }
 
     /**
      */
-    async getTorrent(requestParameters: GetTorrentRequest): Promise<Torrent> {
+    async getTorrent(requestParameters: GetTorrentRequest): Promise<TorrentModel> {
         const response = await this.getTorrentRaw(requestParameters)
         return await response.value()
     }
 
     /**
      */
-    async getTorrentsRaw(): Promise<runtime.ApiResponse<Array<Torrent>>> {
+    async getTorrentsRaw(): Promise<runtime.ApiResponse<Array<TorrentModel>>> {
         const queryParameters: runtime.HTTPQuery = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
@@ -145,12 +145,14 @@ export class TorrentsApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TorrentFromJSON))
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            jsonValue.map(TorrentModelFromJSON)
+        )
     }
 
     /**
      */
-    async getTorrents(): Promise<Array<Torrent>> {
+    async getTorrents(): Promise<Array<TorrentModel>> {
         const response = await this.getTorrentsRaw()
         return await response.value()
     }

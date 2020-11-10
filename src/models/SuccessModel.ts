@@ -12,26 +12,26 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime'
+import { exists, mapValues } from '../helpers'
 /**
  *
  * @export
- * @interface Success
+ * @interface SuccessModel
  */
-export interface Success {
+export interface SuccessModel {
     /**
      *
      * @type {boolean}
-     * @memberof Success
+     * @memberof SuccessModel
      */
     success: boolean
 }
 
-export function SuccessFromJSON(json: any): Success {
-    return SuccessFromJSONTyped(json, false)
+export function SuccessModelFromJSON(json: any): SuccessModel {
+    return SuccessModelFromJSONTyped(json, false)
 }
 
-export function SuccessFromJSONTyped(json: any, ignoreDiscriminator: boolean): Success {
+export function SuccessModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): SuccessModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -40,7 +40,7 @@ export function SuccessFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     }
 }
 
-export function SuccessToJSON(value?: Success | null): any {
+export function SuccessModelToJSON(value?: SuccessModel | null): any {
     if (value === undefined) {
         return undefined
     }

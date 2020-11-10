@@ -12,38 +12,38 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime'
+import { exists, mapValues } from '../helpers'
 /**
  *
  * @export
- * @interface Usage
+ * @interface UsageModel
  */
-export interface Usage {
+export interface UsageModel {
     /**
      *
      * @type {number}
-     * @memberof Usage
+     * @memberof UsageModel
      */
     totalDiskSpace: number
     /**
      *
      * @type {number}
-     * @memberof Usage
+     * @memberof UsageModel
      */
     freeDiskSpace: number
     /**
      *
      * @type {number}
-     * @memberof Usage
+     * @memberof UsageModel
      */
     usedTorrentSpace: number
 }
 
-export function UsageFromJSON(json: any): Usage {
-    return UsageFromJSONTyped(json, false)
+export function UsageModelFromJSON(json: any): UsageModel {
+    return UsageModelFromJSONTyped(json, false)
 }
 
-export function UsageFromJSONTyped(json: any, ignoreDiscriminator: boolean): Usage {
+export function UsageModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): UsageModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -54,7 +54,7 @@ export function UsageFromJSONTyped(json: any, ignoreDiscriminator: boolean): Usa
     }
 }
 
-export function UsageToJSON(value?: Usage | null): any {
+export function UsageModelToJSON(value?: UsageModel | null): any {
     if (value === undefined) {
         return undefined
     }

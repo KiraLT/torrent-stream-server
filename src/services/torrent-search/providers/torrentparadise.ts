@@ -1,7 +1,5 @@
-import fetch from 'node-fetch'
-
-import { Provider, ProviderSearchOptions, ProviderFeature, ProviderMeta, ProviderResult } from '.'
-import { formatMagnet } from '../helpers'
+import { Provider, ProviderSearchOptions, ProviderMeta, ProviderTorrent } from '.'
+import { formatMagnet, loadJson } from '../helpers'
 import { formatBytes } from '../../../helpers'
 
 export interface TorrentParadiseItem {
@@ -15,26 +13,22 @@ export interface TorrentParadiseItem {
 export class TorrentParadiseProvider extends Provider {
     static providerName = 'TorrentParadise.ml' as const
 
+    protected domain: string = 'https://torrent-paradise.ml'
+
     async getMeta(): Promise<ProviderMeta> {
         return {
             categories: [],
-            features: [ProviderFeature.Search],
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderResult[]> {
-        const { category, limit } = options || {}
+    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
+        const { } = options || {}
 
-        const url = `https://torrent-paradise.ml/api/search?q=${encodeURIComponent(query)}`
-        const response = await fetch(url)
-
-        if (!response.ok) {
-            throw new Error('Failed to load results')
-        }
-
-        const result = (await response.json()) as TorrentParadiseItem[]
+        const url = `${this.domain}/api/search?q=${encodeURIComponent(query)}`
+        const result = await loadJson<TorrentParadiseItem[]>(url)
 
         return result.map((v) => ({
+            id: v.id,
             name: v.text,
             magnet: formatMagnet(v.id, v.text, []),
             seeds: v.s,
@@ -45,5 +39,9 @@ export class TorrentParadiseProvider extends Provider {
                 id: '',
             },
         }))
+    }
+
+    public async getMagnet(): Promise<string> {
+        throw new Error('')
     }
 }

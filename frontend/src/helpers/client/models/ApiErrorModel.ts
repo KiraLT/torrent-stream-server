@@ -16,22 +16,22 @@ import { exists, mapValues } from '../runtime'
 /**
  *
  * @export
- * @interface ApiError
+ * @interface ApiErrorModel
  */
-export interface ApiError {
+export interface ApiErrorModel {
     /**
      *
      * @type {string}
-     * @memberof ApiError
+     * @memberof ApiErrorModel
      */
     error: string
 }
 
-export function ApiErrorFromJSON(json: any): ApiError {
-    return ApiErrorFromJSONTyped(json, false)
+export function ApiErrorModelFromJSON(json: any): ApiErrorModel {
+    return ApiErrorModelFromJSONTyped(json, false)
 }
 
-export function ApiErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiError {
+export function ApiErrorModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiErrorModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -40,7 +40,7 @@ export function ApiErrorFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
 }
 
-export function ApiErrorToJSON(value?: ApiError | null): any {
+export function ApiErrorModelToJSON(value?: ApiErrorModel | null): any {
     if (value === undefined) {
         return undefined
     }

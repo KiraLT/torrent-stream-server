@@ -13,69 +13,74 @@
  */
 
 import { exists, mapValues } from '../runtime'
-import { TorrentFile, TorrentFileFromJSON, TorrentFileFromJSONTyped, TorrentFileToJSON } from './'
+import {
+    TorrentFileModel,
+    TorrentFileModelFromJSON,
+    TorrentFileModelFromJSONTyped,
+    TorrentFileModelToJSON,
+} from './'
 
 /**
  *
  * @export
- * @interface Torrent
+ * @interface TorrentModel
  */
-export interface Torrent {
+export interface TorrentModel {
     /**
      *
      * @type {string}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     link: string
     /**
      *
      * @type {string}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     infoHash: string
     /**
      *
      * @type {string}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     name: string
     /**
      *
      * @type {number}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     started: number
     /**
      *
      * @type {number}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     updated: number
     /**
      *
-     * @type {Array<TorrentFile>}
-     * @memberof Torrent
+     * @type {Array<TorrentFileModel>}
+     * @memberof TorrentModel
      */
-    files: Array<TorrentFile>
+    files: Array<TorrentFileModel>
     /**
      *
      * @type {number}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     downloaded: number
     /**
      *
      * @type {number}
-     * @memberof Torrent
+     * @memberof TorrentModel
      */
     downloadSpeed: number
 }
 
-export function TorrentFromJSON(json: any): Torrent {
-    return TorrentFromJSONTyped(json, false)
+export function TorrentModelFromJSON(json: any): TorrentModel {
+    return TorrentModelFromJSONTyped(json, false)
 }
 
-export function TorrentFromJSONTyped(json: any, ignoreDiscriminator: boolean): Torrent {
+export function TorrentModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): TorrentModel {
     if (json === undefined || json === null) {
         return json
     }
@@ -85,13 +90,13 @@ export function TorrentFromJSONTyped(json: any, ignoreDiscriminator: boolean): T
         name: json['name'],
         started: json['started'],
         updated: json['updated'],
-        files: (json['files'] as Array<any>).map(TorrentFileFromJSON),
+        files: (json['files'] as Array<any>).map(TorrentFileModelFromJSON),
         downloaded: json['downloaded'],
         downloadSpeed: json['downloadSpeed'],
     }
 }
 
-export function TorrentToJSON(value?: Torrent | null): any {
+export function TorrentModelToJSON(value?: TorrentModel | null): any {
     if (value === undefined) {
         return undefined
     }
@@ -104,7 +109,7 @@ export function TorrentToJSON(value?: Torrent | null): any {
         name: value.name,
         started: value.started,
         updated: value.updated,
-        files: (value.files as Array<any>).map(TorrentFileToJSON),
+        files: (value.files as Array<any>).map(TorrentFileModelToJSON),
         downloaded: value.downloaded,
         downloadSpeed: value.downloadSpeed,
     }

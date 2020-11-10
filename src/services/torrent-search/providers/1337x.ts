@@ -1,10 +1,9 @@
-import fetch from 'node-fetch'
-import { load } from 'cheerio'
-
-import { Provider, ProviderSearchOptions, ProviderFeature } from '.'
+import { Provider, ProviderSearchOptions, ProviderMeta, ProviderTorrent } from '.'
+import { crawlPage } from '../helpers'
 
 export class X1337Provider extends Provider {
     static providerName = '1337x' as const
+    protected domain: string = 'https://www.1337x.to'
 
     trackers = [
         'udp://tracker.coppersurfer.tk:6969/announce',
@@ -16,7 +15,7 @@ export class X1337Provider extends Provider {
         'udp://tracker.cyberia.is:6969/announce',
     ]
 
-    async getMeta() {
+    async getMeta(): Promise<ProviderMeta> {
         return {
             categories: [
                 {
@@ -32,6 +31,11 @@ export class X1337Provider extends Provider {
                 {
                     name: 'Games',
                     id: 'Games',
+                    subcategories: [],
+                },
+                {
+                    name: 'Music',
+                    id: 'Music',
                     subcategories: [],
                 },
                 {
@@ -60,59 +64,58 @@ export class X1337Provider extends Provider {
                     subcategories: [],
                 },
             ],
-            features: [ProviderFeature.Search],
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions) {
+    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
         const { category, limit } = options || {}
 
-        const domain = 'http://www.1337x.to'
         const url = category
-            ? `${domain}/category-search/${encodeURIComponent(query)}/${encodeURIComponent(
+            ? `${this.domain}/category-search/${encodeURIComponent(query)}/${encodeURIComponent(
                   category || ''
-              )}/1`
-            : `${domain}/search/${encodeURIComponent(query)}/1/`
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': `torrent-stream-server (+https://github.com/KiraLT/torrent-stream-server)`,
-            },
-        })
+              )}/1/`
+            : `${this.domain}/search/${encodeURIComponent(query)}/1/`
 
-        if (!response.ok) {
-            throw new Error('Failed to load results')
-        }
-
-        const $ = load(await response.text())
-
-        const categories = (await this.getMeta()).categories.flatMap((v) => [
-            ...v.subcategories,
-            {
-                id: v.id,
-                name: v.name,
-            },
-        ])
+        const { $ } = await crawlPage(url)
 
         return $('tbody > tr')
             .get()
             .map((v) => {
                 const el = $(v)
 
-                const id = (el.find('a:nth-child(2)').attr('href') || '').trim()
+                const id = (el.find('a:nth-child(2)').attr('href') || '').split('/')[2] || ''
+
+                // Fix strange HTML
+                el.find('.size .seeds').remove()
 
                 return {
+                    id,
                     name: el.find('a').text().trim(),
-                    magnet: '',
                     seeds: parseInt(el.find('.seeds').text().trim(), 10) || 0,
                     peers: parseInt(el.find('.leeches').text().trim(), 10) || 0,
-                    size: '',
-                    time: 0,
-                    category: categories.find((c) => c.id === v.sub_category) || {
-                        name: 'All',
-                        id: '',
-                    },
-                    link: '',
+                    comments: parseInt(el.find('.comments').text().trim(), 10) || 0,
+                    size: el.find('.size').text().trim(),
+                    time: this.parseDate(el.find('.coll-date').text().trim()).getTime(),
+                    link: this.domain + el.find('a:nth-child(2)').attr('href'),
                 }
             })
+    }
+
+    async getMagnet(id: string): Promise<string> {
+        const url = `${this.domain}/torrent/${id}/x/`
+
+        const { $ } = await crawlPage(url)
+
+        const magnet = $('.torrent-detail-page ul li a').first().attr('href')
+
+        if (!magnet) {
+            throw new Error('Failed to load magnet')
+        }
+
+        return magnet.trim()
+    }
+
+    protected parseDate(value: string): Date {
+        return new Date(value.replace('\'', '20').replace('th', '').replace('st', '').replace('rd', ''))
     }
 }

@@ -14,7 +14,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Success'
+                                $ref: '#/components/schemas/SuccessModel'
                 401:
                     $ref: '#/components/responses/401'
                 403:
@@ -30,7 +30,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Usage'
+                                $ref: '#/components/schemas/UsageModel'
                 401:
                     $ref: '#/components/responses/401'
                 403:
@@ -48,7 +48,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: '#/components/schemas/Torrent'
+                                    $ref: '#/components/schemas/TorrentModel'
                 401:
                     $ref: '#/components/responses/401'
                 403:
@@ -70,7 +70,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Torrent'
+                                $ref: '#/components/schemas/TorrentModel'
                 400:
                     $ref: '#/components/responses/400'
                 401:
@@ -95,7 +95,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Torrent'
+                                $ref: '#/components/schemas/TorrentModel'
                 404:
                     $ref: '#/components/responses/404'
                 401:
@@ -155,11 +155,42 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: '#/components/schemas/Provider'
+                                    $ref: '#/components/schemas/ProviderModel'
                 401:
                     $ref: '#/components/responses/401'
                 403:
                     $ref: '#/components/responses/403'
+    /api/browse/providers/{provider}/magnet/{torrentId}:
+        get:
+            operationId: getMagnet
+            tags:
+                - browse
+            parameters:
+                - in: path
+                  name: provider
+                  description: provider name
+                  required: true
+                  schema:
+                      type: string
+                - in: path
+                  name: torrentId
+                  description: torrent id
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/MagnetModel'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+                404:
+                    $ref: '#/components/responses/404'
     /api/browse/search:
         get:
             operationId: searchTorrents
@@ -191,7 +222,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: '#/components/schemas/ProviderTorrent'
+                                    $ref: '#/components/schemas/ProviderTorrentModel'
                 400:
                     $ref: '#/components/responses/400'
                 401:
@@ -200,7 +231,7 @@ paths:
                     $ref: '#/components/responses/403'
 components:
     schemas:
-        Usage:
+        UsageModel:
             type: object
             properties:
                 totalDiskSpace:
@@ -210,7 +241,7 @@ components:
                 usedTorrentSpace:
                     type: number
             required: ['totalDiskSpace', 'freeDiskSpace', 'usedTorrentSpace']
-        Torrent:
+        TorrentModel:
             type: object
             properties:
                 link:
@@ -226,13 +257,13 @@ components:
                 files:
                     type: array
                     items:
-                        $ref: '#/components/schemas/TorrentFile'
+                        $ref: '#/components/schemas/TorrentFileModel'
                 downloaded:
                     type: number
                 downloadSpeed:
                     type: number
             required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed']
-        TorrentFile:
+        TorrentFileModel:
             type: object
             properties:
                 name:
@@ -246,7 +277,7 @@ components:
                 stream:
                     type: string
             required: ['name', 'path', 'length', 'type', 'stream']
-        Provider:
+        ProviderModel:
             type: object
             properties:
                 name:
@@ -254,13 +285,9 @@ components:
                 categories:
                     type: array
                     items:
-                        $ref: '#/components/schemas/ProviderCategory'
-                features:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ProviderFeature'
-            required: ['name', 'categories', 'features']
-        ProviderCategory:
+                        $ref: '#/components/schemas/ProviderCategoryModel'
+            required: ['name', 'categories']
+        ProviderCategoryModel:
             type: object
             properties:
                 name:
@@ -278,12 +305,11 @@ components:
                                 type: string
                         required: ['name', 'id']
             required: ['name', 'id', 'subcategories']
-        ProviderFeature:
-            type: string
-            enum: ['search']
-        ProviderTorrent:
+        ProviderTorrentModel:
             type: object
             properties:
+                id:
+                    type: string
                 name:
                     type: string
                 magnet:
@@ -293,6 +319,8 @@ components:
                 downloads:
                     type: number
                 peers:
+                    type: number
+                comments:
                     type: number
                 size:
                     type: string
@@ -314,14 +342,20 @@ components:
                         id:
                             type: string
                     required: ['name', 'id']
-            required: ['name', 'magnet', 'seeds', 'peers', 'size', 'category']
-        ApiError:
+            required: ['name', 'id', 'seeds', 'peers', 'size']
+        MagnetModel:
+            type: object
+            properties:
+                magnet:
+                    type: string
+            required: ['magnet']
+        ApiErrorModel:
             type: object
             properties:
                 error:
                     type: string
             required: ['error']
-        Success:
+        SuccessModel:
             type: object
             properties:
                 success:
@@ -335,37 +369,37 @@ components:
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ApiError'
+                        $ref: '#/components/schemas/ApiErrorModel'
         401:
             description: Unauthorized
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ApiError'
+                        $ref: '#/components/schemas/ApiErrorModel'
         403:
             description: Forbidden
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ApiError'
+                        $ref: '#/components/schemas/ApiErrorModel'
         404:
             description: Resourse not found
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ApiError'
+                        $ref: '#/components/schemas/ApiErrorModel'
         409:
             description: Conflict
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ApiError'
+                        $ref: '#/components/schemas/ApiErrorModel'
         503:
             description: Server is busy
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/ApiError'
+                        $ref: '#/components/schemas/ApiErrorModel'
     securitySchemes:
         apiKey:
             type: http

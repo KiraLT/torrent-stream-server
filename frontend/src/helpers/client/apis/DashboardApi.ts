@@ -14,12 +14,12 @@
 
 import * as runtime from '../runtime'
 import {
-    ApiError,
-    ApiErrorFromJSON,
-    ApiErrorToJSON,
-    Usage,
-    UsageFromJSON,
-    UsageToJSON,
+    ApiErrorModel,
+    ApiErrorModelFromJSON,
+    ApiErrorModelToJSON,
+    UsageModel,
+    UsageModelFromJSON,
+    UsageModelToJSON,
 } from '../models'
 
 /**
@@ -28,7 +28,7 @@ import {
 export class DashboardApi extends runtime.BaseAPI {
     /**
      */
-    async getUsageRaw(): Promise<runtime.ApiResponse<Usage>> {
+    async getUsageRaw(): Promise<runtime.ApiResponse<UsageModel>> {
         const queryParameters: runtime.HTTPQuery = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
@@ -48,12 +48,12 @@ export class DashboardApi extends runtime.BaseAPI {
             query: queryParameters,
         })
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UsageFromJSON(jsonValue))
+        return new runtime.JSONApiResponse(response, (jsonValue) => UsageModelFromJSON(jsonValue))
     }
 
     /**
      */
-    async getUsage(): Promise<Usage> {
+    async getUsage(): Promise<UsageModel> {
         const response = await this.getUsageRaw()
         return await response.value()
     }
