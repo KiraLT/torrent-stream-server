@@ -20,6 +20,11 @@
             "description": "(optional) protect API with a key. In the frontend you will be required to enter the key after each page reload.",
             "value": "",
             "required": false
+        },
+        "CONFIG": {
+            "description": "(optional) JSON config, find more on [documentation](https://github.com/KiraLT/torrent-stream-server#file)",
+            "value": "",
+            "required": false
         }
     }
 }

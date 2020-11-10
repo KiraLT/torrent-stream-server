@@ -6,7 +6,9 @@ import { merge } from './helpers'
 import configSchema from './config.schema.json'
 import { validateSchema } from './helpers/validation'
 
-export { configSchema }
+type DeepPartial<T> = {
+    [P in keyof T]?: DeepPartial<T[P]>;
+}
 
 /**
  * Project Enviroment variables.
@@ -31,7 +33,7 @@ interface EnvVariables {
      *
      * Default:  `env.PORT` or 3000
      */
-    PORT: string
+    PORT: number
     /**
      * Get ip from `X-Forwarded-*` header.
      *
@@ -46,6 +48,10 @@ interface EnvVariables {
      * Default:  undefined
      */
     API_KEY: string
+    /**
+     * JSON config
+     */
+    CONFIG: DeepPartial<Config>
 }
 
 /**
@@ -198,8 +204,26 @@ export interface Config {
     trustProxy: boolean
 }
 
-export function getEnv<T extends keyof EnvVariables>(key: T): EnvVariables[T] | undefined {
-    return process.env[key] as any
+/**
+ * Load enviroment variable using `EnvVariables` interface
+ */
+export function getEnv<T extends keyof EnvVariables>(key: T, type: 'json' | 'int' | 'string' = 'string'): EnvVariables[T] | undefined {
+    const value = (process.env[key] || '').trim() || undefined
+
+    if (value) {
+        if (type === 'json') {
+            try {
+                return JSON.parse(value)
+            } catch (err) {
+                throw new Error(`Failed to parse ${key} env variable: ${err}`)
+            }
+        }
+        if (type === 'int') {
+            return parseInt(value, 10) as EnvVariables[T] || undefined
+        }
+    }
+
+    return value as EnvVariables[T]
 }
 
 export const isInGoogleAppEngine = process.env.GAE_APPLICATION ? true : false
@@ -207,7 +231,7 @@ export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('
 
 const defaultConfig: Config = {
     host: getEnv('HOST') || '0.0.0.0',
-    port: parseInt(getEnv('PORT') || '') || 3000,
+    port: getEnv('PORT') || 3000,
     environment: getEnv('NODE_ENV') === 'development' ? 'development' : 'production',
     trustProxy:
         (getEnv('TRUST_PROXY') || '').toLowerCase() === 'true'
@@ -243,17 +267,20 @@ export async function readConfig(path: string | undefined): Promise<Config> {
     try {
         return validateSchema(
             configSchema,
-            path
-                ? merge(
-                      defaultConfig,
-                      JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' }))
-                  )
-                : defaultConfig,
+            merge(
+                merge(
+                    defaultConfig,
+                    path ? JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })) : {}
+                ),
+                getEnv('CONFIG', 'json') || {}
+            ),
             {
                 name: path || 'config',
             }
         )
-    } catch (error) {
-        throw Error(`Failed to read config from ${path} - ${error}`)
+    } catch (err) {
+        throw Error(`Configuration error: ${err}`)
     }
 }
+
+export { configSchema }
