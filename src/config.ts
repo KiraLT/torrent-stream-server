@@ -150,7 +150,7 @@ export interface Config {
      */
     security: {
         /**
-         * Stram api (`/stram/:torrent`) settings
+         * Stream API (`/stream/:torrent`) settings
          */
         streamApi: {
             /**
