@@ -141,7 +141,7 @@
             "additionalProperties": false,
             "properties": {
                 "streamApi": {
-                    "description": "Stram api (`/stram/:torrent`) settings",
+                    "description": "Stream API (`/stream/:torrent`) settings",
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
