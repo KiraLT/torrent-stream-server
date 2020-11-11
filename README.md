@@ -74,10 +74,15 @@ API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/docs/swag
 
 ### Open in VLC
 
-Running the following command from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
+Running the following commands from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
+#### By infohash (BTIH)
 
 ``` bash
 vlc "http://localhost:3000/stream/08ada5a7a6183aae1e09d831df6748d566095a10"
+```
+#### By magnet URI
+``` bash
+vlc "http://localhost:3000/stream?torrent=magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&file=Sintel.mp4"
 ```
 
 ### Download file using curl
