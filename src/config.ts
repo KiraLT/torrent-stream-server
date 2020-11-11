@@ -39,7 +39,7 @@ interface EnvVariables {
      *
      * Default:  true if inside App Engine or Heroku else false
      */
-    TRUST_PROXY: string
+    TRUST_PROXY: boolean
     /**
      * Protect API with key. It should be passed to headers to access the API (`authorization`: `bearer ${apiKey}`).
      *
@@ -207,7 +207,7 @@ export interface Config {
 /**
  * Load enviroment variable using `EnvVariables` interface
  */
-export function getEnv<T extends keyof EnvVariables>(key: T, type: 'json' | 'int' | 'string' = 'string'): EnvVariables[T] | undefined {
+export function getEnv<T extends keyof EnvVariables>(key: T, type: 'json' | 'int' | 'string' | 'bool' = 'string'): EnvVariables[T] | undefined {
     const value = (process.env[key] || '').trim() || undefined
 
     if (value) {
@@ -221,6 +221,9 @@ export function getEnv<T extends keyof EnvVariables>(key: T, type: 'json' | 'int
         if (type === 'int') {
             return parseInt(value, 10) as EnvVariables[T] || undefined
         }
+        if (type === 'bool') {
+            return (typeof value === 'string' && value.toLowerCase() === 'true') as EnvVariables[T]
+        }
     }
 
     return value as EnvVariables[T]
@@ -231,12 +234,9 @@ export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('
 
 const defaultConfig: Config = {
     host: getEnv('HOST') || '0.0.0.0',
-    port: getEnv('PORT') || 3000,
-    environment: getEnv('NODE_ENV') === 'development' ? 'development' : 'production',
-    trustProxy:
-        (getEnv('TRUST_PROXY') || '').toLowerCase() === 'true'
-            ? true
-            : isInGoogleAppEngine || isInHeroku,
+    port: getEnv('PORT', 'int') || 3000,
+    environment: getEnv('NODE_ENV', 'bool') === 'development' ? 'development' : 'production',
+    trustProxy: getEnv('TRUST_PROXY') || isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [
             {
