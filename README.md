@@ -15,15 +15,22 @@ HTTP server to convert any torrent to video stream
 
 ![Demo](https://i.imgur.com/mIzSYWV.png)
 
-## Installation
+## Setup
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
 
-### NPM package:
+### NPM package
 
 * `npm install -g torrent-stream-server`
 * `torrent-stream-server serve`
 * Go to http://127.0.0.1:3000
+
+### Other options
+
+
+* [From source](./docs/setup.md#from-source)
+* [Docker](./docs/setup.md#docker)
+* See [all options](./docs/setup.md)
 
 ## Development
 
@@ -50,9 +57,10 @@ So during developemnt you will need to run two dev servers with live reload:
 
 ### ENV variables
 
-You can pass env variables to configurate certain ares.
+You can configurate app using env variables.
 
-> Check [EnvVariables interface](./src/config.ts) to see available ENV variables
+> Check [EnvVariables interface](./src/config.ts) to see available ENV variables.
+
 
 ### File
 
