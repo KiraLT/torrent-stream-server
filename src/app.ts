@@ -1,13 +1,12 @@
 import express, { Express } from 'express'
 import { resolve, join } from 'path'
-import { exists } from 'fs'
 import cors from 'cors'
 import YAML from 'yamljs'
 import swaggerUi from 'swagger-ui-express'
 import { Unauthorized, Forbidden, NotFound } from 'http-errors'
 
 import { TorrentClient } from './services/torrent-client'
-import { readConfig, Config } from './config'
+import { readConfig, Config, frontendBuildPath } from './config'
 import { createLogger } from './helpers/logging'
 import { handleApiErrors } from './helpers/errors'
 import {
@@ -96,17 +95,9 @@ export async function setup(options?: { configFile: string }): Promise<void> {
         if (config.environment === 'production') {
             logger.info('Serving frontend files')
 
-            const path = resolve(__dirname, '../frontend/build')
-
-            app.use((req, res) => {
-                var file = path + req.path
-                exists(file, (fileExists) => {
-                    if (fileExists) {
-                        res.sendFile(file)
-                    } else {
-                        res.sendFile(join(path, 'index.html'))
-                    }
-                })
+            app.use(express.static(frontendBuildPath))
+            app.use((_req, res) => {
+                res.sendFile(join(frontendBuildPath, 'index.html'))
             })
         }
     }

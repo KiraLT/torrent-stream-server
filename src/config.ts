@@ -1,8 +1,8 @@
 import { readFile } from 'fs'
 import { promisify } from 'util'
+import { resolve } from 'path'
 
 import { merge } from './helpers'
-
 import configSchema from './config.schema.json'
 import { validateSchema } from './helpers/validation'
 
@@ -282,5 +282,10 @@ export async function readConfig(path: string | undefined): Promise<Config> {
         throw Error(`Configuration error: ${err}`)
     }
 }
+
+/**
+ * Frontend package path to build directory
+ */
+export const frontendBuildPath = resolve(__dirname, '../frontend/build')
 
 export { configSchema }
