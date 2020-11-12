@@ -1,14 +1,17 @@
 FROM node:12
 
 WORKDIR /usr/app
+
 COPY package*.json ./
 RUN npm ci --ignore-scripts
+
+COPY frontend/package*.json frontend/
+RUN npm ci --prefix frontend/
+
 COPY tsconfig.json ./
 COPY src/ src/
 RUN npm run build-backend
 
-COPY frontend/package*.json frontend/
-RUN npm ci --prefix frontend/
 COPY frontend/tsconfig.json frontend/
 COPY frontend/src/ frontend/src/
 COPY frontend/public/ frontend/public/
