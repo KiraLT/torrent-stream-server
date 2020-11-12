@@ -105,7 +105,7 @@
         "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts serve",
         "dev-frontend": "npm --prefix frontend run start",
         "heroku-cleanup": "rm -rf frontend/node_modules",
-        "postinstall": "[ ! -d frontend/src ] || (NODE_ENV=development npm --prefix frontend install)",
+        "postinstall": "[ ! -d frontend/src ] || npm --prefix frontend install",
         "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
         "start": "node lib/index.js serve",
         "uninstall": "rm -rf frontend/node_mobules"

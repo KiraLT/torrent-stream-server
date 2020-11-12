@@ -11,7 +11,15 @@
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.0",
         "reactn": "^2.2.7",
-        "timeago.js": "^4.0.2"
+        "timeago.js": "^4.0.2",
+        "typescript": "~4.0.5",
+        "@testing-library/jest-dom": "^5.11.5",
+        "@testing-library/react": "^11.1.1",
+        "@testing-library/user-event": "^12.2.0",
+        "@types/jest": "^26.0.15",
+        "@types/react": "^16.9.55",
+        "@types/react-dom": "^16.9.9",
+        "@types/react-router-dom": "^5.1.6"
     },
     "scripts": {
         "start": "PORT=3001 react-scripts start",
@@ -19,7 +27,10 @@
         "test": "react-scripts test"
     },
     "eslintConfig": {
-        "extends": "react-app"
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
     },
     "browserslist": {
         "production": [
@@ -32,16 +43,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "devDependencies": {
-        "typescript": "~4.0.5",
-        "@testing-library/jest-dom": "^5.11.5",
-        "@testing-library/react": "^11.1.1",
-        "@testing-library/user-event": "^12.2.0",
-        "@types/jest": "^26.0.15",
-        "@types/node": "^14.14.6",
-        "@types/react": "^16.9.55",
-        "@types/react-dom": "^16.9.9",
-        "@types/react-router-dom": "^5.1.6"
     }
 }
