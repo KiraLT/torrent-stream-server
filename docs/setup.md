@@ -60,7 +60,7 @@ Go to http://127.0.0.1:3000
 
 [![Docker](https://github.com/KiraLT/torrent-stream-server/workflows/Docker/badge.svg?branch=master)](https://github.com/users/KiraLT/packages/container/package/torrent-stream-server)
 
-This will start a new instance with latest version listening on `3000` port (see [all versions](https://github.com/users/KiraLT/packages/container/torrent-stream-server/versions)). 
+This will start a new instance with latest version listening on `3000` port (see [all versions](https://github.com/users/KiraLT/packages/container/torrent-stream-server/versions)).
 
 ```shell
 docker run -d --name torrent-stream-server ghcr.io/kiralt/torrent-stream-server:latest
@@ -75,3 +75,10 @@ docker run -d --name torrent-stream-server -p 80:3000 ghcr.io/kiralt/torrent-str
 ```
 
 You'll be able to access it on http://localhost
+
+### Using Docker Compose
+You can also use the provided [Docker Compose manifest](../docker-compose.yml). Customize as needed by editing and run:
+```shell
+docker-compose up -d
+```
+Also, you can use the provided manifest as a reference for Docker deployment.
