@@ -4,7 +4,9 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
 
-> Deploy to Heroku with one click, works with free tier
+> _Heroku forbids P2P services, so your account can be suspened ([learn more](https://github.com/KiraLT/torrent-stream-server/issues/32))_
+
+Deploy to Heroku with one click, works with free tier!
 
 ## NPM package
 
