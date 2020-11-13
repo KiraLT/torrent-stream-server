@@ -35,6 +35,14 @@ You can pass [configuration file](./configuration) with `-c` argument:
 torrent-stream-server serve -c config.json
 ```
 
+## NPX
+
+You can run using [NPX](https://www.npmjs.com/package/npx):
+
+```shell
+npx torrent-stream-server serve
+```
+
 ## From source
 
 [![CodeQL](https://github.com/KiraLT/torrent-stream-server/workflows/CodeQL/badge.svg?branch=master)](https://github.com/KiraLT/torrent-stream-server)
