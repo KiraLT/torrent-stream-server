@@ -25,48 +25,20 @@ HTTP server to convert any torrent to video stream
 * `torrent-stream-server serve`
 * Go to http://127.0.0.1:3000
 
+[Read more](https://kiralt.github.io/torrent-stream-server/docs/setup.md#npm-package)
+  
 ### Other options
 
-
-* [From source](./docs/setup.md#from-source)
-* [Docker](./docs/setup.md#docker)
-* See [all options](./docs/setup.md)
+* [From source](https://kiralt.github.io/torrent-stream-server/docs/setup.md#from-source)
+* [Docker](https://kiralt.github.io/torrent-stream-server/docs/setup.md#docker)
+* See [all options](https://kiralt.github.io/torrent-stream-server/docs/setup.md)
 
 ## Development
 
-One-click ready-to-code development environments:
-
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
 
-> Frontend & backend are separate packages.
-
-So during developemnt you will need to run two dev servers with live reload:
-
-* `npm run dev-backend` - start dev server on `3000` port
-* `npm run dev-frontend` - start dev server on  `3001` port
-
-## Commands
-
-* `npm install` - will install both: frontend & backend
-* `npm run build` - will build backend to `lib` directory & frontend to `frontend/build`
-* `npm run start` - start HTTP server with frontend support
-* `npm run dev-backend` - start `backend` server with live reload on `3000` port
-* `npm run dev-frontend` - start `frontend` server with live reload on `3001` port
-
-## Configuration
-
-### ENV variables
-
-You can configurate app using env variables.
-
-> Check [EnvVariables interface](./src/config.ts) to see available ENV variables.
-
-
-### File
-
-You can pass JSON config file to any run command with `-c` option (e.g. `npm run start -c config.json`).
-
-> Check [Config interface](./src/config.ts) to see available configuration options
+* [Development docs](https://kiralt.github.io/torrent-stream-server/docs/setup.md#from-source)
+* [Configuration docs](https://kiralt.github.io/torrent-stream-server/docs/configuration.md)
 
 ## API
 
