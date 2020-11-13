@@ -27,20 +27,20 @@ HTTP server to convert any torrent to video stream
 * `torrent-stream-server serve`
 * Go to http://127.0.0.1:3000
 
-[Read more](https://kiralt.github.io/torrent-stream-server/docs/setup.md#npm-package)
+[Read more](https://kiralt.github.io/torrent-stream-server/docs/setup#npm-package)
   
 ### Other options
 
-* [From source](https://kiralt.github.io/torrent-stream-server/docs/setup.md#from-source)
-* [Docker](https://kiralt.github.io/torrent-stream-server/docs/setup.md#docker)
-* See [all options](https://kiralt.github.io/torrent-stream-server/docs/setup.md)
+* [From source](https://kiralt.github.io/torrent-stream-server/docs/setup#from-source)
+* [Docker](https://kiralt.github.io/torrent-stream-server/docs/setup#docker)
+* See [all options](https://kiralt.github.io/torrent-stream-server/docs/setup)
 
 ## Development
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
 
-* [Development docs](https://kiralt.github.io/torrent-stream-server/docs/setup.md#from-source)
-* [Configuration docs](https://kiralt.github.io/torrent-stream-server/docs/configuration.md)
+* [Development docs](https://kiralt.github.io/torrent-stream-server/docs/setup#from-source)
+* [Configuration docs](https://kiralt.github.io/torrent-stream-server/docs/configuration)
 
 ## API
 
@@ -57,6 +57,7 @@ API uses [swagger.yaml](https://kiralt.github.io/torrent-stream-server/docs/swag
 ### Open in VLC
 
 Running the following commands from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
+
 #### By infohash (BTIH)
 
 ``` bash

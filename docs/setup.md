@@ -29,7 +29,7 @@ Go to http://127.0.0.1:3000
 
 ### Configuration
 
-You can pass [configuration file](./configuration.md) with `-c` argument:
+You can pass [configuration file](./configuration) with `-c` argument:
 
 ```shell
 torrent-stream-server serve -c config.json
