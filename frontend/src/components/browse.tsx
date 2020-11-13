@@ -273,7 +273,6 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                                 provider,
                                                 torrentId: torrent.id
                                             })
-                                            console.log(magnet)
                                             history.push(`/play?torrent=${encodeURIComponent(magnet)}`)
                                         }}>
 
