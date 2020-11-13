@@ -18,4 +18,4 @@ COPY frontend/public/ frontend/public/
 RUN npm run build-frontend && rm -rf ./frontend/node_modules
 
 EXPOSE 3000
-CMD node . serve
+ENTRYPOINT [ "node", ".", "serve" ]
