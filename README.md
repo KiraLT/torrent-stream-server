@@ -35,11 +35,10 @@ HTTP server to convert any torrent to video stream
 * [Docker](https://kiralt.github.io/torrent-stream-server/docs/setup#docker)
 * See [all options](https://kiralt.github.io/torrent-stream-server/docs/setup)
 
-## Development
+## Documentation
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
-
-* [Development docs](https://kiralt.github.io/torrent-stream-server/docs/setup#from-source)
+* [Setup docs](https://kiralt.github.io/torrent-stream-server/docs/setup)
+* [Development docs](https://kiralt.github.io/torrent-stream-server/docs/development)
 * [Configuration docs](https://kiralt.github.io/torrent-stream-server/docs/configuration)
 
 ## API
