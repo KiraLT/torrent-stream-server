@@ -4,7 +4,7 @@ import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 
 import { TorrentsApi, TorrentModel, TorrentFileModel } from '../helpers/client'
-import { getApiConfig, apiDomain } from '../config'
+import { getApiConfig } from '../config'
 import { formatBytes, sortBy, parseError } from '../helpers'
 import { addHistoryItem } from '../helpers/history'
 import { withBearer } from './parts/auth'
@@ -56,9 +56,19 @@ export const PlayComponent = withBearer(({ bearer }) => {
             )}
             {torrent && link && (
                 <>
-                    <h3>
-                        <small>{torrent.name}</small>
-                    </h3>
+                    <div>
+                        <span className="h5 mb-2">
+                            {torrent.name}
+                        </span>
+                        <a
+                            href={torrent.playlist}
+                            className="btn btn-outline-primary float-right mb-2"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <i className="ti-cloud-down"></i>{' '}Playlist
+                        </a>
+                    </div>
                     {!file ? (
                         <table className="table">
                             <thead>
@@ -96,8 +106,10 @@ export const PlayComponent = withBearer(({ bearer }) => {
                                         </td>
                                         <td>
                                             <a
-                                                href={apiDomain + v.stream}
+                                                href={v.stream}
                                                 className="btn btn-outline-primary ti-cloud-down"
+                                                target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 {' '}
                                             </a>
@@ -112,8 +124,10 @@ export const PlayComponent = withBearer(({ bearer }) => {
                                 <small>{file}</small>
                                 {torrentFile && (
                                     <a
-                                        href={apiDomain + torrentFile.stream}
+                                        href={torrentFile.stream}
                                         className="btn ti-cloud-down text-primary"
+                                        target="_blank"
+                                        rel="noreferrer"
                                     >
                                         {' '}
                                     </a>
@@ -129,7 +143,7 @@ export const PlayComponent = withBearer(({ bearer }) => {
                             <div className="form-group">
                                 <input
                                     className="form-control"
-                                    value={apiDomain + torrentFile.stream}
+                                    value={torrentFile.stream}
                                 />
                             </div>
                         </>
@@ -142,20 +156,20 @@ export const PlayComponent = withBearer(({ bearer }) => {
 
 function TorrentFileComponent({ file }: { file: TorrentFileModel }): JSX.Element {
     if (file.type.includes('video')) {
-        return <VideoPlayerComponent video={apiDomain + file.stream} type={file.type} />
+        return <VideoPlayerComponent video={file.stream} type={file.type} />
     }
     if (file.type.includes('image')) {
-        return <ImageComponent image={apiDomain + file.stream} name={file.name} />
+        return <ImageComponent image={file.stream} name={file.name} />
     }
     if (file.type.includes('text')) {
-        return <TextComponent text={apiDomain + file.stream} />
+        return <TextComponent text={file.stream} />
     }
     return (
         <div>
             <Alert variant="warning">
                 Unknown file type: {file.type}
                 <a
-                    href={apiDomain + file.stream}
+                    href={file.stream}
                     className="btn btn-outline-primary ti-cloud-down ml-5"
                 >
                     Direct link

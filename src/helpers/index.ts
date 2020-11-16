@@ -9,22 +9,6 @@ export function mapValues(data: any, fn: (item: any) => any) {
     return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {})
 }
 
-export function getSteamUrl(torrent: string, file: string, encodeToken?: string): string {
-    if (encodeToken) {
-        return `/stream/${encodeURIComponent(
-            signJwtToken(
-                {
-                    torrent,
-                    file,
-                },
-                encodeToken
-            )
-        )}`
-    }
-
-    return `/stream/${encodeURIComponent(torrent)}?file=${encodeURIComponent(file)}`
-}
-
 export function merge(current: any, update: any): any {
     current = { ...current }
     Object.keys(update).forEach(function (key) {
@@ -70,4 +54,35 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
     const i = Math.floor(Math.log(bytes) / Math.log(k))
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+}
+
+export function getSteamUrl(torrent: string, file: string, encodeToken?: string): string {
+    if (encodeToken) {
+        return `/stream/${encodeURIComponent(
+            signJwtToken(
+                {
+                    torrent,
+                    file,
+                },
+                encodeToken
+            )
+        )}`
+    }
+
+    return `/stream/${encodeURIComponent(torrent)}?file=${encodeURIComponent(file)}`
+}
+
+export function getPlaylistUrl(torrent: string, encodeToken?: string): string {
+    if (encodeToken) {
+        return `/playlist/${encodeURIComponent(
+            signJwtToken(
+                {
+                    torrent,
+                },
+                encodeToken
+            )
+        )}`
+    }
+
+    return `/playlist/${encodeURIComponent(torrent)}`
 }

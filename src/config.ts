@@ -235,7 +235,7 @@ export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('
 const defaultConfig: Config = {
     host: getEnv('HOST') || '0.0.0.0',
     port: getEnv('PORT', 'int') || 3000,
-    environment: getEnv('NODE_ENV', 'bool') === 'development' ? 'development' : 'production',
+    environment: getEnv('NODE_ENV') === 'development' ? 'development' : 'production',
     trustProxy: getEnv('TRUST_PROXY') || isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [

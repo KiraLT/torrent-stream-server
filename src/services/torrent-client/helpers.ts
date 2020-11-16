@@ -52,10 +52,10 @@ export interface FindFileOptions {
  * @param files
  * @param options
  */
-export function findFile(
+export function filterFiles(
     files: TorrentClientFile[],
     options: FindFileOptions
-): TorrentClientFile | undefined {
+): TorrentClientFile[] {
     const filteredFiles = files.filter(
         (f, i) =>
             (options.fileIndex === undefined || options.fileIndex == i + 1) &&
@@ -69,8 +69,7 @@ export function findFile(
                     .includes(options.fileType.toLowerCase().replace('.', '')))
     )
 
-    return (
-        filteredFiles.find((f) => options.file && f.path === options.file) ||
-        [...filteredFiles].sort((a, b) => b.length - a.length)[0]
-    )
+    const file = filteredFiles.find((f) => options.file && f.path === options.file)
+
+    return file ? [file] : [...filteredFiles].sort((a, b) => b.length - a.length)
 }
