@@ -11,7 +11,7 @@ RUN npm ci --prefix frontend/
 COPY tsconfig.json ./
 COPY src/ src/
 RUN npm run build-backend
-RUN nom run test
+RUN npm run test
 
 COPY frontend/tsconfig.json frontend/
 COPY frontend/src/ frontend/src/
