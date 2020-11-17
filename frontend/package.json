@@ -1,6 +1,6 @@
 {
     "name": "torrent-stream-server-frontend",
-    "version": "0.0.0",
+    "version": "1.5.2",
     "private": true,
     "dependencies": {
         "bootstrap": "^4.5.3",
@@ -22,8 +22,8 @@
         "@types/react-router-dom": "^5.1.6"
     },
     "scripts": {
-        "start": "PORT=3001 react-scripts start",
-        "build": "react-scripts build",
+        "start": "PORT=3001 REACT_APP_VERSION=$npm_package_version react-scripts start",
+        "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
         "test": "react-scripts test"
     },
     "eslintConfig": {

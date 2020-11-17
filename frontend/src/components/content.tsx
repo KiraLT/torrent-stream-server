@@ -14,6 +14,8 @@ export function ContentComponent(): JSX.Element {
                 <h5 className="my-0 mr-md-auto font-weight-normal">
                     <Link className="text-decoration-none text-dark" to="/">
                         Torrent Stream Server
+                        {' '}
+                        <small className="text-muted">v{process.env.REACT_APP_VERSION}</small>
                     </Link>
                 </h5>
                 <nav className="my-2 my-md-0 mr-md-3">
