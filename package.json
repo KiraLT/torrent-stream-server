@@ -45,6 +45,7 @@
         "@types/express-serve-static-core": "^4.17.8",
         "@types/express-winston": "^4.0.0",
         "@types/http-errors": "^1.8.0",
+        "@types/jest": "^26.0.15",
         "@types/jsonwebtoken": "^8.5.0",
         "@types/mime-types": "^2.1.0",
         "@types/mustache-express": "^1.2.1",
@@ -57,8 +58,10 @@
         "@types/yamljs": "^0.2.31",
         "@types/yargs": "^15.0.9",
         "nodemon": "^2.0.6",
+        "ts-jest": "^26.4.4",
         "ts-node": "^9.0.0",
-        "typescript": "^4.0.5"
+        "typescript": "^4.0.5",
+        "jest": "^26.6.3"
     },
     "engines": {
         "node": "12.x"
@@ -108,6 +111,10 @@
         "postinstall": "[ ! -d frontend/src ] || npm --prefix frontend install",
         "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
         "start": "node lib/index.js serve",
-        "uninstall": "rm -rf frontend/node_mobules"
+        "uninstall": "rm -rf frontend/node_mobules",
+        "test": "jest src"
+    },
+    "jest": {
+        "preset": "ts-jest"
     }
 }
