@@ -136,7 +136,7 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                     {torrents.map((torrent) => (
                                         <>
                                             <tr>
-                                                <td>{torrent.name}</td>
+                                                <td className="text-break">{torrent.name}</td>
                                                 <td>
                                                     {formatBytes(torrent.downloaded)} (
                                                     {formatBytes(torrent.downloadSpeed)}

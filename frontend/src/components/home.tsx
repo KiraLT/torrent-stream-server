@@ -42,7 +42,7 @@ export const HomeComponent = withBearer(
                                 {historyItems.map((item) => (
                                     <>
                                         <tr>
-                                            <td>{item.name}</td>
+                                            <td className="text-break">{item.name}</td>
                                             <td style={{ whiteSpace: 'nowrap' }}>
                                                 <Link
                                                     to={`/play?torrent=${encodeURIComponent(

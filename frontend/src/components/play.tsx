@@ -56,19 +56,27 @@ export const PlayComponent = withBearer(({ bearer }) => {
             )}
             {torrent && link && (
                 <>
-                    <div>
-                        <span className="h5 mb-2">
-                            {torrent.name}
-                        </span>
-                        <a
-                            href={torrent.playlist}
-                            className="btn btn-outline-primary float-right mb-2"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <i className="ti-cloud-down"></i>{' '}Playlist
-                        </a>
-                    </div>
+                    <table className="w-100">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span className="h5 mb-2 text-break">
+                                        {torrent.name}
+                                    </span>
+                                </td>
+                                {!file && <td style={{width: '120px'}}>
+                                    <a
+                                        href={torrent.playlist}
+                                        className="btn btn-outline-primary float-right mb-2"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <i className="ti-cloud-down"></i>{' '}Playlist
+                                    </a>
+                                </td>}
+                            </tr>
+                        </tbody>
+                    </table>
                     {!file ? (
                         <table className="table">
                             <thead>
@@ -82,7 +90,7 @@ export const PlayComponent = withBearer(({ bearer }) => {
                             <tbody>
                                 {sortBy(torrent.files, (v) => v.name).map((v) => (
                                     <tr>
-                                        <td>
+                                        <td className="text-break">
                                             {v.path
                                                 .split('/')
                                                 .map((part, index, arr) =>

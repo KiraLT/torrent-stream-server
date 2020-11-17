@@ -197,12 +197,12 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                 </Alert>
             )}
             {!loading && (
-                <Table className="mt-3">
+                <Table className="mt-3" responsive>
                     <tbody>
                         {torrents?.map((torrent, ti) => (
                             <>
                                 <tr key={ti}>
-                                    <td>
+                                    <td className="text-break">
                                         {torrent.link ? (
                                             <a
                                                 href={torrent.link}
@@ -237,7 +237,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.size}
                                     </td>
-                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
+                                    <td className="text-right d-none d-md-block" style={{ whiteSpace: 'nowrap' }}>
                                         {!!torrent.time && format(new Date(torrent.time))}
                                     </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
@@ -253,8 +253,6 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                                 {torrent.peers}
                                             </span>
                                         )}{' '}
-                                    </td>
-                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.downloads != null && (
                                             <span>
                                                 <small className="ti-download"></small>{' '}
