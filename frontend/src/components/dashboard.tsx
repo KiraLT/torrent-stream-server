@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { format } from 'timeago.js'
+import { Card, Alert, CardDeck, ProgressBar, Container } from 'react-bootstrap'
 
 import { DashboardApi, TorrentsApi, TorrentModel, UsageModel } from '../helpers/client'
-import { formatBytes, parseError } from '../helpers'
+import { formatBytes, parseError, formatDate } from '../helpers'
 import { getApiConfig } from '../config'
 import { withBearer } from './parts/auth'
 
@@ -50,11 +50,11 @@ export const DashboardComponent = withBearer(({ bearer }) => {
     }, [])
 
     return (
-        <div className="container">
+        <Container className="mt-3 content">
             {error && (
-                <div className="alert alert-danger" role="alert">
+                <Alert variant="danger">
                     {error}
-                </div>
+                </Alert>
             )}
             {!torrents && !error && (
                 <div className="text-center">
@@ -64,60 +64,52 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                 </div>
             )}
             {usage && (
-                <div className="card-deck mb-3 text-center">
-                    <div className="card mb-4 box-shadow">
-                        <div className="card-header">
-                            <h4 className="my-0 font-weight-normal">Disk space</h4>
-                        </div>
-                        <div className="card-body">
-                            <h2 className="card-title pricing-card-title">
+                <CardDeck className="mb-3 text-center">
+                    <Card>
+                        <Card.Header>
+                            <Card.Title as="h3">
+                                Disk space
+                            </Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title as="h2">
                                 {formatBytes(usage.totalDiskSpace - usage.freeDiskSpace)}
                                 <small className="text-muted">
-                                    / {formatBytes(usage.totalDiskSpace)}
+                                    {' / '}
+                                    {formatBytes(usage.totalDiskSpace)}
                                 </small>
-                            </h2>
-                            <div className="progress">
-                                <div
-                                    className="progress-bar"
-                                    role="progressbar"
-                                    style={{
-                                        width: `${
-                                            ((usage.totalDiskSpace - usage.freeDiskSpace) /
-                                                usage.totalDiskSpace) *
-                                            100
-                                        }%`,
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card mb-4 box-shadow">
-                        <div className="card-header">
-                            <h4 className="my-0 font-weight-normal">Torrents space</h4>
-                        </div>
-                        <div className="card-body">
-                            <h2 className="card-title pricing-card-title">
+                            </Card.Title>
+                            <ProgressBar
+                                variant="info"
+                                min={0}
+                                max={usage.totalDiskSpace}
+                                now={usage.totalDiskSpace - usage.freeDiskSpace}
+                            />
+                        </Card.Body>
+                    </Card>
+                    <Card>
+                        <Card.Header>
+                            <Card.Title as="h3">
+                                Torrents space
+                            </Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title as="h2">
                                 {formatBytes(usage.usedTorrentSpace)}
                                 <small className="text-muted">
-                                    / {formatBytes(usage.freeDiskSpace + usage.usedTorrentSpace)}
+                                    {' / '}
+                                    {formatBytes(usage.freeDiskSpace + usage.usedTorrentSpace)}
                                 </small>
-                            </h2>
-                            <div className="progress">
-                                <div
-                                    className="progress-bar"
-                                    role="progressbar"
-                                    style={{
-                                        width: `${
-                                            (usage.usedTorrentSpace /
-                                                (usage.freeDiskSpace + usage.usedTorrentSpace)) *
-                                            100
-                                        }%`,
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </Card.Title>
+                            <ProgressBar
+                                variant="info"
+                                min={0}
+                                max={usage.freeDiskSpace + usage.usedTorrentSpace}
+                                now={usage.usedTorrentSpace}
+                            />
+                        </Card.Body>
+                    </Card>
+                </CardDeck>
             )}
             {torrents && (
                 <>
@@ -142,7 +134,7 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                                     {formatBytes(torrent.downloadSpeed)}
                                                     /s)
                                                 </td>
-                                                <td>{format(torrent.started)}</td>
+                                                <td>{formatDate(new Date(torrent.started))}</td>
                                                 <td>
                                                     <Link
                                                         to={`/play?torrent=${encodeURIComponent(
@@ -158,12 +150,12 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                             </table>
                         </>
                     ) : (
-                        <div className="alert alert-warning" role="alert">
+                        <Alert variant="warning">
                             No active torrents at the moment
-                        </div>
+                        </Alert>
                     )}
                 </>
             )}
-        </div>
+        </Container>
     )
 })

@@ -8,16 +8,18 @@ import { DashboardComponent } from './dashboard'
 import { NavigationComponent } from './navigation'
 
 export function ContentComponent(): JSX.Element {
-    return (
-        <div>
+    return <>
+        <div className="main-panel" {...{data: 'blue'}}>
             <NavigationComponent />
 
-            <Switch>
-                <Route path="/" component={HomeComponent} exact />
-                <Route path="/play" component={PlayComponent} exact />
-                <Route path="/browse" component={BrowseComponent} exact />
-                <Route path="/dashboard" component={DashboardComponent} exact />
-            </Switch>
+            <div className="content">
+                <Switch>
+                    <Route path="/" component={HomeComponent} exact />
+                    <Route path="/play" component={PlayComponent} exact />
+                    <Route path="/browse" component={BrowseComponent} exact />
+                    <Route path="/dashboard" component={DashboardComponent} exact />
+                </Switch>
+            </div>
         </div>
-    )
+    </>
 }

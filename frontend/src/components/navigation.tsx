@@ -1,65 +1,57 @@
 import React, { useState } from 'react'
+import { useGlobal } from 'reactn'
 import { Link } from 'react-router-dom'
-import { ListGroup } from 'react-bootstrap'
+import { Collapse, Navbar, Container, Nav } from 'react-bootstrap'
+import classnames from 'classnames'
+
+import { getTheme } from '../config'
 
 export function NavigationComponent(): JSX.Element {
     const [open, setOpen] = useState(false)
+    const [theme, setTheme] = useGlobal('theme')
 
     return <>
-        <header className="d-md-none">
-            <div className="navbar navbar-dark bg-dark shadow-sm">
-                <div className="container d-flex justify-content-between">
-                    <Link className="text-decoration-none text-light" to="/">
+        <Navbar expand="lg" variant={getTheme(theme) === 'dark' ? 'dark' : 'light'} className={classnames(
+            'border-bottom', {
+                'border-dark':  getTheme(theme) === 'dark',
+                'border-light':  getTheme(theme) === 'light',
+                'bg-white': window.innerWidth < 993 && open,
+                'navbar-transparent': window.innerWidth >= 993 && !open
+        })}>
+            <Container fluid>
+                <div className="navbar-wrapper">
+                    <Navbar.Brand as={Link} to="/">
                         Torrent Stream Server
                         {' '}
                         <small className="text-muted">v{process.env.REACT_APP_VERSION}</small>
-                    </Link>
-                    <button className="navbar-toggler collapsed" type="button" onClick={() => setOpen(v => !v)}>
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+                    </Navbar.Brand>
                 </div>
-            </div>
-            <div className={`bg-dark w-100 ${open ? '' : 'collapse'}`} style={{position: 'absolute', zIndex: 99999}}>
-                <ListGroup variant="flush" className="bg-dark">
-                    <ListGroup.Item as={Link} className="bg-dark text-light pl-4" to="/" onClick={() => setOpen(false)}>
-                        Home
-                    </ListGroup.Item>
-                    <ListGroup.Item as={Link} className="bg-dark text-light pl-4" to="/browse" onClick={() => setOpen(false)}>
-                        Browse
-                    </ListGroup.Item>
-                    <ListGroup.Item as={Link} className="bg-dark text-light pl-4" to="/dashboard" onClick={() => setOpen(false)}>
-                        Dashboard
-                    </ListGroup.Item>
-                </ListGroup>
-            </div>
-        </header>
-        <div className="d-none d-md-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-            <h5 className="my-0 mr-md-auto font-weight-normal">
-                <Link className="text-decoration-none text-dark" to="/">
-                    Torrent Stream Server
-                    {' '}
-                    <small className="text-muted">v{process.env.REACT_APP_VERSION}</small>
-                </Link>
-            </h5>
-            <nav className="my-2 my-md-0 mr-md-3">
-                <Link className="p-2 text-dark" to="/">
-                    Home
-                </Link>
-                <Link className="p-2 text-dark" to="/browse">
-                    Browse
-                </Link>
-                <Link className="p-2 text-dark" to="/dashboard">
-                    Dashboard
-                </Link>
-            </nav>
-            <a
-                className="btn btn-outline-primary"
-                href="https://github.com/KiraLT/torrent-stream-server"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Find on GitHub
-            </a>
-        </div>
+                <button className="navbar-toggler" id="navigation" type="button" onClick={() => setOpen(v => !v)}>
+                    <span className="navbar-toggler-bar navbar-kebab" />
+                    <span className="navbar-toggler-bar navbar-kebab" />
+                    <span className="navbar-toggler-bar navbar-kebab" />
+                </button>
+                <Collapse in={open}>
+                    <div className="navbar-collapse">
+                        <Nav className="ml-auto" navbar>
+                            <Nav.Link onClick={() => {
+                                setTheme(getTheme(theme) === 'dark' ? 'light' : 'dark')
+                            }}>
+                                {getTheme(theme) === 'dark' ? <>
+                                    <span className="color-label">LIGHT MODE</span>
+                                    <span className="badge light-badge mr-2"></span>
+                                </>: <>
+                                    <span className="badge dark-badge ml-2"></span>
+                                    <span className="color-label">DARK MODE</span>
+                                </>}
+                            </Nav.Link>
+                            <Nav.Link as={Link} onClick={() => setOpen(false)} to="/" className="btn-link">Home</Nav.Link>
+                            <Nav.Link as={Link} onClick={() => setOpen(false)} to="/browse" className="btn-link">Browse</Nav.Link>
+                            <Nav.Link as={Link} onClick={() => setOpen(false)} to="/dashboard" className="btn-link">Dashboard</Nav.Link>
+                        </Nav>
+                    </div>
+                </Collapse>
+            </Container>
+        </Navbar>
     </>
 }

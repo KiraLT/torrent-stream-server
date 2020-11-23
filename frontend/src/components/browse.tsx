@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import {
-    Container,
     Row,
     Col,
     FormControl,
@@ -11,12 +10,12 @@ import {
     Form,
     Table,
     Badge,
+    Container,
 } from 'react-bootstrap'
-import { format } from 'timeago.js'
 
 import { BrowseApi, ProviderModel, ProviderTorrentModel } from '../helpers/client'
 import { useSearchParam, useSearchParamsHandler } from '../helpers/hooks'
-import { parseError } from '../helpers'
+import { parseError, formatDate } from '../helpers'
 import { withBearer } from './parts/auth'
 import { getApiConfig } from '../config'
 import { AsyncButton } from './parts/button'
@@ -68,7 +67,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
     const categories = provider ? providers.find((v) => v.name === provider)?.categories ?? [] : []
 
     return (
-        <Container>
+        <Container className="mt-3">
             <Form
                 onSubmit={(event) => {
                     event.preventDefault()
@@ -152,28 +151,13 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                 placeholder="Search..."
                                 name="query"
                             />
-                            <InputGroup.Append>
+                            <InputGroup.Append className="border-0">
                                 <Button
                                     disabled={!provider}
                                     variant="outline-primary"
                                     type="submit"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width={24}
-                                        height={24}
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth={2}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="feather feather-search"
-                                    >
-                                        <circle cx={11} cy={11} r={8} />
-                                        <line x1={21} y1={21} x2="16.65" y2="16.65" />
-                                    </svg>
-                                </Button>
+                                    className="ti-search btn-simple m-0"
+                                />
                             </InputGroup.Append>
                         </InputGroup>
                     </Col>
@@ -197,7 +181,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                 </Alert>
             )}
             {!loading && (
-                <Table className="mt-3" responsive>
+                <Table className="mt-3">
                     <tbody>
                         {torrents?.map((torrent, ti) => (
                             <>
@@ -215,7 +199,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                             torrent.name
                                         )}{' '}
                                         {torrent.category && <Badge
-                                            variant="secondary"
+                                            variant="info"
                                             pill={true}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => {
@@ -237,8 +221,8 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.size}
                                     </td>
-                                    <td className="text-right d-none d-md-block" style={{ whiteSpace: 'nowrap' }}>
-                                        {!!torrent.time && format(new Date(torrent.time))}
+                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
+                                        {!!torrent.time && formatDate(new Date(torrent.time))}
                                     </td>
                                     <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
                                         {torrent.seeds != null && (
@@ -265,8 +249,8 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                             to={`/play?torrent=${encodeURIComponent(
                                                 torrent.magnet
                                             )}`}
-                                            className="btn btn-outline-primary ti-control-play"
-                                        ></Link> : <AsyncButton variant="outline-primary" className="ti-control-play" onClick={async () => {
+                                            className="btn btn-success ti-control-play"
+                                        ></Link> : <AsyncButton variant="success" className="ti-control-play" onClick={async () => {
                                             const { magnet } = await new BrowseApi(getApiConfig({ bearer })).getMagnet({
                                                 provider,
                                                 torrentId: torrent.id

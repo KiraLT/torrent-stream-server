@@ -1,5 +1,13 @@
 import { Configuration } from './helpers/client'
 
+export const themes = ['default', 'light', 'dark'] as const
+export type Theme = typeof themes[any]
+
+export function getTheme(theme: Theme): Theme {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return theme === 'default' && isDarkMode ? 'dark' : theme
+}
+
 export const apiDomain = (() => {
     if (process.env.NODE_ENV === 'production') {
         return `${window.location.protocol}//${window.location.host}`
@@ -25,6 +33,9 @@ export function getApiConfig(options?: { bearer?: string }): Configuration {
 export interface State {
     bearerRequired?: boolean
     bearer?: string
+    theme: Theme
 }
 
-export const defaultState = {}
+export const defaultState: State = {
+    theme: 'default'
+}

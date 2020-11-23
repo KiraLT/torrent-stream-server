@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
-import { Alert } from 'react-bootstrap'
-import isMobile from 'ismobilejs'
+import { Card, Button, Row, Col, ListGroup, Container, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import { TorrentsApi, TorrentModel, TorrentFileModel } from '../helpers/client'
 import { getApiConfig } from '../config'
 import { formatBytes, sortBy, parseError } from '../helpers'
 import { addHistoryItem } from '../helpers/history'
 import { withBearer } from './parts/auth'
+import { TorrentFileComponent } from './parts/play'
 
 export const PlayComponent = withBearer(({ bearer }) => {
     const [torrent, setTorrent] = useState<TorrentModel>()
@@ -41,7 +41,7 @@ export const PlayComponent = withBearer(({ bearer }) => {
     }, [link, bearer])
 
     return (
-        <div className="container">
+        <Container className="mt-3">
             {error && (
                 <div className="alert alert-danger" role="alert">
                     {error}
@@ -54,215 +54,163 @@ export const PlayComponent = withBearer(({ bearer }) => {
                     </div>
                 </div>
             )}
-            {torrent && link && (
-                <>
-                    <table className="w-100">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <span className="h5 mb-2 text-break">
-                                        {torrent.name}
-                                    </span>
-                                </td>
-                                {!file && <td style={{width: '120px'}}>
-                                    <a
-                                        href={torrent.playlist}
-                                        className="btn btn-outline-primary float-right mb-2"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        <i className="ti-cloud-down"></i>{' '}Playlist
-                                    </a>
-                                </td>}
-                            </tr>
-                        </tbody>
-                    </table>
-                    {!file ? (
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>File</th>
-                                    <th>Size</th>
-                                    <th>Play</th>
-                                    <th>Link</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sortBy(torrent.files, (v) => v.name).map((v) => (
-                                    <tr>
-                                        <td className="text-break">
-                                            {v.path
-                                                .split('/')
-                                                .map((part, index, arr) =>
-                                                    index + 1 < arr.length ? (
-                                                        <span className="text-muted">
-                                                            {part} /{' '}
-                                                        </span>
-                                                    ) : (
-                                                        part
-                                                    )
-                                                )}
-                                        </td>
-                                        <td>{formatBytes(v.length)}</td>
-                                        <td>
-                                            <Link
-                                                to={`?torrent=${encodeURIComponent(
-                                                    link
-                                                )}&file=${encodeURIComponent(v.path)}`}
-                                                className="btn btn-outline-primary ti-control-play"
-                                            ></Link>
-                                        </td>
-                                        <td>
-                                            <a
-                                                href={v.stream}
-                                                className="btn btn-outline-primary ti-cloud-down"
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
-                                                {' '}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <>
-                            <h5 className="text-muted">
-                                <small>{file}</small>
-                                {torrentFile && (
-                                    <a
-                                        href={torrentFile.stream}
-                                        className="btn ti-cloud-down text-primary"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        {' '}
-                                    </a>
-                                )}{' '}
-                                - <Link to={`?torrent=${encodeURIComponent(link)}`}>view all</Link>
-                            </h5>
-                        </>
-                    )}
-                    {file && link && torrentFile && (
-                        <>
-                            <TorrentFileComponent file={torrentFile} />
-                            <br />
-                            <div className="form-group">
-                                <input
-                                    className="form-control"
-                                    value={torrentFile.stream}
-                                />
-                            </div>
-                        </>
-                    )}
-                </>
-            )}
-        </div>
+            {torrentFile && torrent && <PlayVideoComponent file={torrentFile} torrent={torrent}/>}
+            {torrent && <FilesComponent torrent={torrent}/>}
+        </Container>
     )
 })
 
-function TorrentFileComponent({ file }: { file: TorrentFileModel }): JSX.Element {
-    if (file.type.includes('video')) {
-        return <VideoPlayerComponent video={file.stream} type={file.type} />
-    }
-    if (file.type.includes('image')) {
-        return <ImageComponent image={file.stream} name={file.name} />
-    }
-    if (file.type.includes('text')) {
-        return <TextComponent text={file.stream} />
-    }
-    return (
-        <div>
-            <Alert variant="warning">
-                Unknown file type: {file.type}
-                <a
-                    href={file.stream}
-                    className="btn btn-outline-primary ti-cloud-down ml-5"
-                >
-                    Direct link
-                </a>
-            </Alert>
-        </div>
-    )
-}
-
-function ImageComponent({ image, name }: { image: string; name: string }): JSX.Element {
-    return (
-        <div className="w-100 text-center">
-            <img src={image} alt={name} />
-        </div>
-    )
-}
-
-function TextComponent({ text }: { text: string }): JSX.Element {
-    const [value, setValue] = useState<string>()
-
-    useEffect(() => {
-        fetch(text).then(async (v) => setValue(await v.text()))
-    })
-
-    return (
-        <div className="card card-body" style={{ maxHeight: '500px' }}>
-            {value === undefined && (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            )}
-            <pre>{value}</pre>
-        </div>
-    )
-}
-
-function VideoPlayerComponent({ video, type }: { video: string; type: string }): JSX.Element {
-    const device = isMobile(window.navigator)
-
-    return (
-        <>
-            {type === 'video/x-matroska' && (
-                <Alert variant="warning" className="mt-2">
-                    Browser does not support Matroska subtitles, it's recommended to use native
-                    player.
-                    <br />
-                    {device.any ? (
-                        <>
-                            {device.android.device && (
-                                <>
-                                    In{' '}
-                                    <a
-                                        href="https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.ad"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        MX Player
-                                    </a>{' '}
-                                    click Network stream and paste stream link.
-                                </>
-                            )}
-                        </>
-                    ) : (
-                        <>
-                            In{' '}
-                            <a
-                                href="https://www.videolan.org/vlc/index.html"
+function FilesComponent({ torrent }: { torrent: TorrentModel; }): JSX.Element {
+    return <>
+        <Card>
+            <Card.Header>
+                <Row className="mb-2">
+                    <Col sm className="d-flex">
+                        <span className="justify-content-center align-self-center">
+                            <h5 className="text-break card-category">{torrent.name}</h5>
+                            <Card.Title as="h4" className="text-break">Files</Card.Title>
+                        </span>
+                    </Col>
+                    <Col sm='auto' className="d-flex">
+                        <OverlayTrigger overlay={<Tooltip id={`video-playlist-tooltip`}>
+                            Download M3U playlist which can be opened with most Media Players
+                        </Tooltip>}>
+                            <Button
+                                as={'a'}
+                                href={torrent.playlist}
+                                className="w-100 justify-content-center align-self-center btn-simple"
                                 target="_blank"
                                 rel="noreferrer"
+                                variant="success"
                             >
-                                VLC
-                            </a>{' '}
-                            click Media {'>'} Open Network Stream and paste stream link.
-                        </>
-                    )}
-                </Alert>
-            )}
-            <div className="embed-responsive embed-responsive-16by9">
-                <video width="720" controls>
-                    <source src={video} />
-                    Your browser does not support HTML5 video.
-                </video>
-            </div>
+                                <i className="ti-cloud-down"></i>{' '}Playlist
+                            </Button>
+                        </OverlayTrigger>
+                    </Col>
+                </Row>
+            </Card.Header>
+            <Card.Body>
+                <ListGroup variant="flush">
+                    {sortBy(torrent.files, (v) => v.path.split('/')).map(v => (
+                        <ListGroup.Item className="bg-transparent border-dark" key={v.path}>
+                            <FileComponent file={v} torrent={torrent} />
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            </Card.Body>
+        </Card>
+    </>
+}
+
+function getIconByType(type: string): string {
+    if (type.includes('video')) {
+        return 'ti-control-play'
+    }
+    if (type.includes('image')) {
+        return 'ti-image'
+    }
+    if (type.includes('text')) {
+        return 'ti-text'
+    }
+    return ''
+}
+
+function formatFileName(filePath: string, torrentName: string): string {
+    const parts = filePath.split('/')
+    if (parts.length > 1 && parts[0] === torrentName) {
+        return parts.slice(1).join('/')
+    }
+    return filePath
+}
+
+function FileComponent({ file, torrent }: { file: TorrentFileModel; torrent: TorrentModel }): JSX.Element {
+    return <>
+        <Row>
+            <Col sm className="d-flex">
+                <span className="justify-content-center align-self-center text-break">
+                    {formatFileName(file.path, torrent.name)
+                        .split('/')
+                        .map((part, index, arr) =>
+                            index + 1 < arr.length ? (
+                                <span className="text-muted">
+                                    {part} /{' '}
+                                </span>
+                            ) : (
+                                part
+                            )
+                        )}
+                    {' '}
+                    <i className={`${getIconByType(file.type)} text-info`}/>
+                </span>
+            </Col>
+            <Col sm={'auto'}>
+                <Row>
+                    <Col xs={6} className="d-flex">
+                        <span className="justify-content-center align-self-center text-nowrap" style={{ minWidth: '120px'}}>
+                            {formatBytes(file.length)}
+                        </span>
+                    </Col>
+                    <Col xs={6} className="d-flex text-right">
+                        <OverlayTrigger overlay={<Tooltip id={`play-tooltip-${file.path}`}>
+                            Play file
+                        </Tooltip>}>
+                            <Button as={Link}
+                                to={`?torrent=${encodeURIComponent(
+                                    torrent.link
+                                )}&file=${encodeURIComponent(file.path)}`}
+                                variant="success"
+                                className={`ti-control-play justify-content-center align-self-center pr-4 pl-4`}
+                                onClick={() => window.scrollTo(0, 0)}
+                            />
+                        </OverlayTrigger>
+                        <OverlayTrigger overlay={<Tooltip id={`play-tooltip-${file.path}`}>
+                            Download file
+                        </Tooltip>}>
+                            <Button as={'a'}
+                                href={file.stream}
+                                className="ti-cloud-down justify-content-center align-self-center pr-4 pl-4"
+                                target="_blank"
+                                rel="noreferrer"
+                                variant="info"
+                            />
+                        </OverlayTrigger>
+                    </Col>
+                </Row>
+            </Col>
+        </Row>
+    </>
+}
+
+function PlayVideoComponent({ file, torrent }: { file: TorrentFileModel; torrent: TorrentModel; }): JSX.Element {
+    return <>
+        <>
+            <TorrentFileComponent file={file} />
+            <Card className="mt-3">
+                <Card.Header>
+                    <Row className="">
+                        <Col sm className="d-flex">
+                            <span className="justify-content-center align-self-center">
+                                <h5 className="text-break card-category">{torrent.name}</h5>
+                                <Card.Title as="h4" className="text-break">
+                                    {formatFileName(file.path, torrent.name)}
+                                </Card.Title>
+                            </span>
+                        </Col>
+                        <Col sm='auto' className="d-flex mb-3">
+                            <Button
+                                as={'a'}
+                                href={file.stream}
+                                className="w-100 justify-content-center align-self-center btn-simple"
+                                target="_blank"
+                                rel="noreferrer"
+                                variant="success"
+                            >
+                                <i className="ti-cloud-down"></i>{' '}Download
+                            </Button>
+                        </Col>
+                    </Row>
+                </Card.Header>
+            </Card>
         </>
-    )
+    </>
 }
