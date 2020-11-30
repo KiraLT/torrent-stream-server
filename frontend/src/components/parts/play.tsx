@@ -76,7 +76,13 @@ export function VideoPlayerComponent({ video, type }: { video: string; type: str
                     }
                 ],
                 fluid: true,
-                preload: 'auto'
+                preload: 'auto',
+                ...{
+                    userActions: {
+                        doubleClick: true,
+                        hotkeys: true
+                    },
+                }
             })
 
             // Skip a bit to load poster
