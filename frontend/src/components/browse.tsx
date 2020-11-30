@@ -8,9 +8,11 @@ import {
     Button,
     InputGroup,
     Form,
-    Table,
     Badge,
     Container,
+    Spinner,
+    Card,
+    ListGroup
 } from 'react-bootstrap'
 
 import { BrowseApi, ProviderModel, ProviderTorrentModel } from '../helpers/client'
@@ -170,9 +172,7 @@ export const BrowseComponent = withBearer(({ bearer }) => {
             )}
             {loading && (
                 <div className="d-flex justify-content-center mt-5">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
+                    <Spinner animation="border"/>
                 </div>
             )}
             {!loading && torrents?.length === 0 && canSearch && (
@@ -180,92 +180,111 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                     No results were found
                 </Alert>
             )}
-            {!loading && (
-                <Table className="mt-3">
-                    <tbody>
-                        {torrents?.map((torrent, ti) => (
-                            <>
-                                <tr key={ti}>
-                                    <td className="text-break">
-                                        {torrent.link ? (
-                                            <a
-                                                href={torrent.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+            {!loading && !!torrents?.length && <>
+                <Card>
+                    <Card.Body>
+                        <ListGroup variant="flush">
+                            {torrents?.map((torrent, ti) => (
+                                <ListGroup.Item key={ti} className="bg-transparent border-dark">
+                                    <Row>
+                                        <Col xs className="d-flex mb-2">
+                                            <span className="justify-content-center align-self-center text-break">
+                                                {torrent.link ? (
+                                                <a
+                                                    href={torrent.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-break"
+                                                >
+                                                    {torrent.name}
+                                                </a>
+                                            ) : (
+                                                torrent.name
+                                            )}{' '}
+                                            {torrent.category && <Badge
+                                                variant="info"
+                                                pill={true}
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    torrent.category && handler({
+                                                        set: {
+                                                            category: torrent.category.id,
+                                                        },
+                                                    })
+                                                }}
                                             >
-                                                {torrent.name}
-                                            </a>
-                                        ) : (
-                                            torrent.name
-                                        )}{' '}
-                                        {torrent.category && <Badge
-                                            variant="info"
-                                            pill={true}
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => {
-                                                torrent.category && handler({
-                                                    set: {
-                                                        category: torrent.category.id,
-                                                    },
-                                                })
-                                            }}
-                                        >
-                                            {torrent.category.name}
-                                        </Badge>}{' '}
-                                        {torrent.isVip && <i className="ti-crown text-warning"></i>}
-                                        {' '}
-                                        {!!torrent.comments && <Badge className="text-secondary" variant="light">
-                                            <i className="ti-comments"></i> {torrent.comments}
-                                        </Badge>}
-                                    </td>
-                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
-                                        {torrent.size}
-                                    </td>
-                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
-                                        {!!torrent.time && formatDate(new Date(torrent.time))}
-                                    </td>
-                                    <td className="text-right" style={{ whiteSpace: 'nowrap' }}>
-                                        {torrent.seeds != null && (
-                                            <span className="text-success">
-                                                <small className="ti-arrow-up"></small>
-                                                {torrent.seeds}
+                                                {torrent.category.name}
+                                            </Badge>}{' '}
+                                            {torrent.isVip && <i className="ti-crown text-warning"></i>}
+                                            {' '}
+                                            {!!torrent.comments && <Badge className="text-secondary" variant="light">
+                                                <i className="ti-comments"></i> {torrent.comments}
+                                            </Badge>}
                                             </span>
-                                        )}{' '}
-                                        {torrent.peers != null && (
-                                            <span className="text-danger">
-                                                <small className="ti-arrow-down"></small>
-                                                {torrent.peers}
-                                            </span>
-                                        )}{' '}
-                                        {torrent.downloads != null && (
-                                            <span>
-                                                <small className="ti-download"></small>{' '}
-                                                {torrent.downloads}
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="text-right">
-                                        {torrent.magnet ? <Link
-                                            to={`/play?torrent=${encodeURIComponent(
-                                                torrent.magnet
-                                            )}`}
-                                            className="btn btn-success ti-control-play"
-                                        ></Link> : <AsyncButton variant="success" className="ti-control-play" onClick={async () => {
-                                            const { magnet } = await new BrowseApi(getApiConfig({ bearer })).getMagnet({
-                                                provider,
-                                                torrentId: torrent.id
-                                            })
-                                            history.push(`/play?torrent=${encodeURIComponent(magnet)}`)
-                                        }}>
+                                        </Col>
+                                        <Col sm="auto" className="d-flex mb-2">
+                                            <Row className="justify-content-center align-self-center w-100 m-0">
+                                                <Col className="d-flex pr-2 pl-2">
+                                                    <span className="justify-content-center align-self-center">
+                                                        {torrent.size}
+                                                    </span>
+                                                </Col>
+                                                <Col className="d-flex pr-1 pl-2">
+                                                    <span className="justify-content-center align-self-center">
+                                                        {!!torrent.time && formatDate(new Date(torrent.time))}
+                                                    </span>
+                                                </Col>
+                                                <Col className="d-flex pr-2 pl-2">
+                                                    <span className="justify-content-center align-self-center">
+                                                        {torrent.seeds != null && (
+                                                            <span className="text-success text-nowrap">
+                                                                <small className="ti-arrow-up"></small>
+                                                                {torrent.seeds}
+                                                            </span>
+                                                        )}{' '}
+                                                        {torrent.peers != null && (
+                                                            <span className="text-danger text-nowrap">
+                                                                <small className="ti-arrow-down"></small>
+                                                                {torrent.peers}
+                                                            </span>
+                                                        )}{' '}
+                                                        {torrent.downloads != null && (
+                                                            <span className="text-nowrap text-info">
+                                                                <small className="ti-download"></small>{' '}
+                                                                {torrent.downloads}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                </Col>
+                                                <Col className="d-flex pr-2 pl-2" xs="auto">
+                                                    <span className="justify-content-center align-self-center ml-auto">
+                                                        {torrent.magnet ? <Button as={Link}
+                                                            to={`/play?torrent=${encodeURIComponent(
+                                                                torrent.magnet
+                                                            )}`}
+                                                            variant="success"
+                                                            className="ti-control-play pr-4 pl-4"
+                                                        ></Button> : <AsyncButton variant="success" className="ti-control-play" onClick={async () => {
+                                                            const { magnet } = await new BrowseApi(getApiConfig({ bearer })).getMagnet({
+                                                                provider,
+                                                                torrentId: torrent.id
+                                                            })
+                                                            history.push(`/play?torrent=${encodeURIComponent(magnet)}`)
+                                                        }}>
 
-                                        </AsyncButton>}
-                                    </td>
-                                </tr>
-                            </>
-                        ))}
-                    </tbody>
-                </Table>
-            )}
+                                                        </AsyncButton>}
+                                                    </span>
+                                                </Col>
+                                            </Row>
+
+                                        </Col>
+                                    </Row>
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
+                    </Card.Body>
+                </Card>
+            </>}
         </Container>
     )
 })

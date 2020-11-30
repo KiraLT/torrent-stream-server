@@ -9,7 +9,6 @@ import { unregister } from './serviceWorker'
 
 import './assets/scss/black-dashboard-react.scss'
 import './assets/demo/demo.css'
-import './assets/css/nucleo-icons.css'
 import './assets/custom.scss'
 
 export async function initApp(target: HTMLElement | null): Promise<void> {

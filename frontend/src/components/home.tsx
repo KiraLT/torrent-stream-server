@@ -16,7 +16,7 @@ export const HomeComponent = withBearer(
                 <Card>
                     <Card.Header>
                         <Card.Title as="h3">
-                            Create torrent stream
+                        <i className="ti-control-play text-success"/> Create torrent stream
                         </Card.Title>
                     </Card.Header>
                     <Card.Body>
@@ -52,7 +52,7 @@ export const HomeComponent = withBearer(
                     <Card>
                         <Card.Header>
                             <Card.Title as="h3">
-                            History
+                                <i className="ti-pin-alt text-info"/> History
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -60,13 +60,13 @@ export const HomeComponent = withBearer(
                                 {historyItems.map((item, i) => (
                                     <ListGroup.Item key={i} className="bg-transparent border-dark">
                                         <Row>
-                                            <Col xs className="d-flex">
+                                            <Col xs className="d-flex mb-2">
                                                 <span className="justify-content-center align-self-center text-break">
                                                     {item.name}
                                                 </span>
                                             </Col>
-                                            <Col xs="auto" className="d-flex">
-                                                <span className="justify-content-end align-self-center">
+                                            <Col sm="auto" className="d-flex mb-2">
+                                                <span className="justify-content-end align-self-center ml-auto">
                                                     <Button as={Link}
                                                         to={`/play?torrent=${encodeURIComponent(
                                                             item.link

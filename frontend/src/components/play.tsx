@@ -68,7 +68,9 @@ function FilesComponent({ torrent }: { torrent: TorrentModel; }): JSX.Element {
                     <Col sm className="d-flex">
                         <span className="justify-content-center align-self-center">
                             <h5 className="text-break card-category">{torrent.name}</h5>
-                            <Card.Title as="h4" className="text-break">Files</Card.Title>
+                            <Card.Title as="h3" className="text-break">
+                                <i className="text-info ti-files"/> Files
+                            </Card.Title>
                         </span>
                     </Col>
                     <Col sm='auto' className="d-flex">

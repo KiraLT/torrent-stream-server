@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Alert, CardDeck, ProgressBar, Container } from 'react-bootstrap'
+import { Card, Alert, CardDeck, ProgressBar, Container, Spinner, ListGroup, Row, Col, Button } from 'react-bootstrap'
 
 import { DashboardApi, TorrentsApi, TorrentModel, UsageModel } from '../helpers/client'
 import { formatBytes, parseError, formatDate } from '../helpers'
@@ -57,18 +57,16 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                 </Alert>
             )}
             {!torrents && !error && (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
+                <div className="d-flex justify-content-center mt-5">
+                    <Spinner animation="border"/>
                 </div>
             )}
             {usage && (
                 <CardDeck className="mb-3 text-center">
                     <Card>
                         <Card.Header>
-                            <Card.Title as="h3">
-                                Disk space
+                            <Card.Title as="h4">
+                                <i className="ti-stats-down text-info"/> Disk space
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -89,8 +87,8 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                     </Card>
                     <Card>
                         <Card.Header>
-                            <Card.Title as="h3">
-                                Torrents space
+                            <Card.Title as="h4">
+                                <i className="ti-stats-down text-warning" /> Torrents space
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -114,41 +112,60 @@ export const DashboardComponent = withBearer(({ bearer }) => {
             {torrents && (
                 <>
                     {torrents.length ? (
-                        <>
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Download</th>
-                                        <th>Created</th>
-                                        <th>Play</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <Card>
+                            <Card.Header>
+                                <Card.Title as="h3">
+                                    <i className="ti-bar-chart text-info"/> History
+                                </Card.Title>
+                            </Card.Header>
+                            <Card.Body>
+                                <ListGroup variant="flush">
                                     {torrents.map((torrent) => (
-                                        <>
-                                            <tr>
-                                                <td className="text-break">{torrent.name}</td>
-                                                <td>
-                                                    {formatBytes(torrent.downloaded)} (
-                                                    {formatBytes(torrent.downloadSpeed)}
-                                                    /s)
-                                                </td>
-                                                <td>{formatDate(new Date(torrent.started))}</td>
-                                                <td>
-                                                    <Link
-                                                        to={`/play?torrent=${encodeURIComponent(
-                                                            torrent.link
-                                                        )}`}
-                                                        className="btn btn-outline-primary ti-control-play"
-                                                    ></Link>
-                                                </td>
-                                            </tr>
-                                        </>
+                                        <ListGroup.Item key={torrent.infoHash} className="bg-transparent border-dark">
+                                            <Row>
+                                                <Col xs className="d-flex mb-2">
+                                                    <span className="justify-content-center align-self-center text-break">
+                                                        {torrent.name}
+                                                    </span>
+                                                </Col>
+                                                <Col sm="auto" className="d-flex mb-2">
+                                                    <Row className="justify-content-center align-self-center ">
+                                                        <Col className="d-flex pr-2 pl-2">
+                                                            <span className="justify-content-center align-self-center">
+                                                                <span className="text-nowrap">
+                                                                    {formatBytes(torrent.downloaded)}
+                                                                </span>
+                                                                {' '}
+                                                                <span className="text-nowrap">
+                                                                    ({formatBytes(torrent.downloadSpeed)}/s)
+                                                                </span>
+                                                            </span>
+                                                        </Col>
+                                                        <Col className="d-flex pr-1 pl-2">
+                                                            <span className="justify-content-center align-self-center">
+                                                                {formatDate(new Date(torrent.started))}
+                                                            </span>
+                                                        </Col>
+                                                        <Col className="d-flex pr-2 pl-2">
+                                                            <span className="justify-content-center align-self-center ml-auto">
+                                                                <Button as={Link}
+                                                                    to={`/play?torrent=${encodeURIComponent(
+                                                                        torrent.link
+                                                                    )}`}
+                                                                    variant="success"
+                                                                    className="ti-control-play pr-4 pl-4"
+                                                                ></Button>
+                                                            </span>
+                                                        </Col>
+                                                    </Row>
+
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
                                     ))}
-                                </tbody>
-                            </table>
-                        </>
+                                </ListGroup>
+                            </Card.Body>
+                        </Card>
                     ) : (
                         <Alert variant="warning">
                             No active torrents at the moment

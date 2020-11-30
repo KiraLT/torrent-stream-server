@@ -8,7 +8,7 @@ import { TorrentFileModel } from '../../helpers/client'
 import 'video.js/dist/video-js.css'
 
 export function TorrentFileComponent({ file }: { file: TorrentFileModel }): JSX.Element {
-    if (file.type.includes('video')) {
+    if (file.type.includes('video') || file.type.includes('audio')) {
         return <VideoPlayerComponent video={file.stream} type={file.type} />
     }
     if (file.type.includes('image')) {
@@ -120,7 +120,7 @@ export function VideoPlayerComponent({ video, type }: { video: string; type: str
                             >
                                 VLC
                             </a>{' '}
-                            click Media {'>'} Open Network Stream and paste stream link.
+                            click Media {'>'} Open Network Stream and paste stream link (or download playlist below and open it with VLC).
                         </>
                     )}
                 </Alert>
