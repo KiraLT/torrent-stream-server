@@ -16,7 +16,7 @@ export const HomeComponent = withBearer(
                 <Card>
                     <Card.Header>
                         <Card.Title as="h3">
-                        <i className="ti-control-play text-success"/> Create torrent stream
+                            <i className="ti-control-play text-success" /> Create torrent stream
                         </Card.Title>
                     </Card.Header>
                     <Card.Body>
@@ -37,7 +37,9 @@ export const HomeComponent = withBearer(
                                     className="w-100 mb-2"
                                     onClick={() => {
                                         if (input.trim()) {
-                                            history.push(`/play?torrent=${encodeURIComponent(input)}`)
+                                            history.push(
+                                                `/play?torrent=${encodeURIComponent(input)}`
+                                            )
                                         }
                                     }}
                                 >
@@ -52,7 +54,7 @@ export const HomeComponent = withBearer(
                     <Card>
                         <Card.Header>
                             <Card.Title as="h3">
-                                <i className="ti-pin-alt text-info"/> History
+                                <i className="ti-pin-alt text-info" /> History
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -67,7 +69,8 @@ export const HomeComponent = withBearer(
                                             </Col>
                                             <Col sm="auto" className="d-flex mb-2">
                                                 <span className="justify-content-end align-self-center ml-auto">
-                                                    <Button as={Link}
+                                                    <Button
+                                                        as={Link}
                                                         to={`/play?torrent=${encodeURIComponent(
                                                             item.link
                                                         )}`}
@@ -81,7 +84,9 @@ export const HomeComponent = withBearer(
                                                             removeHistoryItem(item)
                                                             setHistoryItems(getHistoryItems())
                                                         }}
-                                                    >{' '}</Button>
+                                                    >
+                                                        {' '}
+                                                    </Button>
                                                 </span>
                                             </Col>
                                         </Row>

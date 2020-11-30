@@ -37,5 +37,5 @@ export interface State {
 }
 
 export const defaultState: State = {
-    theme: 'default'
+    theme: 'default',
 }

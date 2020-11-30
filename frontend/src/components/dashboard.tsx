@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Alert, CardDeck, ProgressBar, Container, Spinner, ListGroup, Row, Col, Button } from 'react-bootstrap'
+import {
+    Card,
+    Alert,
+    CardDeck,
+    ProgressBar,
+    Container,
+    Spinner,
+    ListGroup,
+    Row,
+    Col,
+    Button,
+} from 'react-bootstrap'
 
 import { DashboardApi, TorrentsApi, TorrentModel, UsageModel } from '../helpers/client'
 import { formatBytes, parseError, formatDate } from '../helpers'
@@ -51,14 +62,10 @@ export const DashboardComponent = withBearer(({ bearer }) => {
 
     return (
         <Container className="mt-3 content">
-            {error && (
-                <Alert variant="danger">
-                    {error}
-                </Alert>
-            )}
+            {error && <Alert variant="danger">{error}</Alert>}
             {!torrents && !error && (
                 <div className="d-flex justify-content-center mt-5">
-                    <Spinner animation="border"/>
+                    <Spinner animation="border" />
                 </div>
             )}
             {usage && (
@@ -66,7 +73,7 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                     <Card>
                         <Card.Header>
                             <Card.Title as="h4">
-                                <i className="ti-stats-down text-info"/> Disk space
+                                <i className="ti-stats-down text-info" /> Disk space
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -115,13 +122,16 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                         <Card>
                             <Card.Header>
                                 <Card.Title as="h3">
-                                    <i className="ti-bar-chart text-info"/> History
+                                    <i className="ti-bar-chart text-info" /> History
                                 </Card.Title>
                             </Card.Header>
                             <Card.Body>
                                 <ListGroup variant="flush">
                                     {torrents.map((torrent) => (
-                                        <ListGroup.Item key={torrent.infoHash} className="bg-transparent border-dark">
+                                        <ListGroup.Item
+                                            key={torrent.infoHash}
+                                            className="bg-transparent border-dark"
+                                        >
                                             <Row>
                                                 <Col xs className="d-flex mb-2">
                                                     <span className="justify-content-center align-self-center text-break">
@@ -133,22 +143,30 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                                         <Col className="d-flex pr-2 pl-2">
                                                             <span className="justify-content-center align-self-center">
                                                                 <span className="text-nowrap">
-                                                                    {formatBytes(torrent.downloaded)}
-                                                                </span>
-                                                                {' '}
+                                                                    {formatBytes(
+                                                                        torrent.downloaded
+                                                                    )}
+                                                                </span>{' '}
                                                                 <span className="text-nowrap">
-                                                                    ({formatBytes(torrent.downloadSpeed)}/s)
+                                                                    (
+                                                                    {formatBytes(
+                                                                        torrent.downloadSpeed
+                                                                    )}
+                                                                    /s)
                                                                 </span>
                                                             </span>
                                                         </Col>
                                                         <Col className="d-flex pr-1 pl-2">
                                                             <span className="justify-content-center align-self-center">
-                                                                {formatDate(new Date(torrent.started))}
+                                                                {formatDate(
+                                                                    new Date(torrent.started)
+                                                                )}
                                                             </span>
                                                         </Col>
                                                         <Col className="d-flex pr-2 pl-2">
                                                             <span className="justify-content-center align-self-center ml-auto">
-                                                                <Button as={Link}
+                                                                <Button
+                                                                    as={Link}
                                                                     to={`/play?torrent=${encodeURIComponent(
                                                                         torrent.link
                                                                     )}`}
@@ -158,7 +176,6 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                                             </span>
                                                         </Col>
                                                     </Row>
-
                                                 </Col>
                                             </Row>
                                         </ListGroup.Item>
@@ -167,9 +184,7 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                             </Card.Body>
                         </Card>
                     ) : (
-                        <Alert variant="warning">
-                            No active torrents at the moment
-                        </Alert>
+                        <Alert variant="warning">No active torrents at the moment</Alert>
                     )}
                 </>
             )}

@@ -8,7 +8,11 @@ import { validateString } from '../helpers/validation'
 import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
 import { getSteamUrl, getPlaylistUrl } from '../helpers'
 
-function torrentToJson(v: TorrentClientTorrent, domain: string, encodeToken?: string): TorrentModel {
+function torrentToJson(
+    v: TorrentClientTorrent,
+    domain: string,
+    encodeToken?: string
+): TorrentModel {
     return {
         name: v.name,
         infoHash: v.infoHash,
@@ -24,7 +28,7 @@ function torrentToJson(v: TorrentClientTorrent, domain: string, encodeToken?: st
             length: f.length,
             stream: `${domain}${getSteamUrl(v.link, f.path, encodeToken)}`,
         })),
-        playlist: `${domain}${getPlaylistUrl(v.link, encodeToken)}`
+        playlist: `${domain}${getPlaylistUrl(v.link, encodeToken)}`,
     }
 }
 

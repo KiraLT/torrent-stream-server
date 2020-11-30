@@ -21,10 +21,7 @@ export function TorrentFileComponent({ file }: { file: TorrentFileModel }): JSX.
         <div>
             <Alert variant="warning">
                 Unknown file type: {file.type}
-                <a
-                    href={file.stream}
-                    className="btn btn-outline-primary ti-cloud-down ml-5"
-                >
+                <a href={file.stream} className="btn btn-outline-primary ti-cloud-down ml-5">
                     Direct link
                 </a>
             </Alert>
@@ -61,7 +58,13 @@ export function TextComponent({ text }: { text: string }): JSX.Element {
     )
 }
 
-export function VideoPlayerComponent({ video, type }: { video: string; type: string }): JSX.Element {
+export function VideoPlayerComponent({
+    video,
+    type,
+}: {
+    video: string
+    type: string
+}): JSX.Element {
     const device = isMobile(window.navigator)
     const ref = useRef<HTMLVideoElement>(null)
 
@@ -73,16 +76,16 @@ export function VideoPlayerComponent({ video, type }: { video: string; type: str
                     {
                         type: type === 'video/x-matroska' ? 'video/mp4' : type,
                         src: video,
-                    }
+                    },
                 ],
                 fluid: true,
                 preload: 'auto',
                 ...{
                     userActions: {
                         doubleClick: true,
-                        hotkeys: true
+                        hotkeys: true,
                     },
-                }
+                },
             })
 
             // Skip a bit to load poster
@@ -93,7 +96,10 @@ export function VideoPlayerComponent({ video, type }: { video: string; type: str
     return (
         <>
             <div data-vjs-player>
-                <video ref={ref} className="video-js vjs-theme-custom vjs-big-play-centered"></video>
+                <video
+                    ref={ref}
+                    className="video-js vjs-theme-custom vjs-big-play-centered"
+                ></video>
             </div>
             {type === 'video/x-matroska' && (
                 <Alert variant="warning" className="mt-2">
@@ -126,7 +132,8 @@ export function VideoPlayerComponent({ video, type }: { video: string; type: str
                             >
                                 VLC
                             </a>{' '}
-                            click Media {'>'} Open Network Stream and paste stream link (or download playlist below and open it with VLC).
+                            click Media {'>'} Open Network Stream and paste stream link (or download
+                            playlist below and open it with VLC).
                         </>
                     )}
                 </Alert>

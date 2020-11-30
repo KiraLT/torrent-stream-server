@@ -17,7 +17,7 @@ export async function initApp(target: HTMLElement | null): Promise<void> {
     await setGlobal(loadedState)
     updateTheme(loadedState.theme)
 
-    addCallback(state => {
+    addCallback((state) => {
         updateTheme(state.theme)
         saveState(state)
     })
@@ -35,19 +35,24 @@ export async function initApp(target: HTMLElement | null): Promise<void> {
 function loadState(): State {
     try {
         const value = localStorage.getItem('state')
-        return value ? {
-            ...defaultState,
-            ...JSON.parse(value),
-        } : defaultState
+        return value
+            ? {
+                  ...defaultState,
+                  ...JSON.parse(value),
+              }
+            : defaultState
     } catch {
         return defaultState
     }
 }
 
 function saveState(state: State): void {
-    localStorage.setItem('state', JSON.stringify({
-        theme: state.theme
-    }))
+    localStorage.setItem(
+        'state',
+        JSON.stringify({
+            theme: state.theme,
+        })
+    )
 }
 
 function registerWebworker(): void {

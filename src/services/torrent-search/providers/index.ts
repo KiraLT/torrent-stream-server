@@ -9,7 +9,7 @@ export const providers = {
     [NyaaProvider.providerName]: new NyaaProvider(),
     [ThepiratebayProvider.providerName]: new ThepiratebayProvider(),
     [TorrentParadiseProvider.providerName]: new TorrentParadiseProvider(),
-    [X1337Provider.providerName]: new X1337Provider()
+    [X1337Provider.providerName]: new X1337Provider(),
 }
 
 export type ProviderName = keyof typeof providers

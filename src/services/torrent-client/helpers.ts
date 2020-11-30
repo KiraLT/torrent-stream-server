@@ -50,7 +50,7 @@ export interface FindFileOptions {
  * @param files
  * @param options
  */
-export function filterFiles<T extends {type: string; name: string; path: string; length: number}>(
+export function filterFiles<T extends { type: string; name: string; path: string; length: number }>(
     files: T[],
     options: FindFileOptions
 ): T[] {

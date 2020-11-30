@@ -116,6 +116,8 @@ export class X1337Provider extends Provider {
     }
 
     protected parseDate(value: string): Date {
-        return new Date(value.replace(`'`, '20').replace('th', '').replace('st', '').replace('rd', ''))
+        return new Date(
+            value.replace(`'`, '20').replace('th', '').replace('st', '').replace('rd', '')
+        )
     }
 }
