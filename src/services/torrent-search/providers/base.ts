@@ -39,7 +39,7 @@ export interface ProviderSearchOptions {
 export abstract class Provider {
     static providerName: string
 
-    public abstract async getMeta(): Promise<ProviderMeta>
+    public abstract getMeta(): Promise<ProviderMeta>
 
     public async search(
         _query: string,
@@ -48,7 +48,7 @@ export abstract class Provider {
         throw new Error(`search is not supported`)
     }
 
-    public async getMagnet(id: string): Promise<string | undefined> {
+    public async getMagnet(_id: string): Promise<string | undefined> {
         throw new Error(`getMagnet is not supported`)
     }
 }

@@ -19,5 +19,5 @@ export interface TorrentAdapterFile {
 export abstract class TorrentAdapter {
     constructor() {}
 
-    public abstract async add(magnet: string, path: string): Promise<TorrentAdapterTorrent>
+    public abstract add(magnet: string, path: string): Promise<TorrentAdapterTorrent>
 }
