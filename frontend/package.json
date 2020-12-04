@@ -1,6 +1,6 @@
 {
     "name": "torrent-stream-server-frontend",
-    "version": "1.5.2",
+    "version": "1.6.0",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.11.6",
