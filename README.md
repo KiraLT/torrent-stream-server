@@ -11,12 +11,12 @@ HTTP server to convert any torrent to stream with video support.
 
 **Features:**
 
-* Create stream from magnet or torrent file - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/home-white.png), [preview 2](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/home-dark.png)
-* Choose which file to stream - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/files-white.png), [preview 2](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/files-dark.png)
-* Stream video files - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/play-white.png), [preview 2](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/play-dark.png)
-* Search & stream torrents - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/browse-white.png), [preview 2](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/browse-dark.png)
-* Playlist support (m3u), open with external player - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/playlist-white.png), [preview 2](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/playlist-dark.png)
-* Monitor activity - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/dashboard-white.png), [preview 2](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/dashboard-dark.png)
+* Create stream from magnet or torrent file - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/home.png)
+* Choose which file to stream - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/files.png)
+* Stream video files - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/play.png)
+* Search & stream torrents - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/browse.png)
+* Playlist support (m3u), open with external player - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/playlist.png)
+* Monitor activity - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/dashboard.png)
 
 ## Setup
 
