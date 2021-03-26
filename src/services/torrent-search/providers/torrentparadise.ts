@@ -22,7 +22,7 @@ export class TorrentParadiseProvider extends Provider {
     }
 
     async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
-        const { } = options || {}
+        const {} = options || {}
 
         const url = `${this.domain}/api/search?q=${encodeURIComponent(query)}`
         const result = await loadJson<TorrentParadiseItem[]>(url)

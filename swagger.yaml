@@ -109,27 +109,10 @@ paths:
             tags:
                 - stream
             parameters:
-                - in: path
-                  name: torrent
-                  required: true
-                  description: Can be torrent infoHash, magnet or link to torrent file. If security is enabled, it should be JWT encoded whole payload (including all `query` parameters) with extra `torrent` parameter.
-                  schema:
-                      type: string
-                - in: query
-                  name: file
-                  description: Case insensitive file name or path
-                  schema:
-                      type: string
-                - in: query
-                  name: fileType
-                  description: Case insensitive file mime type (e.g. `video`, `video/mp4`, `mp4`) or file extension (e.g. `.mp4`, `mp4`)
-                  schema:
-                      type: string
-                - in: query
-                  name: fileIndex
-                  description: File index (starting from `1`)
-                  schema:
-                      type: string
+                - $ref: '#/components/parameters/torrentParam'
+                - $ref: '#/components/parameters/file'
+                - $ref: '#/components/parameters/fileType'
+                - $ref: '#/components/parameters/fileIndex'
             responses:
                 200:
                     description: OK
@@ -138,10 +121,95 @@ paths:
                             schema:
                                 type: string
                                 format: binary
+                400:
+                    $ref: '#/components/responses/400'
                 401:
                     $ref: '#/components/responses/401'
                 403:
                     $ref: '#/components/responses/403'
+                404:
+                    $ref: '#/components/responses/404'
+    /stream:
+        get:
+            operationId: getStream2
+            description: 'Create a file stream from torrents by `torrent` parameter. By default the biggest file will be returned, but it is possible to select file manually using `file`, `fileType`, `fileIndex` parameters. Endpoint can be protected by passing signed payload with JWT token (`token` parameter).'
+            tags:
+                - stream
+            parameters:
+                - $ref: '#/components/parameters/torrent'
+                - $ref: '#/components/parameters/file'
+                - $ref: '#/components/parameters/fileType'
+                - $ref: '#/components/parameters/fileIndex'
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/octet-stream:
+                            schema:
+                                type: string
+                                format: binary
+                400:
+                    $ref: '#/components/responses/400'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+                404:
+                    $ref: '#/components/responses/404'
+    /playlist/{torrent}:
+        get:
+            operationId: getPlaylist
+            description: 'Returns [m3u multimedia playlist](https://en.wikipedia.org/wiki/M3U) of the torrent. Supports same parameters as stream endpoint.'
+            tags:
+                - stream
+            parameters:
+                - $ref: '#/components/parameters/torrentParam'
+                - $ref: '#/components/parameters/file'
+                - $ref: '#/components/parameters/fileType'
+                - $ref: '#/components/parameters/fileIndex'
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/octet-stream:
+                            schema:
+                                type: string
+                                format: binary
+                400:
+                    $ref: '#/components/responses/400'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+                404:
+                    $ref: '#/components/responses/404'
+    /playlist:
+        get:
+            operationId: getPlaylist2
+            description: 'Returns [m3u multimedia playlist](https://en.wikipedia.org/wiki/M3U) of the torrent. Supports same parameters as stream endpoint.'
+            tags:
+                - stream
+            parameters:
+                - $ref: '#/components/parameters/torrent'
+                - $ref: '#/components/parameters/file'
+                - $ref: '#/components/parameters/fileType'
+                - $ref: '#/components/parameters/fileIndex'
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/octet-stream:
+                            schema:
+                                type: string
+                                format: binary
+                400:
+                    $ref: '#/components/responses/400'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
+                404:
+                    $ref: '#/components/responses/404'
     /api/browse/providers:
         get:
             operationId: getProviders
@@ -230,6 +298,39 @@ paths:
                 403:
                     $ref: '#/components/responses/403'
 components:
+    parameters:
+        torrentParam:
+            in: path
+            name: torrent
+            required: true
+            description: Can be torrent infoHash, magnet or link to torrent file. If security is enabled, it should be JWT encoded whole payload (including all `query` parameters) with extra `torrent` parameter.
+            schema:
+                type: string
+        torrent:
+            in: query
+            name: torrent
+            required: true
+            description: Can be torrent infoHash, magnet or link to torrent file. If security is enabled, it should be JWT encoded whole payload (including all `query` parameters) with extra `torrent` parameter.
+            schema:
+                type: string
+        file:
+            in: query
+            name: file
+            description: Case insensitive file name or path
+            schema:
+                type: string
+        fileType:
+            in: query
+            name: fileType
+            description: Case insensitive file mime type (e.g. `video`, `video/mp4`, `mp4`) or file extension (e.g. `.mp4`, `mp4`)
+            schema:
+                type: string
+        fileIndex:
+            in: query
+            name: fileIndex
+            description: File index (starting from `1`)
+            schema:
+                type: string
     schemas:
         UsageModel:
             type: object
@@ -262,7 +363,9 @@ components:
                     type: number
                 downloadSpeed:
                     type: number
-            required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed']
+                playlist:
+                    type: string
+            required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed', 'playlist']
         TorrentFileModel:
             type: object
             properties:

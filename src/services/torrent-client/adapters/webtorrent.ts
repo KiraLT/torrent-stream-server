@@ -61,7 +61,7 @@ export class WebtorrentAdapter extends TorrentAdapter {
                 },
             })),
             async remove() {
-                new Promise((resolve, reject) => {
+                new Promise<void>((resolve, reject) => {
                     torrent.destroy(
                         {
                             destroyStore: true,

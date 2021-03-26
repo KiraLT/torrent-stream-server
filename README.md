@@ -5,15 +5,18 @@
 [![Dependencies](https://david-dm.org/KiraLT/torrent-stream-server.svg)](https://david-dm.org/KiraLT/torrent-stream-server)
 [![npm version](https://badge.fury.io/js/torrent-stream-server.svg)](https://www.npmjs.com/package/torrent-stream-server)
 
-**Whats new:**
+HTTP server to convert any torrent to stream with video support.
 
-* Search & stream torrents - [preview](https://i.imgur.com/kSXYGrm.png)
-* Stream any file from the torrent - [preview](https://i.imgur.com/qRmicai.png)
-* Monitor activity - [preview](https://i.imgur.com/aPTcl9P.png)
+![Cover](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/play-white.png)
 
-HTTP server to convert any torrent to video stream
+**Features:**
 
-![Demo](https://i.imgur.com/mIzSYWV.png)
+* Create stream from magnet or torrent file - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/home.png)
+* Choose which file to stream - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/files.png)
+* Stream video files - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/play.png)
+* Search & stream torrents - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/browse.png)
+* Playlist support (m3u), open with external player - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/playlist.png)
+* Monitor activity - [preview](https://github.com/KiraLT/torrent-stream-server/raw/master/docs/images/dashboard.png)
 
 ## Setup
 

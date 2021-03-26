@@ -254,9 +254,9 @@ export class ThepiratebayProvider extends Provider {
     async search(query: string, options?: ProviderSearchOptions) {
         const { category, limit } = options || {}
 
-        const url = `${this.domain}/q.php?q=${encodeURIComponent(
-            query
-        )}&cat=${encodeURIComponent(category || '')}`
+        const url = `${this.domain}/q.php?q=${encodeURIComponent(query)}&cat=${encodeURIComponent(
+            category || ''
+        )}`
 
         const result = await loadJson<ThepiratebayItem[]>(url)
 

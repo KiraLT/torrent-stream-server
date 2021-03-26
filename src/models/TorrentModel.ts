@@ -74,6 +74,12 @@ export interface TorrentModel {
      * @memberof TorrentModel
      */
     downloadSpeed: number
+    /**
+     *
+     * @type {string}
+     * @memberof TorrentModel
+     */
+    playlist: string
 }
 
 export function TorrentModelFromJSON(json: any): TorrentModel {
@@ -93,6 +99,7 @@ export function TorrentModelFromJSONTyped(json: any, ignoreDiscriminator: boolea
         files: (json['files'] as Array<any>).map(TorrentFileModelFromJSON),
         downloaded: json['downloaded'],
         downloadSpeed: json['downloadSpeed'],
+        playlist: json['playlist'],
     }
 }
 
@@ -112,5 +119,6 @@ export function TorrentModelToJSON(value?: TorrentModel | null): any {
         files: (value.files as Array<any>).map(TorrentFileModelToJSON),
         downloaded: value.downloaded,
         downloadSpeed: value.downloadSpeed,
+        playlist: value.playlist,
     }
 }

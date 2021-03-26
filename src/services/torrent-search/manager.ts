@@ -1,5 +1,10 @@
-import { ProviderMeta, ProviderSearchOptions, ProviderTorrent, providers, ProviderName } from './providers'
-
+import {
+    ProviderMeta,
+    ProviderSearchOptions,
+    ProviderTorrent,
+    providers,
+    ProviderName,
+} from './providers'
 
 export interface ProviderInfo extends ProviderMeta {
     name: string

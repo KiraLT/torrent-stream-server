@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { format } from 'timeago.js'
+import {
+    Card,
+    Alert,
+    CardDeck,
+    ProgressBar,
+    Container,
+    Spinner,
+    ListGroup,
+    Row,
+    Col,
+    Button,
+} from 'react-bootstrap'
 
 import { DashboardApi, TorrentsApi, TorrentModel, UsageModel } from '../helpers/client'
-import { formatBytes, parseError } from '../helpers'
+import { formatBytes, parseError, formatDate } from '../helpers'
 import { getApiConfig } from '../config'
 import { withBearer } from './parts/auth'
 
@@ -50,120 +61,133 @@ export const DashboardComponent = withBearer(({ bearer }) => {
     }, [])
 
     return (
-        <div className="container">
-            {error && (
-                <div className="alert alert-danger" role="alert">
-                    {error}
-                </div>
-            )}
+        <Container className="mt-3 content">
+            {error && <Alert variant="danger">{error}</Alert>}
             {!torrents && !error && (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
+                <div className="d-flex justify-content-center mt-5">
+                    <Spinner animation="border" />
                 </div>
             )}
             {usage && (
-                <div className="card-deck mb-3 text-center">
-                    <div className="card mb-4 box-shadow">
-                        <div className="card-header">
-                            <h4 className="my-0 font-weight-normal">Disk space</h4>
-                        </div>
-                        <div className="card-body">
-                            <h2 className="card-title pricing-card-title">
+                <CardDeck className="mb-3 text-center">
+                    <Card>
+                        <Card.Header>
+                            <Card.Title as="h4">
+                                <i className="ti-stats-down text-info" /> Disk space
+                            </Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title as="h2">
                                 {formatBytes(usage.totalDiskSpace - usage.freeDiskSpace)}
                                 <small className="text-muted">
-                                    / {formatBytes(usage.totalDiskSpace)}
+                                    {' / '}
+                                    {formatBytes(usage.totalDiskSpace)}
                                 </small>
-                            </h2>
-                            <div className="progress">
-                                <div
-                                    className="progress-bar"
-                                    role="progressbar"
-                                    style={{
-                                        width: `${
-                                            ((usage.totalDiskSpace - usage.freeDiskSpace) /
-                                                usage.totalDiskSpace) *
-                                            100
-                                        }%`,
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card mb-4 box-shadow">
-                        <div className="card-header">
-                            <h4 className="my-0 font-weight-normal">Torrents space</h4>
-                        </div>
-                        <div className="card-body">
-                            <h2 className="card-title pricing-card-title">
+                            </Card.Title>
+                            <ProgressBar
+                                variant="info"
+                                min={0}
+                                max={usage.totalDiskSpace}
+                                now={usage.totalDiskSpace - usage.freeDiskSpace}
+                            />
+                        </Card.Body>
+                    </Card>
+                    <Card>
+                        <Card.Header>
+                            <Card.Title as="h4">
+                                <i className="ti-stats-down text-warning" /> Torrents space
+                            </Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title as="h2">
                                 {formatBytes(usage.usedTorrentSpace)}
                                 <small className="text-muted">
-                                    / {formatBytes(usage.freeDiskSpace + usage.usedTorrentSpace)}
+                                    {' / '}
+                                    {formatBytes(usage.freeDiskSpace + usage.usedTorrentSpace)}
                                 </small>
-                            </h2>
-                            <div className="progress">
-                                <div
-                                    className="progress-bar"
-                                    role="progressbar"
-                                    style={{
-                                        width: `${
-                                            (usage.usedTorrentSpace /
-                                                (usage.freeDiskSpace + usage.usedTorrentSpace)) *
-                                            100
-                                        }%`,
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </Card.Title>
+                            <ProgressBar
+                                variant="info"
+                                min={0}
+                                max={usage.freeDiskSpace + usage.usedTorrentSpace}
+                                now={usage.usedTorrentSpace}
+                            />
+                        </Card.Body>
+                    </Card>
+                </CardDeck>
             )}
             {torrents && (
                 <>
                     {torrents.length ? (
-                        <>
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Download</th>
-                                        <th>Created</th>
-                                        <th>Play</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <Card>
+                            <Card.Header>
+                                <Card.Title as="h3">
+                                    <i className="ti-bar-chart text-info" /> History
+                                </Card.Title>
+                            </Card.Header>
+                            <Card.Body>
+                                <ListGroup variant="flush">
                                     {torrents.map((torrent) => (
-                                        <>
-                                            <tr>
-                                                <td>{torrent.name}</td>
-                                                <td>
-                                                    {formatBytes(torrent.downloaded)} (
-                                                    {formatBytes(torrent.downloadSpeed)}
-                                                    /s)
-                                                </td>
-                                                <td>{format(torrent.started)}</td>
-                                                <td>
-                                                    <Link
-                                                        to={`/play?torrent=${encodeURIComponent(
-                                                            torrent.link
-                                                        )}`}
-                                                        className="btn btn-outline-primary ti-control-play"
-                                                    ></Link>
-                                                </td>
-                                            </tr>
-                                        </>
+                                        <ListGroup.Item
+                                            key={torrent.infoHash}
+                                            className="bg-transparent border-dark"
+                                        >
+                                            <Row>
+                                                <Col xs className="d-flex mb-2">
+                                                    <span className="justify-content-center align-self-center text-break">
+                                                        {torrent.name}
+                                                    </span>
+                                                </Col>
+                                                <Col sm="auto" className="d-flex mb-2">
+                                                    <Row className="justify-content-center align-self-center ">
+                                                        <Col className="d-flex pr-2 pl-2">
+                                                            <span className="justify-content-center align-self-center">
+                                                                <span className="text-nowrap">
+                                                                    {formatBytes(
+                                                                        torrent.downloaded
+                                                                    )}
+                                                                </span>{' '}
+                                                                <span className="text-nowrap">
+                                                                    (
+                                                                    {formatBytes(
+                                                                        torrent.downloadSpeed
+                                                                    )}
+                                                                    /s)
+                                                                </span>
+                                                            </span>
+                                                        </Col>
+                                                        <Col className="d-flex pr-1 pl-2">
+                                                            <span className="justify-content-center align-self-center">
+                                                                {formatDate(
+                                                                    new Date(torrent.started)
+                                                                )}
+                                                            </span>
+                                                        </Col>
+                                                        <Col className="d-flex pr-2 pl-2">
+                                                            <span className="justify-content-center align-self-center ml-auto">
+                                                                <Button
+                                                                    as={Link}
+                                                                    to={`/play?torrent=${encodeURIComponent(
+                                                                        torrent.link
+                                                                    )}`}
+                                                                    variant="success"
+                                                                    className="ti-control-play pr-4 pl-4"
+                                                                ></Button>
+                                                            </span>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
                                     ))}
-                                </tbody>
-                            </table>
-                        </>
+                                </ListGroup>
+                            </Card.Body>
+                        </Card>
                     ) : (
-                        <div className="alert alert-warning" role="alert">
-                            No active torrents at the moment
-                        </div>
+                        <Alert variant="warning">No active torrents at the moment</Alert>
                     )}
                 </>
             )}
-        </div>
+        </Container>
     )
 })

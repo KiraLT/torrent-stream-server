@@ -19,6 +19,7 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build
+      - run: npm run test
 
   publish-npm:
     needs: build
@@ -37,9 +38,6 @@ jobs:
 
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # update package.json with correct version
-          npm --no-git-tag-version version $VERSION
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -1,8 +1,6 @@
 import fetch from 'node-fetch'
 import { extname } from 'path'
 
-import { TorrentClientFile } from '.'
-
 export const mirrors = [
     'https://ngosang.github.io/trackerslist/trackers_all.txt',
     'https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt',
@@ -52,10 +50,10 @@ export interface FindFileOptions {
  * @param files
  * @param options
  */
-export function findFile(
-    files: TorrentClientFile[],
+export function filterFiles<T extends { type: string; name: string; path: string; length: number }>(
+    files: T[],
     options: FindFileOptions
-): TorrentClientFile | undefined {
+): T[] {
     const filteredFiles = files.filter(
         (f, i) =>
             (options.fileIndex === undefined || options.fileIndex == i + 1) &&
@@ -69,8 +67,7 @@ export function findFile(
                     .includes(options.fileType.toLowerCase().replace('.', '')))
     )
 
-    return (
-        filteredFiles.find((f) => options.file && f.path === options.file) ||
-        [...filteredFiles].sort((a, b) => b.length - a.length)[0]
-    )
+    const file = filteredFiles.find((f) => options.file && f.path === options.file)
+
+    return file ? [file] : [...filteredFiles].sort((a, b) => b.length - a.length)
 }

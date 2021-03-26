@@ -47,11 +47,16 @@ export function AsyncButton({
 
     return (
         <>
-            <Toast show={!!error} onClose={() => setError('')} style={{
-                position: 'absolute',
-                top: 20,
-                right: 20,
-            }} className="bg-danger">
+            <Toast
+                show={!!error}
+                onClose={() => setError('')}
+                style={{
+                    position: 'absolute',
+                    top: 20,
+                    right: 20,
+                }}
+                className="bg-danger"
+            >
                 <Toast.Header className="text-danger">
                     <strong className="mr-auto">Error</strong>
                 </Toast.Header>
@@ -70,9 +75,7 @@ export function AsyncButton({
                     }
                 }}
             >
-                {loading && <Spinner as="span" animation="border" size="sm" />}
-                {' '}
-                {children}
+                {loading && <Spinner as="span" animation="border" size="sm" />} {children}
             </Button>
             {confirm && confirm.content && (
                 <Modal
@@ -96,7 +99,10 @@ export function AsyncButton({
                         >
                             Close
                         </Button>
-                        <Button variant={confirm.button?.variant ?? 'primary-outline'} onClick={handleConfirm}>
+                        <Button
+                            variant={confirm.button?.variant ?? 'primary-outline'}
+                            onClick={handleConfirm}
+                        >
                             {confirm.button?.text ?? 'Confirm'}
                         </Button>
                     </Modal.Footer>

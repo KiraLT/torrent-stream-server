@@ -7,7 +7,7 @@ import configSchema from './config.schema.json'
 import { validateSchema } from './helpers/validation'
 
 type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>;
+    [P in keyof T]?: DeepPartial<T[P]>
 }
 
 /**
@@ -207,7 +207,10 @@ export interface Config {
 /**
  * Load enviroment variable using `EnvVariables` interface
  */
-export function getEnv<T extends keyof EnvVariables>(key: T, type: 'json' | 'int' | 'string' | 'bool' = 'string'): EnvVariables[T] | undefined {
+export function getEnv<T extends keyof EnvVariables>(
+    key: T,
+    type: 'json' | 'int' | 'string' | 'bool' = 'string'
+): EnvVariables[T] | undefined {
     const value = (process.env[key] || '').trim() || undefined
 
     if (value) {
@@ -219,7 +222,7 @@ export function getEnv<T extends keyof EnvVariables>(key: T, type: 'json' | 'int
             }
         }
         if (type === 'int') {
-            return parseInt(value, 10) as EnvVariables[T] || undefined
+            return (parseInt(value, 10) as EnvVariables[T]) || undefined
         }
         if (type === 'bool') {
             return (typeof value === 'string' && value.toLowerCase() === 'true') as EnvVariables[T]
@@ -235,7 +238,7 @@ export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('
 const defaultConfig: Config = {
     host: getEnv('HOST') || '0.0.0.0',
     port: getEnv('PORT', 'int') || 3000,
-    environment: getEnv('NODE_ENV', 'bool') === 'development' ? 'development' : 'production',
+    environment: getEnv('NODE_ENV') === 'development' ? 'development' : 'production',
     trustProxy: getEnv('TRUST_PROXY') || isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [

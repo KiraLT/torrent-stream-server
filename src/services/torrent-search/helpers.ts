@@ -14,7 +14,7 @@ const defaultHeaders = {
 
 export async function loadPage(url: string): Promise<Response> {
     const response = await fetch(url, {
-        headers: defaultHeaders
+        headers: defaultHeaders,
     })
 
     if (!response.ok) {
@@ -25,13 +25,13 @@ export async function loadPage(url: string): Promise<Response> {
 }
 
 export async function loadJson<T>(url: string): Promise<T> {
-    return loadPage(url).then(v => v.json())
+    return loadPage(url).then((v) => v.json())
 }
 
 export async function crawlPage(url: string): Promise<{ $: cheerio.Root }> {
     const response = await loadPage(url)
 
     return {
-        $: cheerio.load(await response.text())
+        $: cheerio.load(await response.text()),
     }
 }
