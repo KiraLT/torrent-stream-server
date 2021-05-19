@@ -56,7 +56,7 @@
         "@types/swagger-ui-express": "^4.1.2",
         "@types/webtorrent": "^0.109.0",
         "@types/yamljs": "^0.2.31",
-        "@types/yargs": "^15.0.10",
+        "@types/yargs": "^16.0.2",
         "nodemon": "^2.0.6",
         "ts-jest": "^26.4.4",
         "ts-node": "^9.0.0",
