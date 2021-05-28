@@ -1,6 +1,7 @@
+import { formatBytes } from 'common-stuff'
+
 import { Provider, ProviderSearchOptions } from '.'
 import { formatMagnet, loadJson } from '../helpers'
-import { formatBytes } from '../../../helpers'
 
 export interface ThepiratebayItem {
     id: string

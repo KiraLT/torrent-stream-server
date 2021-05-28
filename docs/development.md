@@ -12,6 +12,7 @@ One-click ready-to-code development environments:
 
 So during developemnt you will need to run two dev servers with live reload:
 
+* `npm run dev` - starts both backend and frontend development servers
 * `npm run dev-backend` - start dev server on `3000` port
 * `npm run dev-frontend` - start dev server on  `3001` port
 

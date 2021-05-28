@@ -3,7 +3,6 @@
 export * from './app'
 export * from './config'
 export * from './api'
-export * from './models'
 export * from './services'
 export * from './cli'
 

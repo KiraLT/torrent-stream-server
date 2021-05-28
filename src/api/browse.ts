@@ -1,61 +1,52 @@
-import { Router } from 'express'
-import { Logger } from 'winston'
-import { BadRequest, NotFound } from 'http-errors'
+import { HttpError, HttpStatusCodes } from 'common-stuff'
 
-import { Config } from '../config'
+import { Globals } from '../config'
 import {
     getProvidersInfo,
     search,
     isProviderSupported,
     providers,
 } from '../services/torrent-search'
-import { ProviderModel, ProviderTorrentModel, MagnetModel } from '../models'
-import { validateString } from '../helpers/validation'
+import { createRoute, Route } from '../helpers/openapi'
 
-export function getBrowseRouter(_config: Config, _logger: Logger): Router {
-    return Router()
-        .get<{}, ProviderTorrentModel[], {}, Record<'query' | 'category' | 'provider', unknown>>(
-            '/browse/search',
-            async (req, res) => {
-                const query = validateString(req.query.query, 'query')
-                const category = req.query.category
-                    ? validateString(req.query.category, 'category')
-                    : undefined
-                const provider = validateString(req.query.provider, 'provider')
+export function getBrowseRouter({}: Globals): Route[] {
+    return [
+        createRoute('searchTorrents', async (req, resp) => {
+            const { provider, query, category } = req.query
 
-                if (!isProviderSupported(provider)) {
-                    throw new BadRequest(`Provider ${provider} is not supported`)
-                }
-
-                return res.json(
-                    await search([provider], query, {
-                        category: category,
-                        limit: 50,
-                    })
+            if (!isProviderSupported(provider)) {
+                throw new HttpError(
+                    HttpStatusCodes.BAD_REQUEST,
+                    `Provider ${provider} is not supported`
                 )
             }
-        )
-        .get<{}, ProviderModel[], {}, {}>('/browse/providers', async (_req, res) => {
-            return res.json(await getProvidersInfo())
-        })
-        .get<Record<'provider' | 'torrentId', string>, MagnetModel, {}, {}>(
-            '/browse/providers/:provider/magnet/:torrentId',
-            async (req, res) => {
-                const { provider, torrentId } = req.params
 
-                if (!isProviderSupported(provider)) {
-                    throw new NotFound(`Provider ${provider} not found`)
-                }
-
-                const magnet = await providers[provider].getMagnet(torrentId)
-
-                if (!magnet) {
-                    throw new NotFound(`Torrent ${torrentId} not found`)
-                }
-
-                return res.json({
-                    magnet,
+            return resp.json(
+                await search([provider], query, {
+                    category: category,
+                    limit: 50,
                 })
+            )
+        }),
+        createRoute('getProviders', async (_req, resp) => {
+            return resp.json(await getProvidersInfo())
+        }),
+        createRoute('getMagnet', async (req, res) => {
+            const { provider, torrentId } = req.params
+
+            if (!isProviderSupported(provider)) {
+                throw new HttpError(HttpStatusCodes.NOT_FOUND, `Provider ${provider} not found`)
             }
-        )
+
+            const magnet = await providers[provider].getMagnet(torrentId)
+
+            if (!magnet) {
+                throw new HttpError(HttpStatusCodes.NOT_FOUND, `Torrent ${torrentId} not found`)
+            }
+
+            return res.json({
+                magnet,
+            })
+        }),
+    ]
 }

@@ -2,7 +2,7 @@ import { promisify } from 'util'
 import parseTorrent from 'parse-torrent'
 import { Logger } from 'winston'
 import { lookup } from 'mime-types'
-import { BadRequest } from 'http-errors'
+import { HttpError, HttpStatusCodes } from 'common-stuff'
 
 import {
     downloadTrackers,
@@ -82,13 +82,14 @@ export class TorrentClient {
         try {
             parsedLink = await promisify(parseTorrent.remote)(link)
         } catch (err) {
-            throw new BadRequest(
+            throw new HttpError(
+                HttpStatusCodes.BAD_REQUEST,
                 `Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`
             )
         }
 
         if (!parsedLink) {
-            throw new BadRequest(`Cannot parse torrent: ${link}`)
+            throw new HttpError(HttpStatusCodes.BAD_REQUEST, `Cannot parse torrent: ${link}`)
         }
         const magnet = parseTorrent.toMagnetURI({
             ...parsedLink,
@@ -108,12 +109,13 @@ export class TorrentClient {
 
         const infoHash = parsedLink.infoHash
 
-        if (infoHash in this.torrents) {
+        const foundTorrent = this.torrents[infoHash]
+        if (foundTorrent) {
             this.torrents[infoHash] = {
-                ...this.torrents[infoHash],
+                ...foundTorrent,
                 updated: new Date(),
             }
-            return this.torrents[infoHash]
+            return foundTorrent
         }
 
         const torrent = await this.adapter.add(magnet, this.config.path).then((v) => ({

@@ -285,14 +285,16 @@ export const BrowseComponent = withBearer(({ bearer }) => {
                                                                     variant="success"
                                                                     className="ti-control-play"
                                                                     onClick={async () => {
-                                                                        const {
-                                                                            magnet,
-                                                                        } = await new BrowseApi(
-                                                                            getApiConfig({ bearer })
-                                                                        ).getMagnet({
-                                                                            provider,
-                                                                            torrentId: torrent.id,
-                                                                        })
+                                                                        const { magnet } =
+                                                                            await new BrowseApi(
+                                                                                getApiConfig({
+                                                                                    bearer,
+                                                                                })
+                                                                            ).getMagnet({
+                                                                                provider,
+                                                                                torrentId:
+                                                                                    torrent.id,
+                                                                            })
                                                                         history.push(
                                                                             `/play?torrent=${encodeURIComponent(
                                                                                 magnet

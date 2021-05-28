@@ -5,7 +5,7 @@ export type Theme = typeof themes[any]
 
 export function getTheme(theme: Theme): Theme {
     const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    return theme === 'default' ? isDarkMode ? 'dark' : 'light' : theme
+    return theme === 'default' ? (isDarkMode ? 'dark' : 'light') : theme
 }
 
 export const apiDomain = (() => {
