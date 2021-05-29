@@ -12,7 +12,7 @@ type Operation = keyof Operations
 type Url = keyof Paths
 type Method = KeysOfUnion<Paths[Url]>
 
-export const openapi = YAML.load(resolve(__dirname, '../../../swagger.yaml')) as OpenAPIV3.Document
+export const openapi = YAML.load(resolve(__dirname, '../../../openapi.yaml')) as OpenAPIV3.Document
 
 function getPathByOperation<O extends Operation>(operation: O): { url: Url; method: Method } {
     const value = flatMap(Object.entries(openapi.paths), ([url, data]) => {
