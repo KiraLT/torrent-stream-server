@@ -42,6 +42,5 @@ export const defaultState: State = {
 }
 
 export const packageName = 'torrent-stream-server'
-// export const packageVersion = process.env.REACT_APP_VERSION || '1.0.0'
-export const packageVersion = '1.0.0'
+export const packageVersion = process.env.REACT_APP_VERSION || '1.0.0'
 export const releasesPage = 'https://github.com/KiraLT/torrent-stream-server/releases'
