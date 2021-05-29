@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import {
     Card,
@@ -10,61 +10,47 @@ import {
     OverlayTrigger,
     Tooltip,
 } from 'react-bootstrap'
+import { useAsync } from 'react-async-hook'
+import { formatBytes, sortBy } from 'common-stuff'
 
 import { TorrentsApi, TorrentModel, TorrentFileModel } from '../helpers/client'
 import { getApiConfig } from '../config'
-import { formatBytes, sortBy, parseError } from '../helpers'
+import { handleApiError } from '../helpers'
 import { addHistoryItem } from '../helpers/history'
 import { withBearer } from './parts/auth'
 import { TorrentFileComponent } from './parts/play'
+import { ErrorComponent, LoaderComponent } from './parts'
 
 export const PlayComponent = withBearer(({ bearer }) => {
-    const [torrent, setTorrent] = useState<TorrentModel>()
-    const [error, setError] = useState('')
     const location = useLocation()
 
     const searchParams = new URLSearchParams(location.search)
     const link = searchParams.get('torrent')
     const file = searchParams.get('file')
 
-    const torrentFile = torrent?.files.find((v) => v.path === file)
-
-    useEffect(() => {
-        const action = async () => {
-            if (link) {
-                const newTorrent = await new TorrentsApi(getApiConfig({ bearer })).createTorrent({
-                    torrent: link,
-                })
-                setTorrent(newTorrent)
+    const torrent = useAsync(async () => {
+        if (link) {
+            return new TorrentsApi(getApiConfig({ bearer })).createTorrent({
+                torrent: link,
+            }).then(v => {
                 addHistoryItem({
-                    name: newTorrent.name,
-                    link: newTorrent.link,
+                    name: v.name,
+                    link: v.link,
                 })
-            } else {
-                setError('Torrent link is not specified')
-            }
+                return v
+            }).catch(handleApiError)
         }
-        action().catch(async (err) => {
-            setError(await parseError(err))
-        })
+        return undefined
     }, [link, bearer])
+
+    const torrentFile = useMemo(() => torrent.result?.files.find((v) => v.path === file), [torrent, file])
 
     return (
         <Container className="mt-3">
-            {error && (
-                <div className="alert alert-danger" role="alert">
-                    {error}
-                </div>
-            )}
-            {!torrent && !error && (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            )}
-            {torrentFile && torrent && <PlayVideoComponent file={torrentFile} torrent={torrent} />}
-            {torrent && <FilesComponent torrent={torrent} />}
+            {torrent.error && <ErrorComponent error={torrent.error} retry={torrent.execute}/>}
+            {torrent.loading && <LoaderComponent />}
+            {torrentFile && torrent.result && <PlayVideoComponent file={torrentFile} torrent={torrent.result} />}
+            {torrent.result && <FilesComponent torrent={torrent.result} />}
         </Container>
     )
 })

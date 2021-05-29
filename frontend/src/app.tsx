@@ -51,6 +51,7 @@ function saveState(state: State): void {
         'state',
         JSON.stringify({
             theme: state.theme,
+            latestVersionAlert: state.latestVersionAlert
         })
     )
 }
