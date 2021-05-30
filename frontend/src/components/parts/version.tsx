@@ -9,19 +9,21 @@ export function VersionAlertComponent(): JSX.Element {
     const [latestVersionAlert, setLatestVersionAlert] = useGlobal('latestVersionAlert')
 
     useEffect(() => {
-        getLatestVersion(packageName).then(version => {
-            if (latestVersionAlert !== version && packageVersion !== version) {
-                setLatestVersionAlert(version)
+        getLatestVersion(packageName)
+            .then((version) => {
+                if (latestVersionAlert !== version && packageVersion !== version) {
+                    setLatestVersionAlert(version)
 
-                toast(`A new ${version} version is available, update now!`, {
-                    autoClose: false,
-                    type: 'info',
-                    onClick: () => {
-                        window.open(releasesPage)
-                    }
-                })
-            }
-        }).catch()
+                    toast(`A new ${version} version is available, update now!`, {
+                        autoClose: false,
+                        type: 'info',
+                        onClick: () => {
+                            window.open(releasesPage)
+                        },
+                    })
+                }
+            })
+            .catch()
     }, [latestVersionAlert, setLatestVersionAlert])
 
     return <></>

@@ -1,133 +1,77 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useGlobal } from 'reactn'
 import {
     Card,
     Alert,
     CardDeck,
     ProgressBar,
     Container,
-    Spinner,
     ListGroup,
     Row,
     Col,
     Button,
 } from 'react-bootstrap'
+import { useAsync } from 'react-async-hook'
 
-import { DashboardApi, TorrentsApi, TorrentModel, UsageModel } from '../helpers/client'
-import { formatBytes, parseError, formatDate } from '../helpers'
+import { DashboardApi, TorrentsApi } from '../helpers/client'
+import { formatBytes, formatDate, handleApiError } from '../helpers'
 import { getApiConfig } from '../config'
-import { withBearer } from './parts/auth'
+import { withBearer, ErrorComponent, LoaderComponent } from './parts'
 
-export const DashboardComponent = withBearer(({ bearer }) => {
-    const [torrents, setTorrents] = useState<TorrentModel[]>()
-    const [usage, setUsage] = useState<UsageModel>()
-    const [error, setError] = useState('')
-
-    const updateTorrents = async () =>
-        new TorrentsApi(getApiConfig({ bearer }))
-            .getTorrents()
-            .then((v) => setTorrents(v))
-            .catch(async (err) => {
-                setError(await parseError(err))
-            })
-    const updateUsage = async () =>
-        new DashboardApi(getApiConfig({ bearer }))
-            .getUsage()
-            .then((v) => setUsage(v))
-            .catch(async (err) => {
-                setError(await parseError(err))
-            })
-
-    useEffect(() => {
-        let torrentsInterval: NodeJS.Timeout
-        let usageInterval: NodeJS.Timeout
-
-        updateTorrents().then(() => {
-            torrentsInterval = setInterval(() => {
-                updateTorrents()
-            }, 5 * 1000)
-        })
-        updateUsage().then(() => {
-            usageInterval = setInterval(() => {
-                updateTorrents()
-            }, 60 * 1000)
-        })
-
-        return () => {
-            clearInterval(torrentsInterval)
-            clearInterval(usageInterval)
-        }
-        // eslint-disable-next-line
-    }, [])
-
+export const DashboardComponent = withBearer(() => {
     return (
         <Container className="mt-3 content">
-            {error && <Alert variant="danger">{error}</Alert>}
-            {!torrents && !error && (
-                <div className="d-flex justify-content-center mt-5">
-                    <Spinner animation="border" />
-                </div>
-            )}
-            {usage && (
-                <CardDeck className="mb-3 text-center">
-                    <Card>
-                        <Card.Header>
-                            <Card.Title as="h4">
-                                <i className="ti-stats-down text-info" /> Disk space
-                            </Card.Title>
-                        </Card.Header>
-                        <Card.Body>
-                            <Card.Title as="h2">
-                                {formatBytes(usage.totalDiskSpace - usage.freeDiskSpace)}
-                                <small className="text-muted">
-                                    {' / '}
-                                    {formatBytes(usage.totalDiskSpace)}
-                                </small>
-                            </Card.Title>
-                            <ProgressBar
-                                variant="info"
-                                min={0}
-                                max={usage.totalDiskSpace}
-                                now={usage.totalDiskSpace - usage.freeDiskSpace}
-                            />
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Header>
-                            <Card.Title as="h4">
-                                <i className="ti-stats-down text-warning" /> Torrents space
-                            </Card.Title>
-                        </Card.Header>
-                        <Card.Body>
-                            <Card.Title as="h2">
-                                {formatBytes(usage.usedTorrentSpace)}
-                                <small className="text-muted">
-                                    {' / '}
-                                    {formatBytes(usage.freeDiskSpace + usage.usedTorrentSpace)}
-                                </small>
-                            </Card.Title>
-                            <ProgressBar
-                                variant="info"
-                                min={0}
-                                max={usage.freeDiskSpace + usage.usedTorrentSpace}
-                                now={usage.usedTorrentSpace}
-                            />
-                        </Card.Body>
-                    </Card>
-                </CardDeck>
-            )}
-            {torrents && (
+            <UsageComponent />
+            <ActiveTorrentsComponent />
+        </Container>
+    )
+})
+
+function ActiveTorrentsComponent(): JSX.Element {
+    const [bearer] = useGlobal('bearer')
+
+    const torrents = useAsync(
+        async () => {
+            return new TorrentsApi(getApiConfig({ bearer })).getTorrents().catch(handleApiError)
+        },
+        [bearer],
+        {
+            setLoading: (s) => {
+                // Prevent clearing previous state
+                return s
+            },
+        }
+    )
+
+    useEffect(() => {
+        let interval = setInterval(() => {
+            torrents.execute()
+        }, 5 * 1000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [torrents])
+
+    return (
+        <>
+            {torrents.error ? (
+                <ErrorComponent error={torrents.error} retry={torrents.execute} />
+            ) : undefined}
+            {torrents.loading && !torrents.result && <LoaderComponent />}
+            {torrents.result && (
                 <>
-                    {torrents.length ? (
+                    {torrents.result.length ? (
                         <Card>
                             <Card.Header>
                                 <Card.Title as="h3">
-                                    <i className="ti-bar-chart text-info" /> History
+                                    <i className="ti-bar-chart text-info" /> Activity
                                 </Card.Title>
                             </Card.Header>
                             <Card.Body>
                                 <ListGroup variant="flush">
-                                    {torrents.map((torrent) => (
+                                    {torrents.result.map((torrent) => (
                                         <ListGroup.Item
                                             key={torrent.infoHash}
                                             className="bg-transparent border-dark"
@@ -138,8 +82,8 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                                                         {torrent.name}
                                                     </span>
                                                 </Col>
-                                                <Col sm="auto" className="d-flex mb-2">
-                                                    <Row className="justify-content-center align-self-center ">
+                                                <Col lg={4} className="d-flex mb-2">
+                                                    <Row className="justify-content-center align-self-center w-100">
                                                         <Col className="d-flex pr-2 pl-2">
                                                             <span className="justify-content-center align-self-center">
                                                                 <span className="text-nowrap">
@@ -188,6 +132,89 @@ export const DashboardComponent = withBearer(({ bearer }) => {
                     )}
                 </>
             )}
-        </Container>
+        </>
     )
-})
+}
+
+function UsageComponent(): JSX.Element {
+    const [bearer] = useGlobal('bearer')
+    const usage = useAsync(
+        async () => {
+            return new DashboardApi(getApiConfig({ bearer })).getUsage().catch(handleApiError)
+        },
+        [],
+        {
+            setLoading: (s) => {
+                // Prevent clearing previous state
+                return s
+            },
+        }
+    )
+
+    useEffect(() => {
+        let interval = setInterval(() => {
+            usage.execute()
+        }, 60 * 1000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [usage])
+
+    return (
+        <>
+            {usage.result && (
+                <CardDeck className="mb-3 text-center">
+                    <Card>
+                        <Card.Header>
+                            <Card.Title as="h4">
+                                <i className="ti-stats-down text-info" /> Disk space
+                            </Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title as="h2">
+                                {formatBytes(
+                                    usage.result.totalDiskSpace - usage.result.freeDiskSpace
+                                )}
+                                <small className="text-muted">
+                                    {' / '}
+                                    {formatBytes(usage.result.totalDiskSpace)}
+                                </small>
+                            </Card.Title>
+                            <ProgressBar
+                                variant="info"
+                                min={0}
+                                max={usage.result.totalDiskSpace}
+                                now={usage.result.totalDiskSpace - usage.result.freeDiskSpace}
+                            />
+                        </Card.Body>
+                    </Card>
+                    <Card>
+                        <Card.Header>
+                            <Card.Title as="h4">
+                                <i className="ti-stats-down text-warning" /> Torrents space
+                            </Card.Title>
+                        </Card.Header>
+                        <Card.Body>
+                            <Card.Title as="h2">
+                                {formatBytes(usage.result.usedTorrentSpace)}
+                                <small className="text-muted">
+                                    {' / '}
+                                    {formatBytes(
+                                        usage.result.freeDiskSpace + usage.result.usedTorrentSpace
+                                    )}
+                                </small>
+                            </Card.Title>
+                            <ProgressBar
+                                variant="info"
+                                min={0}
+                                max={usage.result.freeDiskSpace + usage.result.usedTorrentSpace}
+                                now={usage.result.usedTorrentSpace}
+                            />
+                        </Card.Body>
+                    </Card>
+                </CardDeck>
+            )}
+        </>
+    )
+}

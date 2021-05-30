@@ -42,7 +42,7 @@ export function ContentComponent(): JSX.Element {
                     </Container>
                 </footer>
             </div>
-            <ToastContainer limit={5}/>
+            <ToastContainer limit={5} />
             <VersionAlertComponent />
         </>
     )

@@ -2,7 +2,7 @@ import WebTorrent from 'webtorrent'
 import { promisify } from 'util'
 import { mkdir } from 'fs'
 
-import { TorrentAdapter, TorrentAdapterTorrent } from '.'
+import { TorrentAdapter, TorrentAdapterTorrent, TorrentClientError } from '.'
 
 export class WebtorrentAdapter extends TorrentAdapter {
     protected client: WebTorrent.Instance
@@ -20,7 +20,28 @@ export class WebtorrentAdapter extends TorrentAdapter {
         })
 
         return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                torrent.destroy(
+                    {
+                        destroyStore: true,
+                    },
+                    () => {
+                        if (torrent.numPeers === 0) {
+                            reject(
+                                new TorrentClientError(
+                                    'Timeout while loading torrent: no peers found'
+                                )
+                            )
+                        } else {
+                            reject(new TorrentClientError('Timeout while loading torrent'))
+                        }
+                    }
+                )
+            }, 10 * 1000)
+
             torrent.on('error', (e) => {
+                clearTimeout(timeout)
+
                 if (String(e).includes('duplicate torrent')) {
                     const value = this.client.get(torrent.infoHash)
                     if (value) {
@@ -41,6 +62,8 @@ export class WebtorrentAdapter extends TorrentAdapter {
             })
 
             torrent.on('ready', () => {
+                clearTimeout(timeout)
+
                 resolve(this.createTorrentFromClient(torrent))
             })
         })

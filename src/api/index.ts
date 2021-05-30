@@ -32,7 +32,7 @@ export function getApiRouter(globals: Globals, client: TorrentClient): Router {
                 validateRequests: true,
                 validateResponses: config.environment === 'development',
                 ignorePaths: (path: string) => {
-                    return !['/api', '/stream', '/playlist'].every(v => path.startsWith(v))
+                    return !['/api', '/stream', '/playlist'].every((v) => path.startsWith(v))
                 },
                 validateSecurity: apiKey
                     ? {

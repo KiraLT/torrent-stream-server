@@ -21,3 +21,5 @@ export abstract class TorrentAdapter {
 
     public abstract add(magnet: string, path: string): Promise<TorrentAdapterTorrent>
 }
+
+export class TorrentClientError extends Error {}

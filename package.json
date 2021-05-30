@@ -31,6 +31,7 @@
         "prettier": "^2.3.0",
         "pump": "^3.0.0",
         "range-parser": "^1.2.1",
+        "react-hook-form": "^7.7.1",
         "swagger-ui-express": "^4.1.6",
         "timeago.js": "^4.0.2",
         "webtorrent": "^1.0.0",

@@ -15,7 +15,7 @@ const defaultHeaders = {
 export async function loadPage(url: string): Promise<Response> {
     const response = await fetch(url, {
         headers: defaultHeaders,
-        timeout: 5000
+        timeout: 5000,
     })
 
     if (!response.ok) {

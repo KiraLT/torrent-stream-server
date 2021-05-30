@@ -30,26 +30,34 @@ export const PlayComponent = withBearer(({ bearer }) => {
 
     const torrent = useAsync(async () => {
         if (link) {
-            return new TorrentsApi(getApiConfig({ bearer })).createTorrent({
-                torrent: link,
-            }).then(v => {
-                addHistoryItem({
-                    name: v.name,
-                    link: v.link,
+            return new TorrentsApi(getApiConfig({ bearer }))
+                .createTorrent({
+                    torrent: link,
                 })
-                return v
-            }).catch(handleApiError)
+                .then((v) => {
+                    addHistoryItem({
+                        name: v.name,
+                        link: v.link,
+                    })
+                    return v
+                })
+                .catch(handleApiError)
         }
         return undefined
     }, [link, bearer])
 
-    const torrentFile = useMemo(() => torrent.result?.files.find((v) => v.path === file), [torrent, file])
+    const torrentFile = useMemo(
+        () => torrent.result?.files.find((v) => v.path === file),
+        [torrent, file]
+    )
 
     return (
         <Container className="mt-3">
-            {torrent.error && <ErrorComponent error={torrent.error} retry={torrent.execute}/>}
+            {torrent.error && <ErrorComponent error={torrent.error} retry={torrent.execute} />}
             {torrent.loading && <LoaderComponent />}
-            {torrentFile && torrent.result && <PlayVideoComponent file={torrentFile} torrent={torrent.result} />}
+            {torrentFile && torrent.result && (
+                <PlayVideoComponent file={torrentFile} torrent={torrent.result} />
+            )}
             {torrent.result && <FilesComponent torrent={torrent.result} />}
         </Container>
     )

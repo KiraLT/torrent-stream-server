@@ -5,11 +5,7 @@ import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
 import { getSteamUrl, getPlaylistUrl } from '../helpers'
 import { Route, createRoute } from '../helpers/openapi'
 
-const torrentToJson = (
-    v: TorrentClientTorrent,
-    domain: string,
-    encodeToken?: string
-) => {
+const torrentToJson = (v: TorrentClientTorrent, domain: string, encodeToken?: string) => {
     return {
         name: v.name,
         infoHash: v.infoHash,

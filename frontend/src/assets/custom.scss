@@ -192,7 +192,7 @@ select.form-control:active {
 
 // VideoJs
 
-@import "video.js/dist/video-js.css";
+@import 'video.js/dist/video-js.css';
 
 .vjs-theme-custom {
     .vjs-big-play-button {
@@ -268,5 +268,4 @@ $icon-chromecast-casting: '../images/ic_cast_connected_white_24dp.png';
 $icon-chromecast-casting--hover: '../images/ic_cast_connected_blue_24dp.png';
 $chromecast-icon-size: 16px;
 
-@import "@silvermine/videojs-chromecast/src/scss/videojs-chromecast"
-
+@import '@silvermine/videojs-chromecast/src/scss/videojs-chromecast';

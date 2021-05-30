@@ -1,12 +1,19 @@
 import { Response, Request, NextFunction } from 'express'
 import { HttpError, Logger } from 'common-stuff'
 
+import { TorrentClientError } from '../services/torrent-client'
+
 export function handleApiErrors(
     logger: Logger
 ): (err: unknown, req: Request, resp: Response, next: NextFunction) => unknown {
     return (err, _req, resp, next) => {
         if (err) {
-            if (err instanceof HttpError) {
+            if (err instanceof TorrentClientError) {
+                logger.warn(`Torrent client error: ${err.message}`)
+                return resp.status(400).json({
+                    error: err.message,
+                })
+            } else if (err instanceof HttpError) {
                 logger.warn(`${err.status} error: ${err.message}`)
                 return resp.status(err.status).json({
                     error: err.message,

@@ -1,8 +1,7 @@
 import { promisify } from 'util'
 import parseTorrent from 'parse-torrent'
-import { Logger } from 'winston'
+import { Logger } from 'common-stuff'
 import { lookup } from 'mime-types'
-import { HttpError, HttpStatusCodes } from 'common-stuff'
 
 import {
     downloadTrackers,
@@ -10,6 +9,7 @@ import {
     TorrentAdapterTorrent,
     TorrentAdapterFile,
     WebtorrentAdapter,
+    TorrentClientError,
 } from '.'
 
 export interface TorrentClientTorrent extends TorrentAdapterTorrent {
@@ -50,10 +50,15 @@ export class TorrentClient {
                 announce: [
                     ...(config.announce || []),
                     ...(config.useDefaultTrackers
-                        ? await downloadTrackers().catch(() => {
-                              config.logger.warn('Failed to load tracker list')
-                              return []
-                          })
+                        ? await downloadTrackers()
+                              .then((v) => {
+                                  config.logger.info(`Loaded ${v.length} trackers`)
+                                  return v
+                              })
+                              .catch(() => {
+                                  config.logger.warn('Failed to load tracker list')
+                                  return []
+                              })
                         : []),
                 ],
             },
@@ -82,15 +87,15 @@ export class TorrentClient {
         try {
             parsedLink = await promisify(parseTorrent.remote)(link)
         } catch (err) {
-            throw new HttpError(
-                HttpStatusCodes.BAD_REQUEST,
+            throw new TorrentClientError(
                 `Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`
             )
         }
 
         if (!parsedLink) {
-            throw new HttpError(HttpStatusCodes.BAD_REQUEST, `Cannot parse torrent: ${link}`)
+            throw new TorrentClientError(`Cannot parse torrent: ${link}`)
         }
+
         const magnet = parseTorrent.toMagnetURI({
             ...parsedLink,
             announce: [
