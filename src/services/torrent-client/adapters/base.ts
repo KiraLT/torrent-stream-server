@@ -20,6 +20,7 @@ export abstract class TorrentAdapter {
     constructor() {}
 
     public abstract add(magnet: string, path: string): Promise<TorrentAdapterTorrent>
+    public abstract destroy(): Promise<void>
 }
 
 export class TorrentClientError extends Error {}

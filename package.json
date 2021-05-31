@@ -20,6 +20,7 @@
         "express-openapi-validator": "^4.12.11",
         "express-winston": "^4.1.0",
         "get-folder-size": "^2.0.1",
+        "http-terminator": "^3.0.0",
         "jsonwebtoken": "^8.5.1",
         "mime-types": "^2.1.30",
         "mustache": "^4.2.0",

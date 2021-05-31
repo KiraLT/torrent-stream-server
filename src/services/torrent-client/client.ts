@@ -146,6 +146,12 @@ export class TorrentClient {
         return torrent
     }
 
+    async destroy(): Promise<void> {
+        this.config.logger.info('Closing torrent client')
+
+        await this.adapter.destroy()
+    }
+
     protected async checkForExpiredTorrents(): Promise<void> {
         if (this.cleanLocked) {
             return

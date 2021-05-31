@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 import { join } from 'path'
 import cors from 'cors'
 import { Logger } from 'common-stuff'
+import { createHttpTerminator } from 'http-terminator'
 
 import { TorrentClient } from './services/torrent-client'
 import { readConfig, Config, frontendBuildPath } from './config'
@@ -54,7 +55,7 @@ export async function setup(options?: { configFile: string }): Promise<void> {
         }
     }
 
-    app.listen(config.port, config.host, () => {
+    const server = app.listen(config.port, config.host, () => {
         logger.info(`Listening on ${config.host}:${config.port}`)
 
         if (config.environment === 'development') {
@@ -62,4 +63,29 @@ export async function setup(options?: { configFile: string }): Promise<void> {
             logger.info(`* Docs on http://127.0.0.1:${config.port}/api-docs`)
         }
     })
+
+    const httpTerminator = createHttpTerminator({
+        server,
+    })
+
+    const shutdown = async (signal: NodeJS.Signals) => {
+        logger.info(`${signal} signal received, closing server`)
+
+        try {
+            await httpTerminator.terminate()
+        } catch (err) {
+            logger.error(`Error while terminating HTTP server: ${err}`)
+        }
+
+        try {
+            await client.destroy()
+        } catch (err) {
+            logger.error(`Error while terminating torrents client: ${err}`)
+        }
+
+        process.exit()
+    }
+
+    process.on('SIGTERM', shutdown)
+    process.on('SIGINT', shutdown)
 }

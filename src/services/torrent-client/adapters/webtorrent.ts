@@ -69,6 +69,18 @@ export class WebtorrentAdapter extends TorrentAdapter {
         })
     }
 
+    async destroy(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.client.destroy((err) => {
+                if (err instanceof Error) {
+                    reject(err)
+                } else {
+                    resolve()
+                }
+            })
+        })
+    }
+
     protected createTorrentFromClient(torrent: WebTorrent.Torrent): TorrentAdapterTorrent {
         return {
             name: torrent.name,
