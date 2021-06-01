@@ -8,6 +8,8 @@ paths:
             operationId: auth
             tags:
                 - auth
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -24,6 +26,8 @@ paths:
             operationId: getUsage
             tags:
                 - dashboard
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -40,6 +44,8 @@ paths:
             operationId: getTorrents
             tags:
                 - torrents
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -64,6 +70,8 @@ paths:
                   required: true
                   schema:
                       type: string
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -89,6 +97,8 @@ paths:
                   required: true
                   schema:
                       type: string
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -215,6 +225,8 @@ paths:
             operationId: getProviders
             tags:
                 - browse
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -246,6 +258,8 @@ paths:
                   required: true
                   schema:
                       type: string
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -282,6 +296,8 @@ paths:
                   description: provider category
                   schema:
                       type: string
+            security:
+            - apiKey: []
             responses:
                 200:
                     description: OK
@@ -330,7 +346,7 @@ components:
             name: fileIndex
             description: File index (starting from `1`)
             schema:
-                type: string
+                type: number
     schemas:
         UsageModel:
             type: object
@@ -486,7 +502,7 @@ components:
                     schema:
                         $ref: '#/components/schemas/ApiErrorModel'
         404:
-            description: Resourse not found
+            description: Resource not found
             content:
                 application/json:
                     schema:
@@ -510,5 +526,3 @@ components:
 servers:
     - url: http://127.0.0.1:3000/
       description: Dev server
-security:
-    - apiKey: []

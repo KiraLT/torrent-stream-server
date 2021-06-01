@@ -1,136 +1,119 @@
 import pump from 'pump'
 import rangeParser from 'range-parser'
-import { Router } from 'express'
-import { Logger } from 'winston'
-import { Forbidden, NotFound, BadRequest } from 'http-errors'
-import { stringify } from 'querystring'
+import { HttpError, HttpStatusCodes } from 'common-stuff'
 
 import { TorrentClient, filterFiles } from '../services/torrent-client'
-import { Config } from '../config'
+import { Globals } from '../config'
 import { verifyJwtToken, getSteamUrl } from '../helpers'
-import { validateString, validateInt } from '../helpers/validation'
+import { createRoute, Route, getRouteUrl } from '../helpers/openapi'
 
-export function getStreamRouter(config: Config, _logger: Logger, client: TorrentClient): Router {
+export function getStreamRouter({ config }: Globals, client: TorrentClient): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
-    const parseParams = (
-        params: Record<string, unknown>
-    ): { torrent: string; file?: string; fileType?: string; fileIndex?: number } => {
+    type Params = { torrent: string; file?: string; fileType?: string; fileIndex?: number }
+    const parseParams = (params: Params): Params => {
         if (encodeToken) {
             if (params.file || params.fileIndex || params.fileType) {
-                throw new BadRequest(`All parameters should be encoded with JWT`)
+                throw new HttpError(
+                    HttpStatusCodes.BAD_REQUEST,
+                    `All parameters should be encoded with JWT`
+                )
             }
 
-            const data = verifyJwtToken<any>(
-                validateString(params.token || params.torrent, 'torrent'),
+            const data = verifyJwtToken<Params>(
+                params.torrent,
                 encodeToken,
                 config.security.streamApi.maxAge
             )
 
             if (!data) {
-                throw new Forbidden('Incorrect JWT encoding')
+                throw new HttpError(HttpStatusCodes.FORBIDDEN, 'Incorrect JWT encoding')
             }
 
             return data
         }
 
-        return {
-            torrent: validateString(params.torrent, 'torrent'),
-            file: params.file ? validateString(params.file, 'file') : undefined,
-            fileType: params.fileType ? validateString(params.fileType, 'fileType') : undefined,
-            fileIndex: params.fileIndex ? validateInt(params.fileIndex, 'fileIndex') : undefined,
-        }
+        return params
     }
 
-    return Router()
-        .get<{ torrent: string }, {}, {}, Record<'file' | 'fileType' | 'fileIndex', unknown>>(
-            '/stream/:torrent(*)',
-            async (req, res) => {
-                const { torrent: link, ...params } = parseParams({
-                    torrent: req.params.torrent,
-                    ...req.query,
-                })
+    return [
+        createRoute('getStream', async (req, res) => {
+            const { torrent: link, ...params } = parseParams({
+                torrent: req.params.torrent,
+                ...req.query,
+            })
 
-                const torrent = await client.addTorrent(link)
+            const torrent = await client.addTorrent(link)
 
-                const file = filterFiles(torrent.files, params)[0]
+            const file = filterFiles(torrent.files, params)[0]
 
-                if (!file) {
-                    throw new NotFound()
-                }
-
-                res.setHeader('Accept-Ranges', 'bytes')
-                res.attachment(file.name)
-                req.connection.setTimeout(3600000)
-
-                const parsedRange = req.headers.range
-                    ? rangeParser(file.length, req.headers.range)
-                    : undefined
-                const range = parsedRange instanceof Array ? parsedRange[0] : undefined
-
-                if (range) {
-                    res.statusCode = 206
-                    res.setHeader('Content-Length', range.end - range.start + 1)
-                    res.setHeader(
-                        'Content-Range',
-                        'bytes ' + range.start + '-' + range.end + '/' + file.length
-                    )
-                } else {
-                    res.setHeader('Content-Length', file.length)
-                }
-
-                if (req.method === 'HEAD') {
-                    return res.end()
-                }
-
-                return pump(file.createReadStream(range), res, () => {
-                    file.stop()
-                })
+            if (!file) {
+                throw new HttpError(HttpStatusCodes.NOT_FOUND)
             }
-        )
-        .get('/stream', async (req, res) => {
-            const { torrent, ...params } = parseParams(req.query)
 
-            return res.redirect(
-                `/stream/${encodeURIComponent(torrent)}?${stringify(params as {})}`,
-                301
-            )
-        })
-        .get<{ torrent: string }, {}, {}, Record<'file' | 'fileType' | 'fileIndex', unknown>>(
-            '/playlist/:torrent(*)',
-            async (req, res) => {
-                const domain = req.protocol + '://' + req.get('host')
-                const { torrent: link, ...params } = parseParams({
-                    torrent: req.params.torrent,
-                    ...req.query,
-                })
+            res.setHeader('Accept-Ranges', 'bytes')
+            res.attachment(file.name)
+            req.connection.setTimeout(3600000)
 
-                const torrent = await client.addTorrent(link)
-                const files = filterFiles(torrent.files, params).filter(
-                    (v) => v.type.includes('video') || v.type.includes('audio')
+            const parsedRange = req.headers.range
+                ? rangeParser(file.length, req.headers.range)
+                : undefined
+            const range = parsedRange instanceof Array ? parsedRange[0] : undefined
+
+            if (range) {
+                res.statusCode = 206
+                res.setHeader('Content-Length', range.end - range.start + 1)
+                res.setHeader(
+                    'Content-Range',
+                    'bytes ' + range.start + '-' + range.end + '/' + file.length
                 )
-
-                req.connection.setTimeout(10000)
-
-                res.attachment(torrent.name + `.m3u`)
-
-                res.send(
-                    [
-                        '#EXTM3U',
-                        ...files.flatMap((f) => [
-                            `#EXTINF:-1,${f.name}`,
-                            `${domain}${getSteamUrl(link, f.path, encodeToken)}`,
-                        ]),
-                    ].join('\n')
-                )
+            } else {
+                res.setHeader('Content-Length', file.length)
             }
-        )
-        .get('/playlist', async (req, res) => {
-            const { torrent, ...params } = parseParams(req.query)
 
-            return res.redirect(
-                `/playlist/${encodeURIComponent(torrent)}?${stringify(params as {})}`,
-                301
+            if (req.method === 'HEAD') {
+                return res.end()
+            }
+
+            return pump(file.createReadStream(range), res, () => {
+                file.stop()
+            })
+        }),
+        createRoute('getStream2', async (req, res) => {
+            const { torrent, ...query } = req.query
+
+            return res.redirect(getRouteUrl('getStream', { torrent }, query), 301)
+        }),
+        createRoute('getPlaylist', async (req, res) => {
+            const domain = req.protocol + '://' + req.get('host')
+            const { torrent: link, ...params } = parseParams({
+                torrent: req.params.torrent,
+                ...req.query,
+            })
+
+            const torrent = await client.addTorrent(link)
+            const files = filterFiles(torrent.files, params).filter(
+                (v) => v.type.includes('video') || v.type.includes('audio')
             )
-        })
+
+            req.connection.setTimeout(10000)
+
+            res.attachment(torrent.name + `.m3u`)
+
+            return res.send(
+                [
+                    '#EXTM3U',
+                    ...files.flatMap((f) => [
+                        `#EXTINF:-1,${f.name}`,
+                        `${domain}${getSteamUrl(link, f.path, encodeToken)}`,
+                    ]),
+                ].join('\n')
+            )
+        }),
+        createRoute('getPlaylist2', async (req, res) => {
+            const { torrent, ...query } = req.query
+
+            return res.redirect(getRouteUrl('getPlaylist', { torrent }, query), 301)
+        }),
+    ]
 }

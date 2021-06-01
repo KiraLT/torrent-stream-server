@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Collapse, Navbar, Container, Nav, FormCheck } from 'react-bootstrap'
 import classnames from 'classnames'
 
-import { getTheme } from '../config'
+import { getTheme, packageVersion } from '../config'
 
 export function NavigationComponent(): JSX.Element {
     const [open, setOpen] = useState(false)
@@ -24,7 +24,7 @@ export function NavigationComponent(): JSX.Element {
                     <div className="navbar-wrapper">
                         <Navbar.Brand as={Link} to="/">
                             Torrent Stream Server{' '}
-                            <small className="text-muted">v{process.env.REACT_APP_VERSION}</small>
+                            <small className="text-muted">v{packageVersion}</small>
                         </Navbar.Brand>
                     </div>
                     <button

@@ -1,8 +1,8 @@
 import { readFile } from 'fs'
 import { promisify } from 'util'
 import { resolve } from 'path'
+import { Logger, merge } from 'common-stuff'
 
-import { merge } from './helpers'
 import configSchema from './config.schema.json'
 import { validateSchema } from './helpers/validation'
 
@@ -292,3 +292,8 @@ export async function readConfig(path: string | undefined): Promise<Config> {
 export const frontendBuildPath = resolve(__dirname, '../frontend/build')
 
 export { configSchema }
+
+export interface Globals {
+    config: Config
+    logger: Logger
+}

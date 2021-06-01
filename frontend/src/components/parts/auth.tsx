@@ -23,7 +23,7 @@ export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>)
                         if (err instanceof Response && err.status === 401) {
                             setBearerRequired(true)
                         } else {
-                            setError(`Failed to authorize: ${await parseError(err)}`)
+                            setError(await parseError(err))
                         }
                     })
             }

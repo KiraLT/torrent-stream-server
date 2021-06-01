@@ -5,7 +5,8 @@ import videojs from 'video.js'
 
 import { TorrentFileModel } from '../../helpers/client'
 
-import 'video.js/dist/video-js.css'
+const chromecast = require('@silvermine/videojs-chromecast')
+chromecast(videojs)
 
 export function TorrentFileComponent({ file }: { file: TorrentFileModel }): JSX.Element {
     if (file.type.includes('video') || file.type.includes('audio')) {
@@ -80,6 +81,12 @@ export function VideoPlayerComponent({
                 ],
                 fluid: true,
                 preload: 'auto',
+                techOrder: ['chromecast', 'html5'],
+                plugins: {
+                    chromecast: {
+                        buttonPositionIndex: 2,
+                    },
+                },
                 ...{
                     userActions: {
                         doubleClick: true,

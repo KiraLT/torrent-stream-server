@@ -16,8 +16,9 @@ Docker and Docker Compose required. NodeJS **not** required on development host.
 
 > Frontend & backend are separate packages.
 
-So during developemnt you will need to run two dev servers with live reload:
+So during development you will need to run two dev servers with live reload:
 
+* `npm run dev` - starts both backend and frontend development servers
 * `npm run dev-backend` - start dev server on `3000` port
 * `npm run dev-frontend` - start dev server on  `3001` port
 

@@ -1,8 +1,7 @@
 import { promisify } from 'util'
 import parseTorrent from 'parse-torrent'
-import { Logger } from 'winston'
+import { Logger } from 'common-stuff'
 import { lookup } from 'mime-types'
-import { BadRequest } from 'http-errors'
 
 import {
     downloadTrackers,
@@ -10,6 +9,7 @@ import {
     TorrentAdapterTorrent,
     TorrentAdapterFile,
     WebtorrentAdapter,
+    TorrentClientError,
 } from '.'
 
 export interface TorrentClientTorrent extends TorrentAdapterTorrent {
@@ -50,10 +50,15 @@ export class TorrentClient {
                 announce: [
                     ...(config.announce || []),
                     ...(config.useDefaultTrackers
-                        ? await downloadTrackers().catch(() => {
-                              config.logger.warn('Failed to load tracker list')
-                              return []
-                          })
+                        ? await downloadTrackers()
+                              .then((v) => {
+                                  config.logger.info(`Loaded ${v.length} trackers`)
+                                  return v
+                              })
+                              .catch(() => {
+                                  config.logger.warn('Failed to load tracker list')
+                                  return []
+                              })
                         : []),
                 ],
             },
@@ -82,14 +87,15 @@ export class TorrentClient {
         try {
             parsedLink = await promisify(parseTorrent.remote)(link)
         } catch (err) {
-            throw new BadRequest(
+            throw new TorrentClientError(
                 `Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`
             )
         }
 
         if (!parsedLink) {
-            throw new BadRequest(`Cannot parse torrent: ${link}`)
+            throw new TorrentClientError(`Cannot parse torrent: ${link}`)
         }
+
         const magnet = parseTorrent.toMagnetURI({
             ...parsedLink,
             announce: [
@@ -108,12 +114,13 @@ export class TorrentClient {
 
         const infoHash = parsedLink.infoHash
 
-        if (infoHash in this.torrents) {
+        const foundTorrent = this.torrents[infoHash]
+        if (foundTorrent) {
             this.torrents[infoHash] = {
-                ...this.torrents[infoHash],
+                ...foundTorrent,
                 updated: new Date(),
             }
-            return this.torrents[infoHash]
+            return foundTorrent
         }
 
         const torrent = await this.adapter.add(magnet, this.config.path).then((v) => ({
@@ -137,6 +144,12 @@ export class TorrentClient {
         }, 1000)
 
         return torrent
+    }
+
+    async destroy(): Promise<void> {
+        this.config.logger.info('Closing torrent client')
+
+        await this.adapter.destroy()
     }
 
     protected async checkForExpiredTorrents(): Promise<void> {

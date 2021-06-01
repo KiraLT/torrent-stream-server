@@ -56,9 +56,17 @@ export async function parseError(err: unknown): Promise<string> {
         }
     }
     if (err instanceof Error) {
+        if (err.message === 'Failed to fetch') {
+            return 'Failed to fetch response, maybe your are offline?'
+        }
+
         return err.message
     }
     return String(err)
+}
+
+export async function handleApiError(err: unknown): Promise<never> {
+    throw new Error(await parseError(err))
 }
 
 export function getExtension(filename: string): string {
@@ -89,4 +97,19 @@ export function formatDate(date: Date): string {
     )
 
     return timeago.format(date, 'short')
+}
+
+export async function getLatestVersion(packageName: string): Promise<string> {
+    const response = await fetch(`https://unpkg.com/${packageName}/package.json`)
+
+    if (response.ok) {
+        const data = await response.json()
+        const version = data.version
+
+        if (version) {
+            return version
+        }
+    }
+
+    throw new Error('Failed to fetch version')
 }

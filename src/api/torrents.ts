@@ -1,18 +1,11 @@
-import { Router } from 'express'
-import { Logger } from 'winston'
-import { NotFound } from 'http-errors'
+import { HttpError, HttpStatusCodes } from 'common-stuff'
 
-import { Config } from '../config'
-import { TorrentModel } from '../models'
-import { validateString } from '../helpers/validation'
+import { Globals } from '../config'
 import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
 import { getSteamUrl, getPlaylistUrl } from '../helpers'
+import { Route, createRoute } from '../helpers/openapi'
 
-function torrentToJson(
-    v: TorrentClientTorrent,
-    domain: string,
-    encodeToken?: string
-): TorrentModel {
+const torrentToJson = (v: TorrentClientTorrent, domain: string, encodeToken?: string) => {
     return {
         name: v.name,
         infoHash: v.infoHash,
@@ -32,30 +25,33 @@ function torrentToJson(
     }
 }
 
-export function getTorrentsRouter(config: Config, _logger: Logger, client: TorrentClient): Router {
+export function getTorrentsRouter({ config }: Globals, client: TorrentClient): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
-    return Router()
-        .post<{}, TorrentModel, {}, { torrent: unknown }>('/torrents', async (req, res) => {
+    return [
+        createRoute('createTorrent', async (req, res) => {
+            const { torrent: link } = req.query
+
             const domain = req.protocol + '://' + req.get('host')
-            const link = validateString(req.query.torrent, 'torrent')
             const torrent = await client.addTorrent(link)
 
-            res.json(torrentToJson(torrent, domain, encodeToken))
-        })
-        .get<{}, TorrentModel[], {}, {}>('/torrents', (req, res) => {
+            return res.json(torrentToJson(torrent, domain, encodeToken))
+        }),
+        createRoute('getTorrents', (req, res) => {
             const domain = req.protocol + '://' + req.get('host')
 
             return res.json(client.getTorrents().map((v) => torrentToJson(v, domain, encodeToken)))
-        })
-        .get<{ id: string }, TorrentModel, {}, {}>('/torrents/:id', (req, res) => {
+        }),
+        createRoute('getTorrent', (req, res) => {
+            const { infoHash } = req.params
             const domain = req.protocol + '://' + req.get('host')
-            const torrent = client.getTorrent(validateString(req.params.id, 'id'))
+            const torrent = client.getTorrent(infoHash)
 
             if (torrent) {
                 return res.json(torrentToJson(torrent, domain, encodeToken))
             }
 
-            throw new NotFound()
-        })
+            throw new HttpError(HttpStatusCodes.NOT_FOUND)
+        }),
+    ]
 }

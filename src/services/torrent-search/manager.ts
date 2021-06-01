@@ -24,10 +24,11 @@ export async function search(
     query: string,
     options: ProviderSearchOptions
 ): Promise<ProviderTorrent[]> {
-    if (searchProviders.length !== 1) {
+    const provider = searchProviders[0]
+
+    if (!provider || searchProviders.length !== 1) {
         throw new Error('Only 1 provider search is supported at the moment')
     }
-    const provider = searchProviders[0]
 
     return providers[provider].search(query, options)
 }

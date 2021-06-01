@@ -1,21 +1,21 @@
-import { BadRequest } from 'http-errors'
+import { HttpError, HttpStatusCodes } from 'common-stuff'
 import Ajv from 'ajv'
 
 export function validateString(value: unknown, name: string): string {
     if (value == null || !value) {
-        throw new BadRequest(`${name} is required`)
+        throw new HttpError(HttpStatusCodes.BAD_REQUEST, `${name} is required`)
     }
 
     if (typeof value === 'string') {
         return value
     }
 
-    throw new BadRequest(`${name} must be string`)
+    throw new HttpError(HttpStatusCodes.BAD_REQUEST, `${name} must be string`)
 }
 
 export function validateInt(value: unknown, name: string): number {
     if (value == null || !value) {
-        throw new BadRequest(`${name} is required`)
+        throw new HttpError(HttpStatusCodes.BAD_REQUEST, `${name} is required`)
     }
 
     const parsed =
@@ -29,14 +29,15 @@ export function validateInt(value: unknown, name: string): number {
         return parsed
     }
 
-    throw new BadRequest(`${name} must be number`)
+    throw new HttpError(HttpStatusCodes.BAD_REQUEST, `${name} must be number`)
 }
 
 export function validateSchema<T>(schema: object, data: unknown, options?: { name: string }): T {
     const { name = 'data' } = options || {}
-    const ajv = new Ajv({ allErrors: true, jsonPointers: true })
+    const ajv = new Ajv({ allErrors: true })
     if (!ajv.validate(schema, data)) {
-        throw new BadRequest(
+        throw new HttpError(
+            HttpStatusCodes.BAD_REQUEST,
             ajv.errorsText(null, {
                 dataVar: name,
             })

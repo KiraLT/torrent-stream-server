@@ -1,5 +1,7 @@
 import React, { useState, ReactNode } from 'react'
-import { Button, Spinner, ButtonProps, Modal, Toast } from 'react-bootstrap'
+import { toast } from 'react-toastify'
+
+import { Button, Spinner, ButtonProps, Modal } from 'react-bootstrap'
 import { parseError } from '../../helpers'
 
 type AsyncButtonProps = {
@@ -27,7 +29,6 @@ export function AsyncButton({
 }: AsyncButtonProps): JSX.Element {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
-    const [error, setError] = useState('')
 
     const handleConfirm = async () => {
         setLoading(true)
@@ -36,10 +37,9 @@ export function AsyncButton({
         try {
             await onClick()
         } catch (error) {
-            setError(await parseError(error))
-            setTimeout(() => {
-                setError('')
-            }, 3000)
+            toast(await parseError(error), {
+                type: 'error',
+            })
         } finally {
             setLoading(false)
         }
@@ -47,21 +47,6 @@ export function AsyncButton({
 
     return (
         <>
-            <Toast
-                show={!!error}
-                onClose={() => setError('')}
-                style={{
-                    position: 'absolute',
-                    top: 20,
-                    right: 20,
-                }}
-                className="bg-danger"
-            >
-                <Toast.Header className="text-danger">
-                    <strong className="mr-auto">Error</strong>
-                </Toast.Header>
-                <Toast.Body>{error}</Toast.Body>
-            </Toast>
             <Button
                 variant={variant}
                 className={className}
@@ -75,7 +60,7 @@ export function AsyncButton({
                     }
                 }}
             >
-                {loading && <Spinner as="span" animation="border" size="sm" />} {children}
+                {loading ? <Spinner as="span" animation="border" size="sm" /> : children}
             </Button>
             {confirm && confirm.content && (
                 <Modal

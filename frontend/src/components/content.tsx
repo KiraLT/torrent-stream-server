@@ -1,12 +1,16 @@
 import React from 'react'
 import { Switch, Route } from 'react-router'
+import { ToastContainer } from 'react-toastify'
+import { Container } from 'react-bootstrap'
 
 import { HomeComponent } from './home'
 import { PlayComponent } from './play'
 import { BrowseComponent } from './browse'
 import { DashboardComponent } from './dashboard'
 import { NavigationComponent } from './navigation'
-import { Container } from 'react-bootstrap'
+import { VersionAlertComponent } from './parts/version'
+
+import 'react-toastify/dist/ReactToastify.css'
 
 export function ContentComponent(): JSX.Element {
     return (
@@ -38,6 +42,8 @@ export function ContentComponent(): JSX.Element {
                     </Container>
                 </footer>
             </div>
+            <ToastContainer limit={5} />
+            <VersionAlertComponent />
         </>
     )
 }
