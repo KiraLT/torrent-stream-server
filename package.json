@@ -65,6 +65,7 @@
         "jest": "^26.6.3",
         "nodemon": "^2.0.7",
         "openapi-typescript": "^3.3.1",
+        "release-it": "^14.7.0",
         "ts-jest": "^26.5.6",
         "ts-node": "^10.0.0",
         "typescript": "^4.2.4"
@@ -119,9 +120,22 @@
         "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
         "start": "node lib/index.js serve",
         "uninstall": "rm -rf frontend/node_mobules",
-        "test": "jest src"
+        "test": "jest src",
+        "release": "release-it"
     },
     "jest": {
         "preset": "ts-jest"
+    },
+    "release-it": {
+        "git": {
+            "tag": true,
+            "tagName": "v${version}"
+        },
+        "npm": {
+            "publish": false
+        },
+        "hooks": {
+            "after:bump": "npm --no-git-tag-version --prefix frontend version ${version}"
+        }
     }
 }
