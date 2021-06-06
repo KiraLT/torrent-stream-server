@@ -6,9 +6,7 @@ You can pass JSON config file to any run command with `-c` option (e.g. `npm run
 
 All config parameters are optional, so you add only necessary parameters to your configurations.
 
-Example JSON config:
-
-```json
+```javascript
 {
     /**
      * Server host.
@@ -43,7 +41,7 @@ Example JSON config:
             },
             {
                 /**
-                * Enables [loggly](https://www.loggly.com/) logging
+                * Enables https://loggly.com logging
                 */
                 "type": "loggly",
                 /**
@@ -106,7 +104,7 @@ Example JSON config:
          * Default:  []
          */
         "peerAddresses": []
-    }
+    },
     /**
      * Security settings
      */
@@ -116,7 +114,7 @@ Example JSON config:
          */
         "streamApi": {
             /**
-             * Protect stream API with [JSON Web Token](https://jwt.io/).
+             * Protect stream API with JSON Web Token (check https://jwt.io).
              *
              * If `apiKey` is not set, it can also be used as API key (`authorization`: `bearer ${apiKey}`).
              *
@@ -125,7 +123,7 @@ Example JSON config:
             "key": "my random key",
             /**
              * The maximum allowed age for tokens to still be valid.
-             * It is expressed in seconds or a string describing a time span [zeit/ms](https://github.com/vercel/ms)
+             * It is expressed in seconds or a string describing a time span (check https://github.com/vercel/ms)
              *
              * Default:  `6h`
              */
