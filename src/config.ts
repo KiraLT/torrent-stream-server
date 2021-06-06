@@ -184,15 +184,6 @@ const defaultConfig: Config = {
 
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
-        console.log(
-            merge(
-                merge(
-                    defaultConfig,
-                    path ? JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })) : {}
-                ),
-                parsedEnv.config || {}
-            )
-        )
         return configSchema.parse(
             merge(
                 merge(
