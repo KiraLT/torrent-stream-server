@@ -57,7 +57,7 @@ All config parameters are optional, so you add only necessary parameters to your
                 */
                 "tags": ["torrent-stream-server"]
             }
-        ]
+        ],
         /**
          * Logging level, one of `debug`, `info`, `warn`, `error`.
          *
@@ -128,7 +128,7 @@ All config parameters are optional, so you add only necessary parameters to your
              * Default:  `6h`
              */
             "maxAge": "6h"
-        }
+        },
         /**
          * Serve frontend static files
          *
