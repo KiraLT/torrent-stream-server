@@ -43,6 +43,7 @@ HTTP server to convert any torrent to stream with video support.
 * [Setup docs](https://kiralt.github.io/torrent-stream-server/docs/setup)
 * [Development docs](https://kiralt.github.io/torrent-stream-server/docs/development)
 * [Configuration docs](https://kiralt.github.io/torrent-stream-server/docs/configuration)
+* [Security docs](https://kiralt.github.io/torrent-stream-server/docs/security)
 
 ## API
 
@@ -77,35 +78,3 @@ This command will download Sintel movie from torrents and save as `sintel.mp4`.
 ``` bash
 curl "http://localhost:3000/stream/08ada5a7a6183aae1e09d831df6748d566095a10" > sintel.mp4
 ```
-
-## Security
-
-API can be protected with `security.apiKey`, stream api can have additional [JSON Web Token](https://jwt.io/) (configurable via `security.streamApi.key`).
-
-If only only one key specified in the config, it will be used as both: `API key` & `streamApi.key`.
-
-### API protection
-
-When api or stream key is enabled, each API call will require `Authorization` header:
-
-```js
-Authorization: Bearer <token>
-```
-
-### Generate stream API URL
-
-```js
-import { sign } from 'jsonwebtoken'
-
-const url = `/stream/${encodeURIComponent(
-    sign(
-        {
-            torrent: '08ada5a7a6183aae1e09d831df6748d566095a10',
-            fileType: 'video',
-        },
-        key
-    )
-)}`
-```
-
-This API will have encoded parameters, so it's safe to share it publicly. It will automatically expire (configurable via `security.streamApi.maxAge`)
