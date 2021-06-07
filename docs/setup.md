@@ -75,3 +75,27 @@ docker run -d --name torrent-stream-server -p 80:3000 ghcr.io/kiralt/torrent-str
 ```
 
 You'll be able to access it on http://localhost
+
+## Bare-metal/VPS
+
+Cheapest way to host something is using VPS (Virtual private server). Check [The safest countries to download torrents](https://www.downloadprivacy.com/safest-countries-to-download-torrents).
+
+### Setup
+
+1. When buying VPS choose latest ubuntu OS
+2. Connect to server via SSH (use [PuTTY](https://www.putty.org/) on Windows).
+3. Fetch latest packages info: `sudo apt update`
+4. Update all packages: `sudo apt upgrade`
+5. Add NodeJS package: `curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -`
+6. Install NodeJS: `sudo apt-get install -y nodejs`
+7. Install [PM2](https://www.npmjs.com/package/pm2) process manager: `sudo npm install pm2 -g`
+8. Install Torrent Stream Server: `sudo npm install torrent-stream-server -g`
+9. Start Torrent Stream Server on 80 port with process manager: `sudo PORT=80 pm2 --update-env start torrent-stream-server -- serve`
+
+> Go to you http://127.0.0.1 (replace `127.0.0.1` with your server IP). If you get unsafe warning - check how to [bypass it on chrome](https://www.technipages.com/google-chrome-bypass-your-connection-is-not-private-message).
+
+### SSL & custom domain
+
+Easiest way to connect custom domain and SSL is using [Cloudflare DNS](https://www.cloudflare.com/dns/). Forward you custom DNS to Cloudflare, then add `A` record with your server IP address. Cloudflare will automatically proxy all requests with that domain and free SSL certificate.
+
+![cloudflare](./images/cloudflare.png)
