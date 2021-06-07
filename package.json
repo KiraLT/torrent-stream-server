@@ -48,7 +48,7 @@
         "@types/express": "^4.17.12",
         "@types/express-serve-static-core": "^4.17.21",
         "@types/express-winston": "^4.0.0",
-        "@types/get-folder-size": "^2.0.0",
+        "@types/get-folder-size": "^3.0.0",
         "@types/jest": "^26.0.23",
         "@types/jsonwebtoken": "^8.5.1",
         "@types/mime-types": "^2.1.0",
