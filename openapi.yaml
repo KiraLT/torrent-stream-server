@@ -68,6 +68,7 @@ paths:
                   name: torrent
                   description: magnet or torrent link
                   required: true
+                  allowReserved: true
                   schema:
                       type: string
             security:
@@ -283,17 +284,20 @@ paths:
                   name: query
                   description: search query
                   required: true
+                  allowReserved: true
                   schema:
                       type: string
                 - in: query
                   name: provider
                   description: provider name
                   required: true
+                  allowReserved: true
                   schema:
                       type: string
                 - in: query
                   name: category
                   description: provider category
+                  allowReserved: true
                   schema:
                       type: string
             security:
@@ -326,6 +330,7 @@ components:
             in: query
             name: torrent
             required: true
+            allowReserved: true
             description: Can be torrent infoHash, magnet or link to torrent file. If security is enabled, it should be JWT encoded whole payload (including all `query` parameters) with extra `torrent` parameter.
             schema:
                 type: string
@@ -333,18 +338,21 @@ components:
             in: query
             name: file
             description: Case insensitive file name or path
+            allowReserved: true
             schema:
                 type: string
         fileType:
             in: query
             name: fileType
             description: Case insensitive file mime type (e.g. `video`, `video/mp4`, `mp4`) or file extension (e.g. `.mp4`, `mp4`)
+            allowReserved: true
             schema:
                 type: string
         fileIndex:
             in: query
             name: fileIndex
             description: File index (starting from `1`)
+            allowReserved: true
             schema:
                 type: number
     schemas:

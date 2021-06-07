@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 export enum Environment {
     Production = 'production',
-    Development = 'development'
+    Development = 'development',
 }
 
 const configSchema = z.object({
@@ -34,23 +34,25 @@ const configSchema = z.object({
      * Default: `console`
      */
     logging: z.object({
-        transports: z.array(z.union([
-            z.object({
-                type: z.literal('console')
-            }),
-            z.object({
-                type: z.literal('loggly'),
-                subdomain: z.string(),
-                token: z.string(),
-                tags: z.array(z.string()).optional()
-            }),
-        ])),
+        transports: z.array(
+            z.union([
+                z.object({
+                    type: z.literal('console'),
+                }),
+                z.object({
+                    type: z.literal('loggly'),
+                    subdomain: z.string(),
+                    token: z.string(),
+                    tags: z.array(z.string()).optional(),
+                }),
+            ])
+        ),
         /**
          * Logging level.
          *
          * Default: `info`
          */
-        level: z.enum(['debug', 'info', 'warn', 'error'])
+        level: z.enum(['debug', 'info', 'warn', 'error']),
     }),
     /**
      * Torrent client settings
@@ -86,7 +88,7 @@ const configSchema = z.object({
          *
          * Default: `[]`
          */
-        peerAddresses: z.array(z.string())
+        peerAddresses: z.array(z.string()),
     }),
     /**
      * Security settings
@@ -110,7 +112,7 @@ const configSchema = z.object({
              *
              * Default: `6h`
              */
-            maxAge: z.string()
+            maxAge: z.string(),
         }),
         /**
          * Serve frontend static files
@@ -131,14 +133,14 @@ const configSchema = z.object({
          *
          * Default: undefined
          */
-        apiKey: z.string().optional()
+        apiKey: z.string().optional(),
     }),
     /**
      * Get ip from `X-Forwarded-*` header.
      *
      * Default: true if inside App Engine or Heroku else false
      */
-    trustProxy: z.boolean()
+    trustProxy: z.boolean(),
 })
 
 export type Config = z.infer<typeof configSchema>
@@ -148,13 +150,16 @@ export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('
 
 const parsedEnv = convertToNested(process.env, {
     separator: '__',
-    transformKey: camelCase
+    transformKey: camelCase,
 })
 
 const defaultConfig: Config = {
-    host: parsedEnv.host as any || '0.0.0.0',
-    port: parsedEnv.port as any || 3000,
-    environment: parsedEnv.nodeEnv === Environment.Development ? Environment.Development : Environment.Production,
+    host: (parsedEnv.host as any) || '0.0.0.0',
+    port: (parsedEnv.port as any) || 3000,
+    environment:
+        parsedEnv.nodeEnv === Environment.Development
+            ? Environment.Development
+            : Environment.Production,
     trustProxy: !!parsedEnv.trustProxy || isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [
@@ -176,7 +181,7 @@ const defaultConfig: Config = {
         streamApi: {
             maxAge: '6h',
         },
-        apiKey: parsedEnv.apiKey as any || undefined,
+        apiKey: (parsedEnv.apiKey as any) || undefined,
         frontendEnabled: true,
         apiEnabled: true,
     },
@@ -195,7 +200,7 @@ export async function readConfig(path: string | undefined): Promise<Config> {
         )
     } catch (err) {
         if (err instanceof z.ZodError) {
-            const errors = err.errors.map(v => `${v.message} @ ${v.path.join('.')}`)
+            const errors = err.errors.map((v) => `${v.message} @ ${v.path.join('.')}`)
             throw Error(`Configuration error: ${errors.join(', ')}`)
         }
         throw Error(`Configuration error: ${err}`)

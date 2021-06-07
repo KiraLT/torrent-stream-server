@@ -27,7 +27,7 @@ import { AsyncButton } from './parts/button'
 export const BrowseComponent = withBearer(({ bearer }) => {
     const handler = useSearchParamsHandler()
     const provider = useSearchParam('provider') ?? ''
-    const category = useSearchParam('category') ?? ''
+    const category = useSearchParam('category') ?? undefined
     const query = useSearchParam('query') ?? ''
 
     const providers = useAsync(async () => {
