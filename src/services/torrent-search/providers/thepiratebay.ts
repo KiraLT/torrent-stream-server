@@ -261,6 +261,10 @@ export class ThepiratebayProvider extends Provider {
 
         const result = await loadJson<ThepiratebayItem[]>(url)
 
+        if (result[0]?.name === 'No results returned') {
+            return []
+        }
+
         const categories = (await this.getMeta()).categories.flatMap((v) => [
             ...v.subcategories,
             {
