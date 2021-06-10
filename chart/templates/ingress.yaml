@@ -8,10 +8,10 @@ spec:
   rules:
   - http:
       paths:
-      - backend:
-        service:
-          name: torrent-stream-server
-          port:
-            number: {{ .Values.service.port }}
-        path: /
+      - path: /
         pathType: Prefix
+        backend:
+          service:
+            name: torrent-stream-server
+            port:
+              number: {{ .Values.service.port }}
