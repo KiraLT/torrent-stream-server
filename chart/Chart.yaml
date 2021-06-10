@@ -1,4 +1,4 @@
 apiVersion: v2
 name: torrent-stream-server
-version: 1.7.2
+version: 1.0.0
 home: https://github.com/KiraLT/torrent-stream-server
