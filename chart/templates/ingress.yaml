@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: torrent-stream-server
+  annotations:
+    dev.okteto.com/generate-host: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: torrent-stream-server
+          servicePort: {{ .Values.service.port }}
+        path: /
+        pathType: Prefix
