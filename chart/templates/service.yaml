@@ -11,7 +11,9 @@ metadata:
     dev.okteto.com/auto-ingress: "true"
 spec:
   ports:
-  - port: 3000
+    - port: {{ .Values.service.port }}
+      protocol: {{ .Values.service.protocol }}
+      targetPort: {{ .Values.service.port }}
   selector:
     app.kubernetes.io/name: torrent-stream-server
     app.kubernetes.io/instance: {{ .Release.Name }}

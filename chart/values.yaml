@@ -2,3 +2,7 @@ image:
   repository: ghcr.io/kiralt/torrent-stream-server
   tag: "latest"
   pullPolicy: IfNotPresent
+
+service:
+  port: 3000
+  protocol: TCP

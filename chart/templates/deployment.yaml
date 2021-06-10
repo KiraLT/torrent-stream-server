@@ -23,5 +23,5 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: http
-              containerPort: 3000
-              protocol: TCP
+              containerPort: {{ .Values.service.port }}
+              protocol: {{ .Values.service.protocol }}
