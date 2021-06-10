@@ -9,7 +9,9 @@ spec:
   - http:
       paths:
       - backend:
-          serviceName: torrent-stream-server
-          servicePort: {{ .Values.service.port }}
+        service:
+          name: torrent-stream-server
+          port:
+            number: {{ .Values.service.port }}
         path: /
         pathType: Prefix
