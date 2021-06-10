@@ -15,3 +15,6 @@ spec:
             name: torrent-stream-server
             port:
               number: {{ .Values.service.port }}
+{{- if Values.ingress.host -}}
+    host: {{ Values.ingress.host }}
+{{- end -}}

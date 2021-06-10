@@ -6,3 +6,6 @@ image:
 service:
   port: 3000
   protocol: TCP
+
+ingress:
+  host: ""
