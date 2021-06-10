@@ -9,3 +9,6 @@ service:
 
 ingress:
   host: ""
+
+# env:
+#   API_KEY="my key"

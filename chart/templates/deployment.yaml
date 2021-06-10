@@ -35,3 +35,10 @@ spec:
             httpGet:
               path: /
               port: http
+{{- if .Values.env }}
+          env:
+{{- end }}
+{{- range $key, $val := .Values.env }}
+          - name: {{ $key }}
+            value: {{ $val | quote }}
+{{- end }}
