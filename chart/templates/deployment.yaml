@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: torrent-stream-server
+  labels:
+    app.kubernetes.io/name: torrent-stream-server
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: torrent-stream-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: torrent-stream-server
+  template:
+    metadata:
+      labels:
+        app: torrent-stream-server
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP

@@ -22,7 +22,6 @@ HTTP server to convert any torrent to stream with video support.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
 [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/KiraLT/torrent-stream-server&branch=master)
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
 
 > _Heroku forbids P2P services, so your account can be suspened ([learn more](https://github.com/KiraLT/torrent-stream-server/issues/32))_
 
