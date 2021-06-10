@@ -1,21 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: torrent-stream-server
+  name: {{ .Chart.Name }}
   labels:
-    app.kubernetes.io/name: torrent-stream-server
+    app.kubernetes.io/name: {{ .Chart.Name }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    helm.sh/chart: torrent-stream-server
+    helm.sh/chart: {{ .Chart.Name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: torrent-stream-server
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: torrent-stream-server
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
