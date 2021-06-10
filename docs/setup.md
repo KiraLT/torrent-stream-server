@@ -4,7 +4,7 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/KiraLT/torrent-stream-server)
 
-> _Heroku forbids P2P services, so your account can be suspened ([learn more](https://github.com/KiraLT/torrent-stream-server/issues/32))_
+> _Heroku forbids P2P services, so your account can be suspended ([learn more](https://github.com/KiraLT/torrent-stream-server/issues/32))_
 
 Deploy to Heroku with one click, works with free tier!
 
@@ -12,7 +12,7 @@ Deploy to Heroku with one click, works with free tier!
 
 [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/KiraLT/torrent-stream-server&branch=master)
 
-> _Okteto forbids P2P services, so your account can be suspened ([learn more](https://okteto.com/legal/))._
+> _Okteto forbids P2P services, so your account can be suspended ([learn more](https://okteto.com/legal/))._
 
 Deploy to [Okteto](https://okteto.com) with one click, works with free tier!
 
