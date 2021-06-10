@@ -35,8 +35,9 @@ HTTP server to convert any torrent to stream with video support.
   
 ### Other options
 
-* [From source](https://kiralt.github.io/torrent-stream-server/docs/setup#from-source)
+* [VPS](https://kiralt.github.io/torrent-stream-server/docs/setup#vps)
 * [Docker](https://kiralt.github.io/torrent-stream-server/docs/setup#docker)
+* [Kubernetes](https://kiralt.github.io/torrent-stream-server/docs/setup#kubernetes)
 * See [all options](https://kiralt.github.io/torrent-stream-server/docs/setup)
 
 ## Documentation

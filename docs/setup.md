@@ -8,6 +8,14 @@
 
 Deploy to Heroku with one click, works with free tier!
 
+## Okteto
+
+[![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/KiraLT/torrent-stream-server&branch=master)
+
+> _Okteto forbids P2P services, so your account can be suspened ([learn more](https://okteto.com/legal/))._
+
+Deploy to [Okteto](https://okteto.com) with one click, works with free tier!
+
 ## NPM package
 
 [![npm version](https://badge.fury.io/js/torrent-stream-server.svg)](https://www.npmjs.com/package/torrent-stream-server)
@@ -49,6 +57,7 @@ npx torrent-stream-server serve
 
 ```shell
 git clone https://github.com/KiraLT/torrent-stream-server.git
+cd torrent-stream-server
 npm install
 npm run build
 npm run start
@@ -76,7 +85,36 @@ docker run -d --name torrent-stream-server -p 80:3000 ghcr.io/kiralt/torrent-str
 
 You'll be able to access it on http://localhost
 
-## Bare-metal/VPS
+## Kubernetes
+
+_Deploy with Helm3_
+
+```shell
+git clone https://github.com/KiraLT/torrent-stream-server.git
+cd torrent-stream-server
+
+helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server chart
+```
+
+### Configuration
+
+You can change configuration by providing [values.yaml](https://github.com/KiraLT/torrent-stream-server/blob/master/chart/values.yaml).
+
+#### Examples
+
+##### Add custom domain
+
+```shell
+helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server chart
+```
+
+##### Set ENV variables
+
+```shell
+helm3 upgrade --set env.API_KEY="my key" --install torrent-stream-server chart
+```
+
+## VPS
 
 Cheapest way to host something is using VPS (Virtual private server). Check [The safest countries to download torrents](https://www.downloadprivacy.com/safest-countries-to-download-torrents).
 
