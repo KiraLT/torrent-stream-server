@@ -29,7 +29,7 @@ export class AuthApi extends runtime.BaseAPI {
     /**
      */
     async authRaw(): Promise<runtime.ApiResponse<SuccessModel>> {
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 

@@ -1,11 +1,17 @@
 import { useMemo, useContext } from 'react'
 import { __RouterContext } from 'react-router'
 
-export function useSearchParam<T extends string>(key: string): T | undefined {
+
+export function useSearchParam<T extends string>(key: string): T | undefined
+export function useSearchParam<T extends string>(key: string, multiValued?: false): T | undefined
+export function useSearchParam<T extends string>(key: string, multiValued?: true): T[]
+export function useSearchParam<T extends string>(key: string, multiValued: boolean = false): T | T[] | undefined {
     const { location } = useContext(__RouterContext)
     const params = useMemo(() => new URLSearchParams(location.search), [location.search])
 
-    return params.get(key) as T
+    return useMemo(() => {
+        return multiValued ? ((params.get(key) || '').split(',').filter(v => !!v) ?? []) as T[] : params.get(key) as T
+    }, [params, multiValued, key])
 }
 
 export function useSearchParamsHandler() {

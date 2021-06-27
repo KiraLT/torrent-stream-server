@@ -106,6 +106,12 @@ export interface ProviderTorrentModel {
     numFiles?: number
     /**
      *
+     * @type {string}
+     * @memberof ProviderTorrentModel
+     */
+    provider: string
+    /**
+     *
      * @type {ProviderCategoryModelSubcategories}
      * @memberof ProviderTorrentModel
      */
@@ -137,6 +143,7 @@ export function ProviderTorrentModelFromJSONTyped(
         isVip: !exists(json, 'isVip') ? undefined : json['isVip'],
         imdb: !exists(json, 'imdb') ? undefined : json['imdb'],
         numFiles: !exists(json, 'numFiles') ? undefined : json['numFiles'],
+        provider: json['provider'],
         category: !exists(json, 'category')
             ? undefined
             : ProviderCategoryModelSubcategoriesFromJSON(json['category']),
@@ -164,6 +171,7 @@ export function ProviderTorrentModelToJSON(value?: ProviderTorrentModel | null):
         isVip: value.isVip,
         imdb: value.imdb,
         numFiles: value.numFiles,
+        provider: value.provider,
         category: ProviderCategoryModelSubcategoriesToJSON(value.category),
     }
 }

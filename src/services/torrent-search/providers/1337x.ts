@@ -2,10 +2,10 @@ import { Provider, ProviderSearchOptions, ProviderMeta, ProviderTorrent } from '
 import { crawlPage } from '../helpers'
 
 export class X1337Provider extends Provider {
-    static providerName = '1337x' as const
+    providerName = '1337x' as const
     protected domain: string = 'https://www.1337x.to'
 
-    trackers = [
+    protected trackers = [
         'udp://tracker.coppersurfer.tk:6969/announce',
         'udp://9.rarbg.to:2920/announce',
         'udp://tracker.opentrackr.org:1337',
@@ -17,6 +17,7 @@ export class X1337Provider extends Provider {
 
     async getMeta(): Promise<ProviderMeta> {
         return {
+            provider: this.providerName,
             categories: [
                 {
                     name: 'Movies',
@@ -89,6 +90,7 @@ export class X1337Provider extends Provider {
                 el.find('.size .seeds').remove()
 
                 return {
+                    provider: this.providerName,
                     id,
                     name: el.find('a').text().trim(),
                     seeds: parseInt(el.find('.seeds').text().trim(), 10) || 0,

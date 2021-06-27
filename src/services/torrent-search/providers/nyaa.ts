@@ -1,12 +1,13 @@
 import { si } from 'nyaapi'
 
-import { Provider, ProviderSearchOptions, ProviderMeta } from '.'
+import { Provider, ProviderSearchOptions, ProviderMeta, ProviderTorrent } from '.'
 
 export class NyaaProvider extends Provider {
-    static providerName = 'Nyaa' as const
+    providerName = 'Nyaa' as const
 
     async getMeta(): Promise<ProviderMeta> {
         return {
+            provider: this.providerName,
             categories: [
                 {
                     name: 'Anime',
@@ -116,7 +117,7 @@ export class NyaaProvider extends Provider {
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions) {
+    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
         const { category, limit } = options || {}
 
         const result = await si.search(query, limit, {
@@ -132,6 +133,7 @@ export class NyaaProvider extends Provider {
         ])
 
         return result.map((v) => ({
+            provider: this.providerName,
             id: v.id,
             name: v.name,
             magnet: v.magnet,

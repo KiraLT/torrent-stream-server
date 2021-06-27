@@ -1,6 +1,8 @@
 import fetch, { Response } from 'node-fetch'
 import cheerio from 'cheerio'
 
+import { Provider, ProviderError } from './providers'
+
 export function formatMagnet(infoHash: string, name: string, trackers: string[]) {
     const trackersQueryString = trackers.length
         ? `&tr=${trackers.map(encodeURIComponent).join('&tr=')}`
@@ -34,5 +36,28 @@ export async function crawlPage(url: string): Promise<{ $: cheerio.Root }> {
 
     return {
         $: cheerio.load(await response.text()),
+    }
+}
+
+export function parseErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+        return error.message
+    }
+    return String(error)
+}
+
+export async function executeProviders<T>(providers: Provider[], callback: (provider: Provider) => T | Promise<T>): Promise<{items: T[], errors: ProviderError[]}>  {
+    const responses = await Promise.all(
+        providers.map(
+            v => Promise.resolve(callback(v))
+                .catch(err => ({
+                    error: parseErrorMessage(err),
+                    provider: v.providerName
+                })))
+    )
+
+    return {
+        items: responses.filter((v): v is T => !('error' in v)),
+        errors: responses.filter((v): v is ProviderError => 'error' in v)
     }
 }
