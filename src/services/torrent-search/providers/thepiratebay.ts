@@ -1,6 +1,6 @@
 import { formatBytes } from 'common-stuff'
 
-import { Provider, ProviderSearchOptions } from '.'
+import { Provider, ProviderSearchOptions, ProviderTorrent } from '.'
 import { formatMagnet, loadJson } from '../helpers'
 
 export interface ThepiratebayItem {
@@ -19,7 +19,7 @@ export interface ThepiratebayItem {
 }
 
 export class ThepiratebayProvider extends Provider {
-    static providerName = 'ThePirateBay' as const
+    providerName = 'ThePirateBay' as const
 
     protected domain: string = 'https://apibay.org'
 
@@ -35,6 +35,7 @@ export class ThepiratebayProvider extends Provider {
 
     async getMeta() {
         return {
+            provider: this.providerName,
             categories: [
                 {
                     name: 'Audio',
@@ -252,7 +253,7 @@ export class ThepiratebayProvider extends Provider {
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions) {
+    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
         const { category, limit } = options || {}
 
         const url = `${this.domain}/q.php?q=${encodeURIComponent(query)}&cat=${encodeURIComponent(
@@ -274,6 +275,7 @@ export class ThepiratebayProvider extends Provider {
         ])
 
         return result.map((v) => ({
+            provider: this.providerName,
             id: v.id,
             name: v.name,
             magnet: formatMagnet(v.info_hash, v.name, this.trackers),

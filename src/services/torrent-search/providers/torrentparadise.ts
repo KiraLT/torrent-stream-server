@@ -12,12 +12,13 @@ export interface TorrentParadiseItem {
 }
 
 export class TorrentParadiseProvider extends Provider {
-    static providerName = 'TorrentParadise.ml' as const
+    providerName = 'TorrentParadise.ml' as const
 
     protected domain: string = 'https://torrent-paradise.ml'
 
     async getMeta(): Promise<ProviderMeta> {
         return {
+            provider: this.providerName,
             categories: [],
         }
     }
@@ -29,6 +30,7 @@ export class TorrentParadiseProvider extends Provider {
         const result = await loadJson<TorrentParadiseItem[]>(url)
 
         return result.map((v) => ({
+            provider: this.providerName,
             id: v.id,
             name: v.text,
             magnet: formatMagnet(v.id, v.text, []),
@@ -40,9 +42,5 @@ export class TorrentParadiseProvider extends Provider {
                 id: '',
             },
         }))
-    }
-
-    public async getMagnet(): Promise<string> {
-        throw new Error('')
     }
 }

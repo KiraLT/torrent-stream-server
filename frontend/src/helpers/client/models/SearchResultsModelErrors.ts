@@ -13,48 +13,44 @@
  */
 
 import { exists, mapValues } from '../runtime'
-import {
-    ProviderCategoryModel,
-    ProviderCategoryModelFromJSON,
-    ProviderCategoryModelFromJSONTyped,
-    ProviderCategoryModelToJSON,
-} from './'
-
 /**
  *
  * @export
- * @interface ProviderModel
+ * @interface SearchResultsModelErrors
  */
-export interface ProviderModel {
+export interface SearchResultsModelErrors {
     /**
      *
      * @type {string}
-     * @memberof ProviderModel
+     * @memberof SearchResultsModelErrors
      */
     provider: string
     /**
      *
-     * @type {Array<ProviderCategoryModel>}
-     * @memberof ProviderModel
+     * @type {string}
+     * @memberof SearchResultsModelErrors
      */
-    categories: Array<ProviderCategoryModel>
+    error: string
 }
 
-export function ProviderModelFromJSON(json: any): ProviderModel {
-    return ProviderModelFromJSONTyped(json, false)
+export function SearchResultsModelErrorsFromJSON(json: any): SearchResultsModelErrors {
+    return SearchResultsModelErrorsFromJSONTyped(json, false)
 }
 
-export function ProviderModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProviderModel {
+export function SearchResultsModelErrorsFromJSONTyped(
+    json: any,
+    ignoreDiscriminator: boolean
+): SearchResultsModelErrors {
     if (json === undefined || json === null) {
         return json
     }
     return {
         provider: json['provider'],
-        categories: (json['categories'] as Array<any>).map(ProviderCategoryModelFromJSON),
+        error: json['error'],
     }
 }
 
-export function ProviderModelToJSON(value?: ProviderModel | null): any {
+export function SearchResultsModelErrorsToJSON(value?: SearchResultsModelErrors | null): any {
     if (value === undefined) {
         return undefined
     }
@@ -63,6 +59,6 @@ export function ProviderModelToJSON(value?: ProviderModel | null): any {
     }
     return {
         provider: value.provider,
-        categories: (value.categories as Array<any>).map(ProviderCategoryModelToJSON),
+        error: value.error,
     }
 }

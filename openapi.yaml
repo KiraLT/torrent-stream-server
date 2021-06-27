@@ -234,9 +234,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/ProviderModel'
+                                type: object
+                                properties:
+                                    items:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/ProviderModel'
+                                    errors:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/ProviderErrorModel'
+                                required: ['items', 'errors']
                 401:
                     $ref: '#/components/responses/401'
                 403:
@@ -288,12 +296,13 @@ paths:
                   schema:
                       type: string
                 - in: query
-                  name: provider
+                  name: providers
                   description: provider name
-                  required: true
                   allowReserved: true
                   schema:
-                      type: string
+                      type: array
+                      items:
+                        type: string
                 - in: query
                   name: category
                   description: provider category
@@ -308,9 +317,8 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/ProviderTorrentModel'
+                                $ref: '#/components/schemas/SearchResultsModel'
+                                    
                 400:
                     $ref: '#/components/responses/400'
                 401:
@@ -407,13 +415,13 @@ components:
         ProviderModel:
             type: object
             properties:
-                name:
+                provider:
                     type: string
                 categories:
                     type: array
                     items:
                         $ref: '#/components/schemas/ProviderCategoryModel'
-            required: ['name', 'categories']
+            required: ['provider', 'categories']
         ProviderCategoryModel:
             type: object
             properties:
@@ -461,6 +469,8 @@ components:
                     type: string
                 numFiles:
                     type: number
+                provider:
+                    type: string
                 category:
                     type: object
                     properties:
@@ -469,7 +479,27 @@ components:
                         id:
                             type: string
                     required: ['name', 'id']
-            required: ['name', 'id', 'seeds', 'peers', 'size']
+            required: ['name', 'id', 'seeds', 'peers', 'size', 'provider']
+        SearchResultsModel:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ProviderTorrentModel'
+                errors:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ProviderErrorModel'
+            required: ['items', 'errors']
+        ProviderErrorModel:
+            type: object
+            properties:
+                error:
+                    type: string
+                provider:
+                    type: string
+            required: ['error', 'provider']
         MagnetModel:
             type: object
             properties:
