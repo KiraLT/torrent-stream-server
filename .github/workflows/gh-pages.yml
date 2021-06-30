@@ -1,4 +1,4 @@
-name: github pages
+name: Github Pages
 
 on:
   push:
@@ -6,9 +6,13 @@ on:
       - master
 
 jobs:
-  deploy:
+  deploy-docs:
     runs-on: ubuntu-18.04
     steps:
+    - name: Sleep for 300 seconds
+      run: sleep 300s
+      shell: bash
+
       - uses: actions/checkout@v2
 
       - name: Deploy
