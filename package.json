@@ -1,7 +1,7 @@
 {
     "name": "torrent-stream-server",
     "description": "HTTP server to convert any torrent to video stream",
-    "version": "1.7.2",
+    "version": "1.8.0",
     "author": "KiraLT",
     "bin": {
         "torrent-stream-server": "lib/index.js"
@@ -135,7 +135,7 @@
             "publish": false
         },
         "hooks": {
-            "after:bump": "npm --no-git-tag-version --prefix frontend version ${version}"
+            "after:bump": "npm --no-git-tag-version --prefix frontend version ${version} && sed -i 's/[0-9]*\\.[0-9]*\\.[0-9]*/${version}/g' chart/Chart.yaml"
         }
     }
 }
