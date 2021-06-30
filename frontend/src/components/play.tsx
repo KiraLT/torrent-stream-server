@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import {
     Card,
@@ -9,9 +9,11 @@ import {
     Container,
     OverlayTrigger,
     Tooltip,
+    DropdownButton,
+    Dropdown
 } from 'react-bootstrap'
 import { useAsync } from 'react-async-hook'
-import { formatBytes, sortBy } from 'common-stuff'
+import { formatBytes, sortBy, generateUUID } from 'common-stuff'
 
 import { TorrentsApi, TorrentModel, TorrentFileModel } from '../helpers/client'
 import { getApiConfig } from '../config'
@@ -232,16 +234,25 @@ function PlayVideoComponent({
                                 </span>
                             </Col>
                             <Col sm="auto" className="d-flex mb-3">
-                                <Button
-                                    as={'a'}
-                                    href={file.stream}
-                                    className="w-100 justify-content-center align-self-center btn-simple"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    variant="success"
-                                >
-                                    <i className="ti-cloud-down"></i> Download
-                                </Button>
+                                <DropdownButton title="Download" variant="success" className="w-100 justify-content-center align-self-center">
+                                    <Dropdown.Item
+                                        eventKey="1"
+                                        as={'a'}
+                                        href={file.stream}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <i className="ti-cloud-down"></i> Download
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        eventKey="2"
+                                        className="g-savetodrive"
+                                        id="save-to-google-cloud"
+    
+                                    >
+                                        <SaveToGoogleCloud name={file.name} url={file.stream} id={generateUUID()} />
+                                    </Dropdown.Item>
+                                </DropdownButton>
                             </Col>
                         </Row>
                     </Card.Header>
@@ -249,4 +260,20 @@ function PlayVideoComponent({
             </>
         </>
     )
+}
+
+function SaveToGoogleCloud({name, url, id}: {name: string, url: string, id: string}) {
+    useEffect(() => {
+        const gapi = (window as any).gapi
+
+        gapi.savetodrive.render(id, {
+            src: url,
+            filename: name,
+            sitename: document.title
+        })
+    }, [url, name, id])
+
+    return <div id={id}>
+
+    </div>
 }
