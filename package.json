@@ -135,7 +135,7 @@
             "publish": false
         },
         "hooks": {
-            "after:bump": "npm --no-git-tag-version --prefix frontend version ${version}"
+            "after:bump": "npm --no-git-tag-version --prefix frontend version ${version} && sed -i 's/[0-9]*\\.[0-9]*\\.[0-9]*/${version}/g' chart/Chart.yaml"
         }
     }
 }
