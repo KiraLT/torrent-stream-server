@@ -89,11 +89,14 @@ You'll be able to access it on http://localhost
 
 _Deploy with Helm3_
 
-```shell
-git clone https://github.com/KiraLT/torrent-stream-server.git
-cd torrent-stream-server
 
-helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server chart
+```shell
+# Add repository (add only once)
+helm3 repo add torrent-stream-server https://kiralt.github.io/torrent-stream-server
+helm3 repo update
+
+# Install or update
+helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server torrent-stream-server/torrent-stream-server
 ```
 
 ### Configuration
