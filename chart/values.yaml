@@ -1,6 +1,7 @@
 image:
   repository: ghcr.io/kiralt/torrent-stream-server
-  tag: "{{ .Chart.AppVersion  }}"
+  # Default is .Chart.AppVersion
+  tag: ""
   pullPolicy: IfNotPresent
 
 service:
