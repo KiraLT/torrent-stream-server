@@ -96,7 +96,7 @@ helm3 repo add torrent-stream-server https://kiralt.github.io/torrent-stream-ser
 helm3 repo update
 
 # Install or update
-helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server torrent-stream-server/torrent-stream-server
+helm3 upgrade --install torrent-stream-server torrent-stream-server/torrent-stream-server
 ```
 
 ### Configuration
@@ -108,13 +108,13 @@ You can change configuration by providing [values.yaml](https://github.com/KiraL
 ##### Add custom domain
 
 ```shell
-helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server chart
+helm3 upgrade --set ingress.host=domain.com --install torrent-stream-server torrent-stream-server/torrent-stream-server
 ```
 
 ##### Set ENV variables
 
 ```shell
-helm3 upgrade --set env.API_KEY="my key" --install torrent-stream-server chart
+helm3 upgrade --set env.API_KEY="my key" --install torrent-stream-server torrent-stream-server/torrent-stream-server
 ```
 
 ## VPS
