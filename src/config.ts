@@ -89,6 +89,18 @@ const configSchema = z.object({
          * Default: `[]`
          */
         peerAddresses: z.array(z.string()),
+        /**
+         * Max download speed (bytes/sec) over all torrents
+         * 
+         * Default: `5242880`
+         */
+        downloadLimit: z.number(),
+        /**
+         * Max upload speed (bytes/sec) over all torrents
+         * 
+         * Default: `0`
+         */
+        uploadLimit: z.number(),
     }),
     /**
      * Security settings
@@ -176,6 +188,8 @@ const defaultConfig: Config = {
         announce: [],
         urlList: [],
         peerAddresses: [],
+        uploadLimit: 0,
+        downloadLimit: 5242880
     },
     security: {
         streamApi: {
