@@ -17,7 +17,7 @@ export interface TorrentAdapterFile {
 }
 
 export abstract class TorrentAdapter {
-    constructor() {}
+    constructor(_options?: {downloadLimit?: number, uploadLimit?: number}) {}
 
     public abstract add(magnet: string, path: string): Promise<TorrentAdapterTorrent>
     public abstract destroy(): Promise<void>

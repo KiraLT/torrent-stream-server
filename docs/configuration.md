@@ -103,7 +103,19 @@ All config parameters are optional, so you add only necessary parameters to your
          *
          * Default:  []
          */
-        "peerAddresses": []
+        "peerAddresses": [],
+        /**
+         * Max download speed (bytes/sec) over all torrents
+         * 
+         * Default: `5242880`
+         */
+        "downloadLimit": 5242880,
+        /**
+         * Max upload speed (bytes/sec) over all torrents
+         * 
+         * Default: `0`
+         */
+        "uploadLimit": 0,
     },
     /**
      * Security settings
