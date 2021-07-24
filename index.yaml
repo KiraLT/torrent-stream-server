@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   torrent-stream-server:
   - apiVersion: v2
+    appVersion: 1.8.2
+    created: "2021-07-24T19:46:18.294606671Z"
+    digest: f4f0d1ae0b0ab86cc616a96e2165acd2e5ccf49d703a491d058cc11da393c83e
+    home: https://github.com/KiraLT/torrent-stream-server
+    name: torrent-stream-server
+    urls:
+    - https://github.com/KiraLT/torrent-stream-server/releases/download/v1.8.2/torrent-stream-server-1.8.2.tgz
+    version: 1.8.2
+  - apiVersion: v2
     appVersion: 1.8.1
     created: "2021-06-30T19:19:41.668681515Z"
     digest: 910d5643ae1a3383c11d690255aec59bccea75ed1893a4292db48ca6682deaa1
@@ -19,4 +28,4 @@ entries:
     urls:
     - https://github.com/KiraLT/torrent-stream-server/releases/download/v1.8.0/torrent-stream-server-1.8.0.tgz
     version: 1.8.0
-generated: "2021-06-30T19:19:41.668692115Z"
+generated: "2021-07-24T19:46:18.294991277Z"
