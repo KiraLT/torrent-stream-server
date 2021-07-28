@@ -16,6 +16,7 @@ export interface ProviderTorrent {
     imdb?: string
     numFiles?: number
     comments?: number
+    provider: string
 }
 
 export interface ProviderCategory {
@@ -28,6 +29,7 @@ export interface ProviderCategory {
 }
 
 export interface ProviderMeta {
+    provider: string
     categories: ProviderCategory[]
 }
 
@@ -37,7 +39,7 @@ export interface ProviderSearchOptions {
 }
 
 export abstract class Provider {
-    static providerName: string
+    public abstract providerName: string
 
     public abstract getMeta(): Promise<ProviderMeta>
 
@@ -51,4 +53,9 @@ export abstract class Provider {
     public async getMagnet(_id: string): Promise<string | undefined> {
         throw new Error(`getMagnet is not supported`)
     }
+}
+
+export interface ProviderError {
+    error: string
+    provider: string
 }

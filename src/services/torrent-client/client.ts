@@ -29,6 +29,8 @@ export interface TorrentClientConfig {
     announce?: string[]
     urlList?: string[]
     peerAddresses?: string[]
+    uploadLimit?: number
+    downloadLimit?: number
     ttl: number
     path: string
     logger: Logger
@@ -62,7 +64,10 @@ export class TorrentClient {
                         : []),
                 ],
             },
-            adapter || new WebtorrentAdapter()
+            adapter || new WebtorrentAdapter({
+                downloadLimit: config.downloadLimit,
+                uploadLimit: config.uploadLimit
+            })
         )
     }
 

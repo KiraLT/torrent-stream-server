@@ -17,15 +17,15 @@ import {
     ApiErrorModel,
     ApiErrorModelFromJSON,
     ApiErrorModelToJSON,
+    InlineResponse200,
+    InlineResponse200FromJSON,
+    InlineResponse200ToJSON,
     MagnetModel,
     MagnetModelFromJSON,
     MagnetModelToJSON,
-    ProviderModel,
-    ProviderModelFromJSON,
-    ProviderModelToJSON,
-    ProviderTorrentModel,
-    ProviderTorrentModelFromJSON,
-    ProviderTorrentModelToJSON,
+    SearchResultsModel,
+    SearchResultsModelFromJSON,
+    SearchResultsModelToJSON,
 } from '../models'
 
 export interface GetMagnetRequest {
@@ -35,7 +35,7 @@ export interface GetMagnetRequest {
 
 export interface SearchTorrentsRequest {
     query: string
-    provider: string
+    providers?: Array<string>
     category?: string
 }
 
@@ -62,7 +62,7 @@ export class BrowseApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
@@ -98,8 +98,8 @@ export class BrowseApi extends runtime.BaseAPI {
 
     /**
      */
-    async getProvidersRaw(): Promise<runtime.ApiResponse<Array<ProviderModel>>> {
-        const queryParameters: runtime.HTTPQuery = {}
+    async getProvidersRaw(): Promise<runtime.ApiResponse<InlineResponse200>> {
+        const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
@@ -119,13 +119,13 @@ export class BrowseApi extends runtime.BaseAPI {
         })
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            jsonValue.map(ProviderModelFromJSON)
+            InlineResponse200FromJSON(jsonValue)
         )
     }
 
     /**
      */
-    async getProviders(): Promise<Array<ProviderModel>> {
+    async getProviders(): Promise<InlineResponse200> {
         const response = await this.getProvidersRaw()
         return await response.value()
     }
@@ -134,7 +134,7 @@ export class BrowseApi extends runtime.BaseAPI {
      */
     async searchTorrentsRaw(
         requestParameters: SearchTorrentsRequest
-    ): Promise<runtime.ApiResponse<Array<ProviderTorrentModel>>> {
+    ): Promise<runtime.ApiResponse<SearchResultsModel>> {
         if (requestParameters.query === null || requestParameters.query === undefined) {
             throw new runtime.RequiredError(
                 'query',
@@ -142,21 +142,14 @@ export class BrowseApi extends runtime.BaseAPI {
             )
         }
 
-        if (requestParameters.provider === null || requestParameters.provider === undefined) {
-            throw new runtime.RequiredError(
-                'provider',
-                'Required parameter requestParameters.provider was null or undefined when calling searchTorrents.'
-            )
-        }
-
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         if (requestParameters.query !== undefined) {
             queryParameters['query'] = requestParameters.query
         }
 
-        if (requestParameters.provider !== undefined) {
-            queryParameters['provider'] = requestParameters.provider
+        if (requestParameters.providers) {
+            queryParameters['providers'] = requestParameters.providers
         }
 
         if (requestParameters.category !== undefined) {
@@ -181,15 +174,13 @@ export class BrowseApi extends runtime.BaseAPI {
         })
 
         return new runtime.JSONApiResponse(response, (jsonValue) =>
-            jsonValue.map(ProviderTorrentModelFromJSON)
+            SearchResultsModelFromJSON(jsonValue)
         )
     }
 
     /**
      */
-    async searchTorrents(
-        requestParameters: SearchTorrentsRequest
-    ): Promise<Array<ProviderTorrentModel>> {
+    async searchTorrents(requestParameters: SearchTorrentsRequest): Promise<SearchResultsModel> {
         const response = await this.searchTorrentsRaw(requestParameters)
         return await response.value()
     }

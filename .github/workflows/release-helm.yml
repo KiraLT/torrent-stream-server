@@ -1,0 +1,82 @@
+name: Release helm
+
+on:
+  push:
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+env:
+  version: "v1.2.1"
+  CR_GIT_BASE_URL: "https://api.github.com/"
+  CR_GIT_UPLOAD_URL: "https://uploads.github.com/"
+  CR_PACKAGE_PATH: .cr-release-packages
+  CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  CR_RELEASE_NAME_TEMPLATE: "v{{ .Version }}"
+
+jobs:
+  release-helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Release helm
+        run: |
+          arch=$(uname -m)
+          cache_dir="$RUNNER_TOOL_CACHE/ct/$version/$arch"
+
+          export CR_OWNER=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
+          export CR_GIT_REPO=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
+    
+          if [[ ! -d "$RUNNER_TOOL_CACHE" ]]; then
+              echo "Cache directory '$RUNNER_TOOL_CACHE' does not exist" >&2
+              exit 1
+          fi
+
+          if [[ ! -d "$cache_dir" ]]; then
+              mkdir -p "$cache_dir"
+
+              echo "Installing chart-releaser..."
+              curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/$version/chart-releaser_${version#v}_linux_amd64.tar.gz"
+              tar -xzf cr.tar.gz -C "$cache_dir"
+              rm -f cr.tar.gz
+
+              echo 'Adding cr directory to PATH...'
+              export PATH="$cache_dir:$PATH"
+          fi
+  
+          rm -rf .cr-release-packages
+          mkdir -p .cr-release-packages
+
+          echo "Packaging chart..."
+          cr package "chart"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: .cr-release-packages/*.tgz
+
+      - name: Create index
+        run: |
+          arch=$(uname -m)
+          cache_dir="$RUNNER_TOOL_CACHE/ct/$version/$arch"
+
+          export CR_OWNER=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
+          export CR_GIT_REPO=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
+          export PATH="$cache_dir:$PATH"
+
+          rm -rf .cr-index
+          mkdir -p .cr-index
+
+          echo "Indexing chart..."
+          cr index -c "https://$CR_OWNER.github.io/$CR_GIT_REPO" -o "$CR_OWNER" -r "$CR_GIT_REPO"
+          
+      - name: Upload index to gp-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          keep_files: true
+          enable_jekyll: true
+          publish_dir: .cr-index

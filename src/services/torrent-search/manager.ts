@@ -1,38 +1,39 @@
+import { sortBy, extractWords } from 'common-stuff'
 import {
     ProviderMeta,
     ProviderSearchOptions,
     ProviderTorrent,
-    providers,
-    ProviderName,
+    Provider,
+    ProviderError
 } from './providers'
 
-export interface ProviderInfo extends ProviderMeta {
-    name: string
+import { executeProviders } from './helpers'
+
+export interface ProvidersResult<T> {
+    items: T
+    errors: ProviderError[]
 }
 
-export async function getProvidersInfo(): Promise<ProviderInfo[]> {
-    return Promise.all(
-        Object.entries(providers).map(async ([name, provider]) => ({
-            name,
-            ...(await provider.getMeta()),
-        }))
-    )
+export async function getMeta(targetProviders: Provider[]): Promise<ProvidersResult<ProviderMeta[]>> {
+    return executeProviders(targetProviders, v => v.getMeta())
 }
 
 export async function search(
-    searchProviders: ProviderName[],
+    targetProviders: Provider[],
     query: string,
     options: ProviderSearchOptions
-): Promise<ProviderTorrent[]> {
-    const provider = searchProviders[0]
+): Promise<ProvidersResult<ProviderTorrent[]>> {
+    const words = extractWords(query)
+    const { errors, items } = await executeProviders(targetProviders, v => v.search(query, options))
 
-    if (!provider || searchProviders.length !== 1) {
-        throw new Error('Only 1 provider search is supported at the moment')
+    return {
+        errors,
+        items: sortBy(items.flat(), v => {
+            const index = extractWords(v.name)
+            return [
+                words.filter(word => index.includes(word)).length * -1,
+                v.seeds * -1
+            ]
+        }),
     }
-
-    return providers[provider].search(query, options)
-}
-
-export function isProviderSupported(name: unknown): name is ProviderName {
-    return typeof name === 'string' && name in providers
 }

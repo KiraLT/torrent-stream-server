@@ -7,9 +7,14 @@ import { TorrentAdapter, TorrentAdapterTorrent, TorrentClientError } from '.'
 export class WebtorrentAdapter extends TorrentAdapter {
     protected client: WebTorrent.Instance
 
-    constructor() {
-        super()
-        this.client = new WebTorrent()
+    constructor(options?: {downloadLimit?: number, uploadLimit?: number}) {
+        super(options)
+        this.client = new WebTorrent({
+            ...{
+                downloadLimit: options?.downloadLimit ?? -1,
+                uploadLimit: options?.uploadLimit ?? -1
+            } as any
+        })
     }
 
     async add(magnet: string, path: string): Promise<TorrentAdapterTorrent> {

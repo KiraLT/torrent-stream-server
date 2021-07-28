@@ -97,6 +97,10 @@ export function VideoPlayerComponent({
 
             // Skip a bit to load poster
             v.currentTime(1)
+
+            return () => {
+                v.dispose()
+            }
         }
     })
 

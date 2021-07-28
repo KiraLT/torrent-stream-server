@@ -29,7 +29,7 @@ export class DashboardApi extends runtime.BaseAPI {
     /**
      */
     async getUsageRaw(): Promise<runtime.ApiResponse<UsageModel>> {
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 

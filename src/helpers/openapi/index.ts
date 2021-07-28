@@ -100,9 +100,9 @@ export function getRouteUrl<O extends keyof Operations>(
     params: RouteType<O>[0],
     query: RouteType<O>[3]
 ): string {
-    const queryString = Object.keys((query as {}) || {}) ? `?${stringify(query)}` : ''
+    const queryString = Object.keys((query as {}) || {}).length ? `?${stringify(query)}` : ''
 
     return `${Object.entries((params as any) || {}).reduce((prev, [key, value]) => {
-        return prev.replace(`{${key}}`, String(value))
+        return prev.replace(`{${key}}`, encodeURIComponent(String(value)))
     }, getPathByOperation(operation).url as string)}${queryString}`
 }

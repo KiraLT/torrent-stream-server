@@ -1,0 +1,15 @@
+image:
+  repository: ghcr.io/kiralt/torrent-stream-server
+  # Default is .Chart.AppVersion
+  tag: ""
+  pullPolicy: IfNotPresent
+
+service:
+  port: 3000
+  protocol: TCP
+
+ingress:
+  host: ""
+
+# env:
+#   API_KEY="my key"

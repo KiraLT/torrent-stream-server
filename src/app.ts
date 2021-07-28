@@ -45,22 +45,22 @@ export async function setup(options?: { configFile: string }): Promise<void> {
     app.use(getApiRouter(globals, client))
 
     if (config.security.frontendEnabled) {
-        if (config.environment === 'production') {
-            logger.info('Serving frontend files')
+        logger.info('Serving frontend files')
 
-            app.use(express.static(frontendBuildPath))
-            app.use((_req, res) => {
-                res.sendFile(join(frontendBuildPath, 'index.html'))
-            })
-        }
+        app.use(express.static(frontendBuildPath))
+        app.use((_req, res) => {
+            res.sendFile(join(frontendBuildPath, 'index.html'))
+        })
     }
 
     const server = app.listen(config.port, config.host, () => {
         logger.info(`Listening on ${config.host}:${config.port}`)
 
         if (config.environment === 'development') {
-            logger.info(`* Website on http://127.0.0.1:${config.port}`)
-            logger.info(`* Docs on http://127.0.0.1:${config.port}/api-docs`)
+            const accessHost = config.host === '0.0.0.0' ? '127.0.0.1' : config.host
+
+            logger.info(`* Website on http://${accessHost}:${config.port}`)
+            logger.info(`* Docs on http://${accessHost}:${config.port}/api-docs`)
         }
     })
 

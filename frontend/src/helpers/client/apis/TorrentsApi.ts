@@ -46,7 +46,7 @@ export class TorrentsApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         if (requestParameters.torrent !== undefined) {
             queryParameters['torrent'] = requestParameters.torrent
@@ -91,7 +91,7 @@ export class TorrentsApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 
@@ -126,7 +126,7 @@ export class TorrentsApi extends runtime.BaseAPI {
     /**
      */
     async getTorrentsRaw(): Promise<runtime.ApiResponse<Array<TorrentModel>>> {
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         const headerParameters: runtime.HTTPHeaders = {}
 

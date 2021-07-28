@@ -1,245 +1,178 @@
 import { readFile } from 'fs'
 import { promisify } from 'util'
 import { resolve } from 'path'
-import { Logger, merge } from 'common-stuff'
+import { Logger, merge, convertToNested, camelCase } from 'common-stuff'
+import { z } from 'zod'
 
-import configSchema from './config.schema.json'
-import { validateSchema } from './helpers/validation'
-
-type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>
+export enum Environment {
+    Production = 'production',
+    Development = 'development',
 }
 
-/**
- * Project Enviroment variables.
- *
- * Configuration file can overwrite ENV variables.
- */
-interface EnvVariables {
-    /**
-     * Project environment.
-     *
-     * Default:  `production`
-     */
-    NODE_ENV: 'development' | 'production'
+const configSchema = z.object({
     /**
      * Server host.
      *
-     * Default:  `0.0.0.0`
+     * Default: `0.0.0.0`
      */
-    HOST: string
+    host: z.string(),
     /**
      * Server port.
      *
-     * Default:  `env.PORT` or 3000
+     * Default: `env.PORT` or 3000
      */
-    PORT: number
-    /**
-     * Get ip from `X-Forwarded-*` header.
-     *
-     * Default:  true if inside App Engine or Heroku else false
-     */
-    TRUST_PROXY: boolean
-    /**
-     * Protect API with key. It should be passed to headers to access the API (`authorization`: `bearer ${apiKey}`).
-     *
-     * If `streamApi` doesn't have a separate key, `apiKey` can be used as JSON Web Token.
-     *
-     * Default:  undefined
-     */
-    API_KEY: string
-    /**
-     * JSON config
-     */
-    CONFIG: DeepPartial<Config>
-}
-
-/**
- * Configuration file interface, it can overwrite ENV variables.
- */
-export interface Config {
-    /**
-     * Server host.
-     *
-     * Default:  `0.0.0.0`
-     */
-    host: string
-    /**
-     * Server port.
-     *
-     * Default:  `env.PORT` or 3000
-     */
-    port: number
+    port: z.number(),
     /**
      * Project environment.
      *
-     * Default:  `production`
+     * Default: `production`
      */
-    environment: 'development' | 'production'
+    environment: z.nativeEnum(Environment),
     /**
      * Logging configuration.
      *
-     * Default:  `console`
+     * Default: `console`
      */
-    logging: {
-        transports: Array<
-            | {
-                  /**
-                   * Log to console
-                   */
-                  type: 'console'
-              }
-            | {
-                  /**
-                   * Enable [loggly](https://www.loggly.com/) logging
-                   */
-                  type: 'loggly'
-                  /**
-                   * Loggly subdomain
-                   */
-                  subdomain: string
-                  /**
-                   * Loggly token
-                   */
-                  token: string
-                  /**
-                   * Loggly tags, can be used to filter logs
-                   */
-                  tags?: string[]
-              }
-        >
+    logging: z.object({
+        transports: z.array(
+            z.union([
+                z.object({
+                    type: z.literal('console'),
+                }),
+                z.object({
+                    type: z.literal('loggly'),
+                    subdomain: z.string(),
+                    token: z.string(),
+                    tags: z.array(z.string()).optional(),
+                }),
+            ])
+        ),
         /**
          * Logging level.
          *
-         * Default:  `info`
+         * Default: `info`
          */
-        level: 'debug' | 'info' | 'warn' | 'error'
-    }
+        level: z.enum(['debug', 'info', 'warn', 'error']),
+    }),
     /**
      * Torrent client settings
      */
-    torrents: {
-        path: string
+    torrents: z.object({
+        path: z.string(),
         /**
          * Delete torrent data if it is inactive for X seconds.
          *
-         * Default:  60 * 60
+         * Default: `3600`
          */
-        ttl: number
+        ttl: z.number(),
         /**
-         * Load defaul trackers list & use it for each torrents.
+         * Load default trackers list & use it for each torrents.
          *
-         * Default:  true
+         * Default: `true`
          */
-        useDefaultTrackers: boolean
+        useDefaultTrackers: z.boolean(),
         /**
-         * Additional trackers (`tr` parameter) which will be appened to each torrent.
+         * Additional trackers (`tr` parameter) which will be appended to each torrent.
          *
-         * Default:  []
+         * Default: `[]`
          */
-        announce: string[]
+        announce: z.array(z.string()),
         /**
-         * Web Seed (`ws` parameter) which will be appened to each torrent.
+         * Web Seed (`ws` parameter) which will be appended to each torrent.
          *
-         * Default:  []
+         * Default: `[]`
          */
-        urlList: string[]
+        urlList: z.array(z.string()),
         /**
          * Peer addresses (`x.pe` parameter).
          *
-         * Default:  []
+         * Default: `[]`
          */
-        peerAddresses: string[]
-    }
+        peerAddresses: z.array(z.string()),
+        /**
+         * Max download speed (bytes/sec) over all torrents
+         * 
+         * Default: `5242880`
+         */
+        downloadLimit: z.number(),
+        /**
+         * Max upload speed (bytes/sec) over all torrents
+         * 
+         * Default: `0`
+         */
+        uploadLimit: z.number(),
+    }),
     /**
      * Security settings
      */
-    security: {
+    security: z.object({
         /**
          * Stream API (`/stream/:torrent`) settings
          */
-        streamApi: {
+        streamApi: z.object({
             /**
              * Protect stream API with [JSON Web Token](https://jwt.io/).
              *
              * If `apiKey` is not set, it can also be used as API key (`authorization`: `bearer ${apiKey}`).
              *
-             * Default:  undefined
+             * Default: `undefined`
              */
-            key?: string
+            key: z.string().optional(),
             /**
              * The maximum allowed age for tokens to still be valid.
              * It is expressed in seconds or a string describing a time span [zeit/ms](https://github.com/vercel/ms)
              *
-             * Default:  `6h`
+             * Default: `6h`
              */
-            maxAge: string
-        }
+            maxAge: z.string(),
+        }),
         /**
          * Serve frontend static files
          *
-         * Default:  environment === 'production'
+         * Default: environment === 'production'
          */
-        frontendEnabled: boolean
+        frontendEnabled: z.boolean(),
         /**
          * Enable API
          *
-         * Default:  true
+         * Default: true
          */
-        apiEnabled: boolean
+        apiEnabled: z.boolean(),
         /**
          * Protect API with key. It should be passed to headers to access the API (`authorization`: `bearer ${apiKey}`).
          *
          * If `streamApi` doesn't have a separate key, `apiKey` can be used as JSON Web Token.
          *
-         * Default:  undefined
+         * Default: undefined
          */
-        apiKey?: string
-    }
+        apiKey: z.string().optional(),
+    }),
     /**
      * Get ip from `X-Forwarded-*` header.
      *
-     * Default:  true if inside App Engine or Heroku else false
+     * Default: true if inside App Engine or Heroku else false
      */
-    trustProxy: boolean
-}
+    trustProxy: z.boolean(),
+})
 
-/**
- * Load enviroment variable using `EnvVariables` interface
- */
-export function getEnv<T extends keyof EnvVariables>(
-    key: T,
-    type: 'json' | 'int' | 'string' | 'bool' = 'string'
-): EnvVariables[T] | undefined {
-    const value = (process.env[key] || '').trim() || undefined
-
-    if (value) {
-        if (type === 'json') {
-            try {
-                return JSON.parse(value)
-            } catch (err) {
-                throw new Error(`Failed to parse ${key} env variable: ${err}`)
-            }
-        }
-        if (type === 'int') {
-            return (parseInt(value, 10) as EnvVariables[T]) || undefined
-        }
-        if (type === 'bool') {
-            return (typeof value === 'string' && value.toLowerCase() === 'true') as EnvVariables[T]
-        }
-    }
-
-    return value as EnvVariables[T]
-}
+export type Config = z.infer<typeof configSchema>
 
 export const isInGoogleAppEngine = process.env.GAE_APPLICATION ? true : false
 export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('heroku') : false
 
+const parsedEnv = convertToNested(process.env, {
+    separator: '__',
+    transformKey: camelCase,
+})
+
 const defaultConfig: Config = {
-    host: getEnv('HOST') || '0.0.0.0',
-    port: getEnv('PORT', 'int') || 3000,
-    environment: getEnv('NODE_ENV') === 'development' ? 'development' : 'production',
-    trustProxy: getEnv('TRUST_PROXY') || isInGoogleAppEngine || isInHeroku,
+    host: (parsedEnv.host as any) || '0.0.0.0',
+    port: (parsedEnv.port as any) || 3000,
+    environment:
+        parsedEnv.nodeEnv === Environment.Development
+            ? Environment.Development
+            : Environment.Production,
+    trustProxy: !!parsedEnv.trustProxy || isInGoogleAppEngine || isInHeroku,
     logging: {
         transports: [
             {
@@ -255,12 +188,14 @@ const defaultConfig: Config = {
         announce: [],
         urlList: [],
         peerAddresses: [],
+        uploadLimit: 0,
+        downloadLimit: 5242880
     },
     security: {
         streamApi: {
             maxAge: '6h',
         },
-        apiKey: getEnv('API_KEY') || undefined,
+        apiKey: (parsedEnv.apiKey as any) || undefined,
         frontendEnabled: true,
         apiEnabled: true,
     },
@@ -268,20 +203,20 @@ const defaultConfig: Config = {
 
 export async function readConfig(path: string | undefined): Promise<Config> {
     try {
-        return validateSchema(
-            configSchema,
+        return configSchema.parse(
             merge(
                 merge(
                     defaultConfig,
                     path ? JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })) : {}
                 ),
-                getEnv('CONFIG', 'json') || {}
-            ),
-            {
-                name: path || 'config',
-            }
+                parsedEnv.config || {}
+            )
         )
     } catch (err) {
+        if (err instanceof z.ZodError) {
+            const errors = err.errors.map((v) => `${v.message} @ ${v.path.join('.')}`)
+            throw Error(`Configuration error: ${errors.join(', ')}`)
+        }
         throw Error(`Configuration error: ${err}`)
     }
 }
@@ -290,8 +225,6 @@ export async function readConfig(path: string | undefined): Promise<Config> {
  * Frontend package path to build directory
  */
 export const frontendBuildPath = resolve(__dirname, '../frontend/build')
-
-export { configSchema }
 
 export interface Globals {
     config: Config

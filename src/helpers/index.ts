@@ -1,5 +1,7 @@
 import { sign, verify } from 'jsonwebtoken'
 
+import { getRouteUrl } from './openapi'
+
 export function exists(json: any, key: string) {
     const value = json[key]
     return value !== null && value !== undefined
@@ -30,31 +32,45 @@ export function verifyJwtToken<T extends object | string>(
 
 export function getSteamUrl(torrent: string, file: string, encodeToken?: string): string {
     if (encodeToken) {
-        return `/stream/${encodeURIComponent(
-            signJwtToken(
-                {
-                    torrent,
-                    file,
-                },
-                encodeToken
-            )
-        )}`
+        return getRouteUrl(
+            'getStream',
+            {
+                torrent: signJwtToken(
+                    {
+                        torrent,
+                        file,
+                    },
+                    encodeToken
+                ),
+            },
+            {}
+        )
     }
 
-    return `/stream/${encodeURIComponent(torrent)}?file=${encodeURIComponent(file)}`
+    return getRouteUrl(
+        'getStream',
+        {
+            torrent,
+        },
+        { file }
+    )
 }
 
 export function getPlaylistUrl(torrent: string, encodeToken?: string): string {
     if (encodeToken) {
-        return `/playlist/${encodeURIComponent(
-            signJwtToken(
-                {
-                    torrent,
-                },
-                encodeToken
-            )
-        )}`
+        return getRouteUrl(
+            'getPlaylist',
+            {
+                torrent: signJwtToken(
+                    {
+                        torrent,
+                    },
+                    encodeToken
+                ),
+            },
+            {}
+        )
     }
 
-    return `/playlist/${encodeURIComponent(torrent)}`
+    return getRouteUrl('getPlaylist', { torrent }, {})
 }

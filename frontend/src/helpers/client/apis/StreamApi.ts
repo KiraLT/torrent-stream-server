@@ -19,28 +19,28 @@ export interface GetPlaylistRequest {
     torrent: string
     file?: string
     fileType?: string
-    fileIndex?: string
+    fileIndex?: number
 }
 
 export interface GetPlaylist2Request {
     torrent: string
     file?: string
     fileType?: string
-    fileIndex?: string
+    fileIndex?: number
 }
 
 export interface GetStreamRequest {
     torrent: string
     file?: string
     fileType?: string
-    fileIndex?: string
+    fileIndex?: number
 }
 
 export interface GetStream2Request {
     torrent: string
     file?: string
     fileType?: string
-    fileIndex?: string
+    fileIndex?: number
 }
 
 /**
@@ -60,7 +60,7 @@ export class StreamApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         if (requestParameters.file !== undefined) {
             queryParameters['file'] = requestParameters.file
@@ -76,14 +76,6 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken
-            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
-
-            if (tokenString) {
-                headerParameters['Authorization'] = `Bearer ${tokenString}`
-            }
-        }
         const response = await this.request({
             path: `/playlist/{torrent}`.replace(
                 `{${'torrent'}}`,
@@ -118,7 +110,7 @@ export class StreamApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         if (requestParameters.torrent !== undefined) {
             queryParameters['torrent'] = requestParameters.torrent
@@ -138,14 +130,6 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken
-            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
-
-            if (tokenString) {
-                headerParameters['Authorization'] = `Bearer ${tokenString}`
-            }
-        }
         const response = await this.request({
             path: `/playlist`,
             method: 'GET',
@@ -175,7 +159,7 @@ export class StreamApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         if (requestParameters.file !== undefined) {
             queryParameters['file'] = requestParameters.file
@@ -191,14 +175,6 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken
-            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
-
-            if (tokenString) {
-                headerParameters['Authorization'] = `Bearer ${tokenString}`
-            }
-        }
         const response = await this.request({
             path: `/stream/{torrent}`.replace(
                 `{${'torrent'}}`,
@@ -231,7 +207,7 @@ export class StreamApi extends runtime.BaseAPI {
             )
         }
 
-        const queryParameters: runtime.HTTPQuery = {}
+        const queryParameters: any = {}
 
         if (requestParameters.torrent !== undefined) {
             queryParameters['torrent'] = requestParameters.torrent
@@ -251,14 +227,6 @@ export class StreamApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {}
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken
-            const tokenString = typeof token === 'function' ? token('apiKey', []) : token
-
-            if (tokenString) {
-                headerParameters['Authorization'] = `Bearer ${tokenString}`
-            }
-        }
         const response = await this.request({
             path: `/stream`,
             method: 'GET',
