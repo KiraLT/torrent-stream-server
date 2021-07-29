@@ -1,4 +1,4 @@
-import { filterFiles } from './helpers'
+import { filterFiles } from '../src/services/torrent-client/helpers'
 
 describe('filterFiles', () => {
     const file1 = {

@@ -118,7 +118,7 @@
         "prettify": "prettier --write \"{src,frontend/src}/**/*.{js,ts,tsx,json,css,scss}\"",
         "start": "node lib/index.js serve",
         "uninstall": "rm -rf frontend/node_mobules",
-        "test": "jest src",
+        "test": "jest ./spec",
         "release": "release-it"
     },
     "jest": {
