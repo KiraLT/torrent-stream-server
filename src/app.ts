@@ -3,6 +3,7 @@ import { join } from 'path'
 import cors from 'cors'
 import { Logger } from 'common-stuff'
 import { createHttpTerminator } from 'http-terminator'
+import rateLimit from 'express-rate-limit'
 
 import { TorrentClient } from './services/torrent-client'
 import { readConfig, Config, frontendBuildPath } from './config'
@@ -23,6 +24,11 @@ function createApp(config: Config, logger: Logger): Express {
         app.set('trust proxy', true)
     }
 
+    app.use(rateLimit({
+        windowMs: 60 * 1000,
+        max: config.security.rpm
+    }))
+
     return app
 }
 
@@ -32,6 +38,7 @@ export async function setup(options?: { configFile: string }): Promise<void> {
     const logger = createLogger(config)
 
     const app = createApp(config, logger)
+
     const client = await TorrentClient.create({
         logger,
         ...config.torrents,

@@ -160,7 +160,14 @@ All config parameters are optional, so you add only necessary parameters to your
          *
          * Default:  undefined
          */
-        "apiKey": "my random key"
+        "apiKey": "my random key",
+        /**
+         * Limit requests per minute for single IP
+         * 
+         * Default: 100
+         */
+        "rpm": 100
+    }),
     },
     /**
      * Get ip from `X-Forwarded-*` header.

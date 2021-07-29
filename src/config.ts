@@ -146,6 +146,12 @@ const configSchema = z.object({
          * Default: undefined
          */
         apiKey: z.string().optional(),
+        /**
+         * Limit requests per minute for single IP
+         * 
+         * Default: 100
+         */
+        rpm: z.number()
     }),
     /**
      * Get ip from `X-Forwarded-*` header.
@@ -198,6 +204,7 @@ const defaultConfig: Config = {
         apiKey: (parsedEnv.apiKey as any) || undefined,
         frontendEnabled: true,
         apiEnabled: true,
+        rpm: 100
     },
 }
 
