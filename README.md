@@ -72,6 +72,10 @@ vlc "http://localhost:3000/stream/08ada5a7a6183aae1e09d831df6748d566095a10"
 ``` bash
 vlc "http://localhost:3000/stream?torrent=magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&file=Sintel.mp4"
 ```
+or
+``` bash
+vlc "http://127.0.0.1:3000/stream/magnet%3A%3Fxt%3Durn%3Abtih%3A08ada5a7a6183aae1e09d831df6748d566095a10?file=Sintel.mp4"
+```
 
 ### Download file using curl
 
