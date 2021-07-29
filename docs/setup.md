@@ -131,12 +131,12 @@ Cheapest way to host something is using VPS (Virtual private server). Check [The
 6. Install NodeJS: `sudo apt-get install -y nodejs`
 7. Install [PM2](https://www.npmjs.com/package/pm2) process manager: `sudo npm install pm2 -g`
 8. Install Torrent Stream Server: `sudo npm install torrent-stream-server -g`
-9. Start Torrent Stream Server on 80 port with process manager: `sudo PORT=80 pm2 --update-env start torrent-stream-server -- serve`
+9. Start Torrent Stream Server on port 80 with process manager: `sudo PORT=80 pm2 --update-env start torrent-stream-server -- serve`
 
-> Go to you http://127.0.0.1 (replace `127.0.0.1` with your server IP). If you get unsafe warning - check how to [bypass it on chrome](https://www.technipages.com/google-chrome-bypass-your-connection-is-not-private-message).
+> Go to http://127.0.0.1 (replace `127.0.0.1` with your server IP). If you get unsafe warning - check how to [bypass it on chrome](https://www.technipages.com/google-chrome-bypass-your-connection-is-not-private-message).
 
 ### SSL & custom domain
 
-Easiest way to connect custom domain and SSL is using [Cloudflare DNS](https://www.cloudflare.com/dns/). Forward you custom DNS to Cloudflare, then add `A` record with your server IP address. Cloudflare will automatically proxy all requests with that domain and free SSL certificate.
+Easiest way to connect custom domain and SSL is using [Cloudflare DNS](https://www.cloudflare.com/dns/). Forward your custom DNS to Cloudflare, then add an `A` record with your server's IP address. Cloudflare will automatically proxy all requests with that domain and free SSL certificate.
 
 ![cloudflare](./images/cloudflare.png)
