@@ -111,7 +111,7 @@
         "build-frontend": "npm run --prefix frontend build",
         "build-swagger": "npm run build-swagger-frontend && npm run build-swagger-backend",
         "build-swagger-backend": "openapi-typescript openapi.yaml --output src/helpers/openapi/generated.ts",
-        "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o frontend/src/helpers/client --enable-post-process-file",
+        "build-swagger-frontend": "TS_POST_PROCESS_FILE='prettier --write' openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o frontend/src/common/api --enable-post-process-file",
         "dev-backend": "NODE_ENV=development nodemon --watch 'src/**/*' -e 'mustache,ts,json,xml,yaml' --exec 'ts-node' src/index.ts serve",
         "dev-frontend": "npm --prefix frontend run start",
         "dev": "concurrently --kill-others \"npm run dev-backend\" \"npm run dev-frontend\"",

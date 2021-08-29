@@ -4,12 +4,10 @@ import { BrowserRouter } from 'react-router-dom'
 import { setGlobal, addCallback } from 'reactn'
 
 import { defaultState, getTheme, State, Theme } from './config'
-import { ContentComponent } from './components/content'
+import { Pages } from './pages'
 import { unregister } from './serviceWorker'
 
-import './assets/scss/black-dashboard-react.scss'
-import './assets/demo/demo.css'
-import './assets/custom.scss'
+import './common/assets'
 
 export async function initApp(target: HTMLElement | null): Promise<void> {
     const loadedState = loadState()
@@ -26,7 +24,7 @@ export async function initApp(target: HTMLElement | null): Promise<void> {
 
     ReactDOM.render(
         <BrowserRouter>
-            <ContentComponent />
+            <Pages />
         </BrowserRouter>,
         target
     )

@@ -1,0 +1,271 @@
+.navbar .navbar-brand {
+    position: initial;
+}
+
+.main-panel > .content {
+    padding: initial;
+}
+
+select.form-control,
+select.form-control:active {
+    background: #1e1e2d;
+}
+
+.navbar.bg-white .navbar-nav .nav-link {
+    color: #222a42 !important;
+}
+
+.main-panel > .content {
+    min-height: calc(100vh - 150px);
+}
+
+.text-break {
+    word-break: break-all;
+}
+
+// Switch
+
+.custom-switch {
+    padding-left: 2.25rem !important;
+}
+
+.custom-switch .custom-control-label {
+    cursor: pointer;
+}
+
+.custom-switch .custom-control-label:before {
+    left: -2.25rem;
+    width: 1.75rem;
+    pointer-events: all;
+    border-radius: 0.5rem;
+    background: #d9dce2;
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label:after {
+    background-color: #fff;
+    transform: translateX(0.75rem);
+}
+.custom-switch .custom-control-label:after {
+    top: calc(0.25rem + 2px);
+    left: calc(-2.25rem + 2px);
+    width: calc(1rem - 4px);
+    height: calc(1rem - 4px);
+    background-color: #adb5bd;
+    border-radius: 0.5rem;
+    transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+// Loader
+
+//
+// Rotating border
+//
+
+@keyframes spinner-border {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: text-bottom;
+    border: 0.25em solid;
+    border-right: 0.25em solid transparent;
+    border-radius: 50%;
+    -webkit-animation: spinner-border 0.75s linear infinite;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+}
+
+//
+// Growing circle
+//
+
+@keyframes spinner-grow {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.spinner-grow {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: text-bottom;
+    background-color: currentColor;
+    border-radius: 50%;
+    opacity: 0;
+    -webkit-animation: spinner-grow 0.75s linear infinite;
+    animation: spinner-grow 0.75s linear infinite;
+}
+
+.spinner-grow-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+// Footer
+
+.white-content .footer .copyright,
+.white-content .footer ul li a {
+    color: #1d253b;
+}
+
+@media (min-width: 1200px) {
+    .footer .copyright {
+        float: right;
+        margin-top: 5px;
+    }
+}
+
+.footer .copyright {
+    font-size: 0.75rem;
+    line-height: 1.8;
+    color: #fff;
+}
+
+// Scrollbar
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 3px;
+}
+::-webkit-scrollbar-track {
+    background-color: #646464;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: #000;
+}
+::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: #666;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-corner {
+    background-color: #646464;
+}
+::-webkit-resizer {
+    background-color: #666;
+}
+
+.white-content {
+    select.form-control,
+    select.form-control:active {
+        background: initial;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 3px;
+    }
+    ::-webkit-scrollbar-track {
+        background-color: #f5f5f5;
+    }
+    ::-webkit-scrollbar-track-piece {
+        background-color: #f5f5f5;
+    }
+    ::-webkit-scrollbar-thumb {
+        height: 50px;
+        background-color: #555;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-corner {
+        background-color: #f5f5f5;
+    }
+    ::-webkit-resizer {
+        background-color: #f5f5f5;
+    }
+}
+
+// VideoJs
+
+@import 'video.js/dist/video-js.css';
+
+.vjs-theme-custom {
+    .vjs-big-play-button {
+        background-color: rgba(255, 255, 255, 0.25);
+        border: none;
+    }
+
+    .vjs-control-bar {
+        height: 4em;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+        outline: none !important;
+    }
+
+    .vjs-button:hover {
+        color: #4176bc;
+        background: linear-gradient(to top, #d0ddee, #fff);
+    }
+
+    .vjs-menu-item:not(.vjs-selected) {
+        color: white !important;
+    }
+
+    .vjs-volume-bar {
+        margin-top: 1.8em;
+    }
+
+    .vjs-button > .vjs-icon-placeholder::before {
+        line-height: 2.2;
+    }
+
+    .vjs-time-control {
+        line-height: 4em;
+    }
+
+    .vjs-progress-control .vjs-play-progress {
+        background-color: rgba(65, 118, 188, 0.9);
+    }
+
+    .vjs-progress-control .vjs-play-progress:before {
+        display: none;
+    }
+
+    .vjs-progress-control .vjs-slider {
+        background-color: rgba(65, 118, 188, 0.1);
+    }
+
+    .vjs-progress-control .vjs-load-progress div {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .vjs-progress-control .vjs-progress-holder {
+        margin: 0;
+        height: 100%;
+    }
+
+    .vjs-progress-control .vjs-time-tooltip {
+        background-color: rgba(65, 118, 188, 0.5);
+        color: #fff;
+    }
+
+    .vjs-progress-control .vjs-mouse-display .vjs-time-tooltip {
+        background-color: rgba(255, 255, 255, 0.7);
+        color: #4176bc;
+    }
+}
+
+$icon-chromecast--default: '../images/ic_cast_white_24dp.png';
+$icon-chromecast--hover: '../images/ic_cast_blue_24dp.png';
+$icon-chromecast-casting: '../images/ic_cast_connected_white_24dp.png';
+$icon-chromecast-casting--hover: '../images/ic_cast_connected_blue_24dp.png';
+$chromecast-icon-size: 16px;
+
+@import '@silvermine/videojs-chromecast/src/scss/videojs-chromecast';
