@@ -103,7 +103,19 @@ All config parameters are optional, so you add only necessary parameters to your
          *
          * Default:  []
          */
-        "peerAddresses": []
+        "peerAddresses": [],
+        /**
+         * Max download speed (bytes/sec) over all torrents
+         * 
+         * Default: `5242880`
+         */
+        "downloadLimit": 5242880,
+        /**
+         * Max upload speed (bytes/sec) over all torrents
+         * 
+         * Default: `0`
+         */
+        "uploadLimit": 0,
     },
     /**
      * Security settings
@@ -148,7 +160,14 @@ All config parameters are optional, so you add only necessary parameters to your
          *
          * Default:  undefined
          */
-        "apiKey": "my random key"
+        "apiKey": "my random key",
+        /**
+         * Limit requests per minute for single IP
+         * 
+         * Default: 100
+         */
+        "rpm": 100
+    }),
     },
     /**
      * Get ip from `X-Forwarded-*` header.

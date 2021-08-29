@@ -89,6 +89,18 @@ const configSchema = z.object({
          * Default: `[]`
          */
         peerAddresses: z.array(z.string()),
+        /**
+         * Max download speed (bytes/sec) over all torrents
+         * 
+         * Default: `5242880`
+         */
+        downloadLimit: z.number(),
+        /**
+         * Max upload speed (bytes/sec) over all torrents
+         * 
+         * Default: `0`
+         */
+        uploadLimit: z.number(),
     }),
     /**
      * Security settings
@@ -134,6 +146,12 @@ const configSchema = z.object({
          * Default: undefined
          */
         apiKey: z.string().optional(),
+        /**
+         * Limit requests per minute for single IP
+         * 
+         * Default: 100
+         */
+        rpm: z.number()
     }),
     /**
      * Get ip from `X-Forwarded-*` header.
@@ -176,6 +194,8 @@ const defaultConfig: Config = {
         announce: [],
         urlList: [],
         peerAddresses: [],
+        uploadLimit: 0,
+        downloadLimit: 5242880
     },
     security: {
         streamApi: {
@@ -184,6 +204,7 @@ const defaultConfig: Config = {
         apiKey: (parsedEnv.apiKey as any) || undefined,
         frontendEnabled: true,
         apiEnabled: true,
+        rpm: 100
     },
 }
 
