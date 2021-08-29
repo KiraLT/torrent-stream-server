@@ -1,29 +1,24 @@
-
+<!DOCTYPE html>
 <html>
-    <head>
-        <!-- Load the latest Swagger UI code and style from npm using unpkg.com -->
-        <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css"/>
-        <title>Swagger</title>
-    </head>
-    <body>
-        <div id="swagger-ui"></div> <!-- Div to hold the UI component -->
-        <script>
-            window.onload = function () {
-                // Begin Swagger UI call region
-                window.ui = SwaggerUIBundle({
-                    url: "../openapi.yaml",
-                    dom_id: '#swagger-ui',
-                    deepLinking: true,
-                    presets: [
-                        SwaggerUIBundle.presets.apis,
-                        SwaggerUIBundle.SwaggerUIStandalonePreset
-                    ],
-                    plugins: [
-                        SwaggerUIBundle.plugins.DownloadUrl
-                    ],
-                })
-            }
-        </script>
-    </body>
+  <head>
+    <title>ReDoc</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <redoc spec-url='../openapi.yaml'></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+  </body>
 </html>
