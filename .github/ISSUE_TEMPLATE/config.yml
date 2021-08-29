@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🚑 Help & Support
+    url: https://github.com/KiraLT/torrent-stream-server/discussions/categories/q-a
+    about: Please use the discussions Q&A category for questions
+  - name: 💡 Features & Ideas
+    url: https://github.com/KiraLT/torrent-stream-server/discussions/categories/ideas
+    about: Please vote for & post new ideas in the the discussions Ideas category
