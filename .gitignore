@@ -64,3 +64,7 @@ typings/
 openapitools.json
 lib
 build
+
+# Editors
+.vscode
+.idea
