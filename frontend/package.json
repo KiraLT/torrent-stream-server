@@ -18,7 +18,6 @@
         "common-stuff": "^1.5.2",
         "ismobilejs": "^1.1.1",
         "node-sass": "^6.0.0",
-        "prettier": "^2.3.2",
         "react": "^17.0.2",
         "react-app-polyfill": "^2.0.0",
         "react-async-hook": "^3.6.2",
@@ -37,8 +36,7 @@
     "scripts": {
         "start": "PORT=3001 REACT_APP_VERSION=$npm_package_version SKIP_PREFLIGHT_CHECK=true react-scripts start",
         "build": "REACT_APP_VERSION=$npm_package_version SKIP_PREFLIGHT_CHECK=true react-scripts build",
-        "test": "react-scripts test",
-        "prettify": "prettier --write \"src/**/*.ts\""
+        "test": "react-scripts test"
     },
     "eslintConfig": {
         "extends": [
