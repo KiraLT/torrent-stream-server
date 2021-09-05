@@ -23,7 +23,8 @@ export function InputWidget() {
         <Card>
             <Card.Header>
                 <Card.Title as="h3">
-                    <i className="ti-control-play text-success" /> Stream torrents
+                    <i className="ti-control-play text-success" /> Stream
+                    torrents
                 </Card.Title>
             </Card.Header>
             <Card.Body>
@@ -38,7 +39,11 @@ export function InputWidget() {
                             />
                         </Col>
                         <Col sm={4}>
-                            <Button variant="secondary" className="w-100 mb-2" type="submit">
+                            <Button
+                                variant="secondary"
+                                className="w-100 mb-2"
+                                type="submit"
+                            >
                                 Stream
                             </Button>
                         </Col>

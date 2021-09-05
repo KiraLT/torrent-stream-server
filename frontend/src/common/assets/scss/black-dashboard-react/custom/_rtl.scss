@@ -36,7 +36,14 @@
             }
         }
 
-        .sidebar-wrapper .nav [data-toggle='collapse'] ~ div > ul > li > a .sidebar-mini-icon,
+        .sidebar-wrapper
+            .nav
+            [data-toggle='collapse']
+            ~ div
+            > ul
+            > li
+            > a
+            .sidebar-mini-icon,
         .sidebar-wrapper
             .user
             .info
@@ -51,8 +58,23 @@
             margin-right: 0;
         }
 
-        .sidebar-wrapper > .nav [data-toggle='collapse'] ~ div > ul > li > a .sidebar-normal,
-        .sidebar-wrapper .user .info [data-toggle='collapse'] ~ div > ul > li > a .sidebar-normal {
+        .sidebar-wrapper
+            > .nav
+            [data-toggle='collapse']
+            ~ div
+            > ul
+            > li
+            > a
+            .sidebar-normal,
+        .sidebar-wrapper
+            .user
+            .info
+            [data-toggle='collapse']
+            ~ div
+            > ul
+            > li
+            > a
+            .sidebar-normal {
             text-align: right;
         }
 
@@ -231,7 +253,10 @@
         }
     }
     .sidebar .nav li.active > a:not([data-toggle='collapse']):before,
-    .off-canvas-sidebar .nav li.active > a:not([data-toggle='collapse']):before {
+    .off-canvas-sidebar
+        .nav
+        li.active
+        > a:not([data-toggle='collapse']):before {
         left: unset;
         right: -4px;
     }

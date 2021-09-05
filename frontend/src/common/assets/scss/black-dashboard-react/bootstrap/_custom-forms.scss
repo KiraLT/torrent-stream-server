@@ -62,7 +62,12 @@
     // Background-color and (when enabled) gradient
     &::before {
         position: absolute;
-        top: (($font-size-base * $line-height-base - $custom-control-indicator-size) / 2);
+        top: (
+            (
+                    $font-size-base * $line-height-base -
+                        $custom-control-indicator-size
+                ) / 2
+        );
         left: -$custom-control-gutter;
         display: block;
         width: $custom-control-indicator-size;
@@ -77,7 +82,12 @@
     // Foreground (icon)
     &::after {
         position: absolute;
-        top: (($font-size-base * $line-height-base - $custom-control-indicator-size) / 2);
+        top: (
+            (
+                    $font-size-base * $line-height-base -
+                        $custom-control-indicator-size
+                ) / 2
+        );
         left: -$custom-control-gutter;
         display: block;
         width: $custom-control-indicator-size;
@@ -110,7 +120,9 @@
     .custom-control-input:indeterminate ~ .custom-control-label {
         &::before {
             @include gradient-bg($custom-checkbox-indicator-indeterminate-bg);
-            @include box-shadow($custom-checkbox-indicator-indeterminate-box-shadow);
+            @include box-shadow(
+                $custom-checkbox-indicator-indeterminate-box-shadow
+            );
         }
         &::after {
             background-image: $custom-checkbox-indicator-icon-indeterminate;
@@ -162,13 +174,14 @@
     display: inline-block;
     width: 100%;
     height: $custom-select-height;
-    padding: $custom-select-padding-y ($custom-select-padding-x + $custom-select-indicator-padding)
+    padding: $custom-select-padding-y
+        ($custom-select-padding-x + $custom-select-indicator-padding)
         $custom-select-padding-y $custom-select-padding-x;
     line-height: $custom-select-line-height;
     color: $custom-select-color;
     vertical-align: middle;
-    background: $custom-select-bg $custom-select-indicator no-repeat right $custom-select-padding-x
-        center;
+    background: $custom-select-bg $custom-select-indicator no-repeat right
+        $custom-select-padding-x center;
     background-size: $custom-select-bg-size;
     border: $custom-select-border-width solid $custom-select-border-color;
     @if $enable-rounded {
@@ -183,7 +196,8 @@
         border-color: $custom-select-focus-border-color;
         outline: 0;
         @if $enable-shadows {
-            box-shadow: $custom-select-box-shadow, $custom-select-focus-box-shadow;
+            box-shadow: $custom-select-box-shadow,
+                $custom-select-focus-box-shadow;
         } @else {
             box-shadow: $custom-select-focus-box-shadow;
         }
@@ -300,7 +314,9 @@
         content: 'Browse';
         @include gradient-bg($custom-file-button-bg);
         border-left: $custom-file-border-width solid $custom-file-border-color;
-        @include border-radius(0 $custom-file-border-radius $custom-file-border-radius 0);
+        @include border-radius(
+            0 $custom-file-border-radius $custom-file-border-radius 0
+        );
     }
 }
 

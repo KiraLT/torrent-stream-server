@@ -115,7 +115,8 @@
 
             &:focus {
                 ~ .custom-control-label::before {
-                    box-shadow: 0 0 0 1px $body-bg, 0 0 0 $input-focus-width rgba($color, 0.25);
+                    box-shadow: 0 0 0 1px $body-bg,
+                        0 0 0 $input-focus-width rgba($color, 0.25);
                 }
             }
         }

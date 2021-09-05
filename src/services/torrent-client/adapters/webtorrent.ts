@@ -7,13 +7,13 @@ import { TorrentAdapter, TorrentAdapterTorrent, TorrentClientError } from '.'
 export class WebtorrentAdapter extends TorrentAdapter {
     protected client: WebTorrent.Instance
 
-    constructor(options?: {downloadLimit?: number, uploadLimit?: number}) {
+    constructor(options?: { downloadLimit?: number; uploadLimit?: number }) {
         super(options)
         this.client = new WebTorrent({
-            ...{
+            ...({
                 downloadLimit: options?.downloadLimit ?? -1,
-                uploadLimit: options?.uploadLimit ?? -1
-            } as any
+                uploadLimit: options?.uploadLimit ?? -1,
+            } as any),
         })
     }
 
@@ -38,7 +38,11 @@ export class WebtorrentAdapter extends TorrentAdapter {
                                 )
                             )
                         } else {
-                            reject(new TorrentClientError('Timeout while loading torrent'))
+                            reject(
+                                new TorrentClientError(
+                                    'Timeout while loading torrent'
+                                )
+                            )
                         }
                     }
                 )
@@ -58,7 +62,6 @@ export class WebtorrentAdapter extends TorrentAdapter {
                     reject(e)
                 }
             })
-
             torrent.on('metadata', () => {
                 torrent.deselect(0, torrent.pieces.length - 1, 0)
                 torrent.files.forEach((file) => {
@@ -86,7 +89,9 @@ export class WebtorrentAdapter extends TorrentAdapter {
         })
     }
 
-    protected createTorrentFromClient(torrent: WebTorrent.Torrent): TorrentAdapterTorrent {
+    protected createTorrentFromClient(
+        torrent: WebTorrent.Torrent
+    ): TorrentAdapterTorrent {
         return {
             name: torrent.name,
             files: torrent.files.map((file) => ({

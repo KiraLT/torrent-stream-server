@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import {
-    Container
-} from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { useAsync } from 'react-async-hook'
 
 import { TorrentsApi } from 'common/api'
@@ -18,17 +16,25 @@ export default withBearer(({ bearer }) => {
         const parsed = new URLSearchParams(location.search)
         return [
             parsed.get('torrent') || undefined,
-            parsed.get('file') || undefined
+            parsed.get('file') || undefined,
         ]
     }, [location.search])
 
     if (link) {
-        return <PlayPage link={link} file={file} bearer={bearer}/>
+        return <PlayPage link={link} file={file} bearer={bearer} />
     }
     return <></>
 })
 
-function PlayPage({link, file, bearer}: {link: string, file?: string; bearer?: string}) {
+function PlayPage({
+    link,
+    file,
+    bearer,
+}: {
+    link: string
+    file?: string
+    bearer?: string
+}) {
     const torrent = useAsync(async () => {
         return new TorrentsApi(getApiConfig({ bearer }))
             .createTorrent({
@@ -51,10 +57,17 @@ function PlayPage({link, file, bearer}: {link: string, file?: string; bearer?: s
     return (
         <Container className="mt-3">
             <ResultContainer result={torrent}>
-            {(result) => <>
-                {torrentFile && <TorrentViewWidget file={torrentFile} torrent={result} />}
-                <TorrentsListWidget torrent={result} />
-            </>}
+                {(result) => (
+                    <>
+                        {torrentFile && (
+                            <TorrentViewWidget
+                                file={torrentFile}
+                                torrent={result}
+                            />
+                        )}
+                        <TorrentsListWidget torrent={result} />
+                    </>
+                )}
             </ResultContainer>
         </Container>
     )

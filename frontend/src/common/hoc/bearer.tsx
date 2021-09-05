@@ -5,7 +5,9 @@ import { Container, Form, Col, Button, Alert } from 'react-bootstrap'
 import { AuthApi } from '../api'
 import { getApiConfig } from '../../config'
 
-export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>): ComponentType<T> {
+export function withBearer<T>(
+    Component: ComponentType<T & { bearer?: string }>
+): ComponentType<T> {
     return (props) => {
         const [bearerRequired, setBearerRequired] = useGlobal('bearerRequired')
         const [bearer, setBearer] = useGlobal('bearer')
@@ -64,7 +66,9 @@ export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>)
                 <Form
                     onSubmit={(event) => {
                         event.preventDefault()
-                        const value = new FormData(event.target as HTMLFormElement).get('key')
+                        const value = new FormData(
+                            event.target as HTMLFormElement
+                        ).get('key')
 
                         if (typeof value === 'string') {
                             new AuthApi(getApiConfig({ bearer: value }))
@@ -80,10 +84,18 @@ export function withBearer<T>(Component: ComponentType<T & { bearer?: string }>)
                 >
                     <Form.Row>
                         <Col>
-                            <Form.Control placeholder="Key" type="password" name="key" />
+                            <Form.Control
+                                placeholder="Key"
+                                type="password"
+                                name="key"
+                            />
                         </Col>
                         <Col>
-                            <Button type="submit" variant="primary" className="w-100">
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                className="w-100"
+                            >
                                 Authorize
                             </Button>
                         </Col>

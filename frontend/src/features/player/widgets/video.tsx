@@ -3,7 +3,6 @@ import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 import videojs from 'video.js'
 
-
 const chromecast = require('@silvermine/videojs-chromecast')
 chromecast(videojs)
 
@@ -62,8 +61,8 @@ export function VideoPlayerWidget({
             </div>
             {type === 'video/x-matroska' && (
                 <Alert variant="warning" className="mt-2">
-                    Browser does not support Matroska subtitles, it's recommended to use native
-                    player.
+                    Browser does not support Matroska subtitles, it's
+                    recommended to use native player.
                     <br />
                     {device.any ? (
                         <>
@@ -91,8 +90,9 @@ export function VideoPlayerWidget({
                             >
                                 VLC
                             </a>{' '}
-                            click Media {'>'} Open Network Stream and paste stream link (or download
-                            playlist below and open it with VLC).
+                            click Media {'>'} Open Network Stream and paste
+                            stream link (or download playlist below and open it
+                            with VLC).
                         </>
                     )}
                 </Alert>

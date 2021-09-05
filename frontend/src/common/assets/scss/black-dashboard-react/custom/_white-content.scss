@@ -30,7 +30,8 @@
     }
 
     .sidebar {
-        box-shadow: 0 2px 22px 0 rgba(0, 0, 0, 0.1), 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 22px 0 rgba(0, 0, 0, 0.1),
+            0 4px 20px 0 rgba(0, 0, 0, 0.15);
         p {
             color: $opacity-8;
         }
@@ -58,7 +59,8 @@
     }
 
     .btn:not([data-action]):hover {
-        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11),
+            0 1px 3px rgba(0, 0, 0, 0.08);
     }
 
     .btn-neutral.btn-link {
@@ -170,7 +172,8 @@
     }
 
     .btn-group .btn.active {
-        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11),
+            0 1px 3px rgba(0, 0, 0, 0.08);
     }
 
     .card:not(.card-white) {

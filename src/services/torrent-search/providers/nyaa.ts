@@ -1,6 +1,11 @@
 import { si } from 'nyaapi'
 
-import { Provider, ProviderSearchOptions, ProviderMeta, ProviderTorrent } from '.'
+import {
+    Provider,
+    ProviderSearchOptions,
+    ProviderMeta,
+    ProviderTorrent,
+} from '.'
 
 export class NyaaProvider extends Provider {
     providerName = 'Nyaa' as const
@@ -117,7 +122,10 @@ export class NyaaProvider extends Provider {
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
+    async search(
+        query: string,
+        options?: ProviderSearchOptions
+    ): Promise<ProviderTorrent[]> {
         const { category, limit } = options || {}
 
         const result = await si.search(query, limit, {

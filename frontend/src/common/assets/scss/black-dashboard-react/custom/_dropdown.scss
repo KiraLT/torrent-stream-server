@@ -191,23 +191,48 @@
     }
 
     &.dropdown-primary {
-        @include dropdown-colors(darken($primary, 3%), $opacity-8, $white, $opacity-2);
+        @include dropdown-colors(
+            darken($primary, 3%),
+            $opacity-8,
+            $white,
+            $opacity-2
+        );
     }
 
     &.dropdown-info {
-        @include dropdown-colors(darken($info, 3%), $opacity-8, $white, $opacity-2);
+        @include dropdown-colors(
+            darken($info, 3%),
+            $opacity-8,
+            $white,
+            $opacity-2
+        );
     }
 
     &.dropdown-danger {
-        @include dropdown-colors(darken($danger, 3%), $opacity-8, $white, $opacity-2);
+        @include dropdown-colors(
+            darken($danger, 3%),
+            $opacity-8,
+            $white,
+            $opacity-2
+        );
     }
 
     &.dropdown-success {
-        @include dropdown-colors(darken($success, 3%), $opacity-8, $white, $opacity-2);
+        @include dropdown-colors(
+            darken($success, 3%),
+            $opacity-8,
+            $white,
+            $opacity-2
+        );
     }
 
     &.dropdown-warning {
-        @include dropdown-colors(darken($warning, 3%), $opacity-8, $white, $opacity-2);
+        @include dropdown-colors(
+            darken($warning, 3%),
+            $opacity-8,
+            $white,
+            $opacity-2
+        );
     }
 
     .dropdown &,

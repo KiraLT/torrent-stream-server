@@ -107,7 +107,11 @@
 
     &.modal-black {
         .modal-content {
-            background: linear-gradient(to bottom, $black 0%, $black-states 100%);
+            background: linear-gradient(
+                to bottom,
+                $black 0%,
+                $black-states 100%
+            );
             color: rgba($white, 0.8);
             .modal-header {
                 .modal-title,

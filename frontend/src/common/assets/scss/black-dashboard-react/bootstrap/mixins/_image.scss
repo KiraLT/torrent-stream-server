@@ -27,7 +27,8 @@
     // There's no such thing as unprefixed min-device-pixel-ratio since it's nonstandard.
     // Compatibility info: https://caniuse.com/#feat=css-media-resolution
     // IE9-11 don't support dppx
-    @media only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+    @media only screen and (min-resolution: 192dpi),
+        only screen and (min-resolution: 2dppx) {
         // Standardized
         background-image: url($file-2x);
         background-size: $width-1x $height-1x;

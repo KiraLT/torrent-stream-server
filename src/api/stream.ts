@@ -7,10 +7,18 @@ import { Globals } from '../config'
 import { verifyJwtToken, getSteamUrl } from '../helpers'
 import { createRoute, Route, getRouteUrl } from '../helpers/openapi'
 
-export function getStreamRouter({ config }: Globals, client: TorrentClient): Route[] {
+export function getStreamRouter(
+    { config }: Globals,
+    client: TorrentClient
+): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
-    type Params = { torrent: string; file?: string; fileType?: string; fileIndex?: number }
+    type Params = {
+        torrent: string
+        file?: string
+        fileType?: string
+        fileIndex?: number
+    }
     const parseParams = (params: Params): Params => {
         if (encodeToken) {
             if (params.file || params.fileIndex || params.fileType) {
@@ -27,7 +35,10 @@ export function getStreamRouter({ config }: Globals, client: TorrentClient): Rou
             )
 
             if (!data) {
-                throw new HttpError(HttpStatusCodes.FORBIDDEN, 'Incorrect JWT encoding')
+                throw new HttpError(
+                    HttpStatusCodes.FORBIDDEN,
+                    'Incorrect JWT encoding'
+                )
             }
 
             return data
@@ -58,7 +69,8 @@ export function getStreamRouter({ config }: Globals, client: TorrentClient): Rou
             const parsedRange = req.headers.range
                 ? rangeParser(file.length, req.headers.range)
                 : undefined
-            const range = parsedRange instanceof Array ? parsedRange[0] : undefined
+            const range =
+                parsedRange instanceof Array ? parsedRange[0] : undefined
 
             if (range) {
                 res.statusCode = 206
@@ -82,7 +94,10 @@ export function getStreamRouter({ config }: Globals, client: TorrentClient): Rou
         createRoute('getStream2', async (req, res) => {
             const { torrent, ...query } = req.query
 
-            return res.redirect(getRouteUrl('getStream', { torrent }, query), 301)
+            return res.redirect(
+                getRouteUrl('getStream', { torrent }, query),
+                301
+            )
         }),
         createRoute('getPlaylist', async (req, res) => {
             const domain = req.protocol + '://' + req.get('host')
@@ -113,7 +128,10 @@ export function getStreamRouter({ config }: Globals, client: TorrentClient): Rou
         createRoute('getPlaylist2', async (req, res) => {
             const { torrent, ...query } = req.query
 
-            return res.redirect(getRouteUrl('getPlaylist', { torrent }, query), 301)
+            return res.redirect(
+                getRouteUrl('getPlaylist', { torrent }, query),
+                301
+            )
         }),
     ]
 }

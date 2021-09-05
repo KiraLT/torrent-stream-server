@@ -16,7 +16,9 @@ export function TopNavigation(): JSX.Element {
                 expand="lg"
                 variant={getTheme(theme) === 'dark' ? 'dark' : 'light'}
                 className={classnames({
-                    'bg-white': getTheme(theme) === 'light' || (window.innerWidth < 993 && open),
+                    'bg-white':
+                        getTheme(theme) === 'light' ||
+                        (window.innerWidth < 993 && open),
                     'border-bottom border-dark': getTheme(theme) === 'dark',
                 })}
             >
@@ -24,7 +26,9 @@ export function TopNavigation(): JSX.Element {
                     <div className="navbar-wrapper">
                         <Navbar.Brand as={Link} to="/">
                             Torrent Stream Server{' '}
-                            <small className="text-muted">v{packageVersion}</small>
+                            <small className="text-muted">
+                                v{packageVersion}
+                            </small>
                         </Navbar.Brand>
                     </div>
                     <button
@@ -48,16 +52,32 @@ export function TopNavigation(): JSX.Element {
                                     className="mr-3"
                                     checked={getTheme(theme) === 'dark'}
                                     onChange={() => {
-                                        setTheme(getTheme(theme) === 'dark' ? 'light' : 'dark')
+                                        setTheme(
+                                            getTheme(theme) === 'dark'
+                                                ? 'light'
+                                                : 'dark'
+                                        )
                                     }}
                                 />
-                                <Nav.Link as={Link} onClick={() => setOpen(false)} to="/">
+                                <Nav.Link
+                                    as={Link}
+                                    onClick={() => setOpen(false)}
+                                    to="/"
+                                >
                                     Home
                                 </Nav.Link>
-                                <Nav.Link as={Link} onClick={() => setOpen(false)} to="/browse">
+                                <Nav.Link
+                                    as={Link}
+                                    onClick={() => setOpen(false)}
+                                    to="/browse"
+                                >
                                     Browse
                                 </Nav.Link>
-                                <Nav.Link as={Link} onClick={() => setOpen(false)} to="/dashboard">
+                                <Nav.Link
+                                    as={Link}
+                                    onClick={() => setOpen(false)}
+                                    to="/dashboard"
+                                >
                                     Dashboard
                                 </Nav.Link>
                             </Nav>

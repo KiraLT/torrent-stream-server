@@ -253,12 +253,15 @@ export class ThepiratebayProvider extends Provider {
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
+    async search(
+        query: string,
+        options?: ProviderSearchOptions
+    ): Promise<ProviderTorrent[]> {
         const { category, limit } = options || {}
 
-        const url = `${this.domain}/q.php?q=${encodeURIComponent(query)}&cat=${encodeURIComponent(
-            category || ''
-        )}`
+        const url = `${this.domain}/q.php?q=${encodeURIComponent(
+            query
+        )}&cat=${encodeURIComponent(category || '')}`
 
         const result = await loadJson<ThepiratebayItem[]>(url)
 

@@ -39,7 +39,9 @@
     margin-bottom: $popover-arrow-height;
 
     .arrow {
-        bottom: calc((#{$popover-arrow-height} + #{$popover-border-width}) * -1);
+        bottom: calc(
+            (#{$popover-arrow-height} + #{$popover-border-width}) * -1
+        );
     }
 
     .arrow::before,
@@ -70,7 +72,8 @@
 
     .arrow::before,
     .arrow::after {
-        border-width: ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2) 0;
+        border-width: ($popover-arrow-width / 2) $popover-arrow-height
+            ($popover-arrow-width / 2) 0;
     }
 
     .arrow::before {
@@ -93,7 +96,8 @@
 
     .arrow::before,
     .arrow::after {
-        border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height ($popover-arrow-width / 2);
+        border-width: 0 ($popover-arrow-width / 2) $popover-arrow-height
+            ($popover-arrow-width / 2);
     }
 
     .arrow::before {
@@ -131,7 +135,8 @@
 
     .arrow::before,
     .arrow::after {
-        border-width: ($popover-arrow-width / 2) 0 ($popover-arrow-width / 2) $popover-arrow-height;
+        border-width: ($popover-arrow-width / 2) 0 ($popover-arrow-width / 2)
+            $popover-arrow-height;
     }
 
     .arrow::before {

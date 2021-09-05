@@ -8,7 +8,10 @@ export function exists(json: any, key: string) {
 }
 
 export function mapValues(data: any, fn: (item: any) => any) {
-    return Object.keys(data).reduce((acc, key) => ({ ...acc, [key]: fn(data[key]) }), {})
+    return Object.keys(data).reduce(
+        (acc, key) => ({ ...acc, [key]: fn(data[key]) }),
+        {}
+    )
 }
 
 export function signJwtToken(data: object | string, key: string): string {
@@ -30,7 +33,11 @@ export function verifyJwtToken<T extends object | string>(
     }
 }
 
-export function getSteamUrl(torrent: string, file: string, encodeToken?: string): string {
+export function getSteamUrl(
+    torrent: string,
+    file: string,
+    encodeToken?: string
+): string {
     if (encodeToken) {
         return getRouteUrl(
             'getStream',

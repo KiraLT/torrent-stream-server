@@ -19,14 +19,13 @@ export function getDefaultProviders(providerNames: string[]): Provider[] {
 }
 
 export function getDefaultProvider(providerName: string): Provider {
-    const provider = defaultProviders.find(p => p.providerName === providerName)
+    const provider = defaultProviders.find(
+        (p) => p.providerName === providerName
+    )
 
     if (provider) {
         return provider
     }
 
-    throw new TorrentsBrowserError(
-        `Unknown torrents provider: ${providerName}`
-    )
+    throw new TorrentsBrowserError(`Unknown torrents provider: ${providerName}`)
 }
-

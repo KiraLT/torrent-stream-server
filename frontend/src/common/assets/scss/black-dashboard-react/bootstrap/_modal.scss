@@ -111,7 +111,8 @@
     .close {
         padding: $modal-header-padding;
         // auto on the left force icon to the right even when there is no .modal-title
-        margin: (-$modal-header-padding) (-$modal-header-padding) (-$modal-header-padding) auto;
+        margin: (-$modal-header-padding) (-$modal-header-padding)
+            (-$modal-header-padding) auto;
     }
 }
 

@@ -30,9 +30,24 @@
         $end-color,
         $start-color
     );
-    background-image: -o-linear-gradient(to bottom left, $start-color, $end-color, $start-color);
-    background-image: -moz-linear-gradient(to bottom left, $start-color, $end-color, $start-color);
-    background-image: linear-gradient(to bottom left, $start-color, $end-color, $start-color);
+    background-image: -o-linear-gradient(
+        to bottom left,
+        $start-color,
+        $end-color,
+        $start-color
+    );
+    background-image: -moz-linear-gradient(
+        to bottom left,
+        $start-color,
+        $end-color,
+        $start-color
+    );
+    background-image: linear-gradient(
+        to bottom left,
+        $start-color,
+        $end-color,
+        $start-color
+    );
     background-size: 210% 210%;
     background-position: top right;
 }
@@ -71,7 +86,11 @@
 
 @mixin linear-gradient-right($color, $states-color) {
     background: $color;
-    background: -webkit-linear-gradient(to right, $color 0%, $states-color 100%);
+    background: -webkit-linear-gradient(
+        to right,
+        $color 0%,
+        $states-color 100%
+    );
     background: -o-linear-gradient(to right, $color 0%, $states-color 100%);
     background: -moz-linear-gradient(to right, $color 0%, $states-color 100%);
     background: linear-gradient(to right, $color 0%, $states-color 100%);

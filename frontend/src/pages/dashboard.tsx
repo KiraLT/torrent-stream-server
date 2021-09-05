@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-    Container,
-} from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 
 import { withBearer } from 'common/hoc'
 import { UsageWidget, ActiveTorrentsWidget } from 'features/dashboard'

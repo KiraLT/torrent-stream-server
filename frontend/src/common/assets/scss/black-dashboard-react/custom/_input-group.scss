@@ -8,7 +8,10 @@
     color: $success;
 }
 
-@include form-control-lg-padding($padding-lg-vertical, $padding-input-horizontal);
+@include form-control-lg-padding(
+    $padding-lg-vertical,
+    $padding-input-horizontal
+);
 @include input-base-padding($padding-input-vertical, $padding-input-horizontal);
 
 .form-group.no-border,
@@ -84,7 +87,10 @@
 
     & + .form-control,
     & ~ .form-control {
-        @include input-size($padding-base-vertical - 1, $padding-base-horizontal);
+        @include input-size(
+            $padding-base-vertical - 1,
+            $padding-base-horizontal
+        );
         padding-left: 18px;
     }
 

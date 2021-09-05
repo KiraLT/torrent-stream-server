@@ -6,7 +6,7 @@ import {
     search,
     defaultProviders,
     getDefaultProvider,
-    getDefaultProviders
+    getDefaultProviders,
 } from '../services/torrent-search'
 import { createRoute, Route } from '../helpers/openapi'
 
@@ -16,10 +16,16 @@ export function getBrowseRouter({}: Globals): Route[] {
             const { providers: providerNames, query, category } = req.query
 
             return resp.json(
-                await search(providerNames ? getDefaultProviders(providerNames) : defaultProviders, query, {
-                    category: category,
-                    limit: 50,
-                })
+                await search(
+                    providerNames
+                        ? getDefaultProviders(providerNames)
+                        : defaultProviders,
+                    query,
+                    {
+                        category: category,
+                        limit: 50,
+                    }
+                )
             )
         }),
         createRoute('getProviders', async (_req, resp) => {
@@ -28,10 +34,15 @@ export function getBrowseRouter({}: Globals): Route[] {
         createRoute('getMagnet', async (req, res) => {
             const { provider, torrentId } = req.params
 
-            const magnet = await getDefaultProvider(provider).getMagnet(torrentId)
+            const magnet = await getDefaultProvider(provider).getMagnet(
+                torrentId
+            )
 
             if (!magnet) {
-                throw new HttpError(HttpStatusCodes.NOT_FOUND, `Torrent ${torrentId} not found`)
+                throw new HttpError(
+                    HttpStatusCodes.NOT_FOUND,
+                    `Torrent ${torrentId} not found`
+                )
             }
 
             return res.json({

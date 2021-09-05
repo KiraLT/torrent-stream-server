@@ -1,3 +1,1 @@
-export class TorrentsBrowserError extends Error {
-
-}
+export class TorrentsBrowserError extends Error {}
