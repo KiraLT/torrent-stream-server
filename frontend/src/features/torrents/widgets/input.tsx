@@ -7,7 +7,7 @@ interface Inputs {
     torrent: string
 }
 
-export function StreamWidget() {
+export function InputWidget() {
     const {
         register,
         handleSubmit,

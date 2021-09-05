@@ -2,13 +2,13 @@ import React from 'react'
 import { Container } from 'react-bootstrap'
 
 import { HistoryWidget } from 'features/history'
-import { StreamWidget } from 'features/player'
+import { InputWidget } from 'features/torrents'
 import { withBearer } from 'common/hoc'
 
 export default withBearer((): JSX.Element => {
     return (
         <Container className="mt-3">
-            <StreamWidget />
+            <InputWidget />
             <HistoryWidget />
         </Container>
     )

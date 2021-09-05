@@ -1,69 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 import videojs from 'video.js'
 
-import { TorrentFileModel } from 'common/api'
 
 const chromecast = require('@silvermine/videojs-chromecast')
 chromecast(videojs)
 
-export function TorrentFileViewer({ file }: { file: TorrentFileModel }): JSX.Element {
-    if (file.type.includes('video') || file.type.includes('audio')) {
-        return <VideoPlayerComponent video={file.stream} type={file.type} />
-    }
-    if (file.type.includes('image')) {
-        return <ImageComponent image={file.stream} name={file.name} />
-    }
-    if (file.type.includes('text')) {
-        return <TextComponent text={file.stream} />
-    }
-    return (
-        <div>
-            <Alert variant="warning">
-                Unknown file type: {file.type}
-                <a href={file.stream} className="btn btn-outline-primary ti-cloud-down ml-5">
-                    Direct link
-                </a>
-            </Alert>
-        </div>
-    )
-}
-
-export function ImageComponent({ image, name }: { image: string; name: string }): JSX.Element {
-    return (
-        <div className="w-100 text-center">
-            <img src={image} alt={name} />
-        </div>
-    )
-}
-
-export function TextComponent({ text }: { text: string }): JSX.Element {
-    const [value, setValue] = useState<string>()
-
-    useEffect(() => {
-        fetch(text).then(async (v) => setValue(await v.text()))
-    })
-
-    return (
-        <div className="card card-body" style={{ maxHeight: '500px' }}>
-            {value === undefined && (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            )}
-            <pre>{value}</pre>
-        </div>
-    )
-}
-
-export function VideoPlayerComponent({
-    video,
+export function VideoPlayerWidget({
+    url,
     type,
 }: {
-    video: string
+    url: string
     type: string
 }): JSX.Element {
     const device = isMobile(window.navigator)
@@ -76,7 +24,7 @@ export function VideoPlayerComponent({
                 sources: [
                     {
                         type: type === 'video/x-matroska' ? 'video/mp4' : type,
-                        src: video,
+                        src: url,
                     },
                 ],
                 fluid: true,

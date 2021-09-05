@@ -46,24 +46,30 @@ export function getApiConfig(options?: { bearer?: string }): Configuration {
         basePath: apiDomain,
         accessToken: bearer,
         fetchApi: async (input, init) => {
-            return fetch(input, init).catch(err => {
-                if (err instanceof Error && err.message === 'Failed to fetch') {
-                    throw new Error(
-                        'Failed to fetch response, maybe your are offline?'
-                    )
-                }
-                throw new Error('Unknown server error')
-            }).then(async response => {
-                if (!response.ok) {
-                    throw new Error(
-                        await tryCatch(
-                            async () => response.json().then((v) => v.error),
-                            `Server returned error: ${response.statusText}`
+            return fetch(input, init)
+                .catch((err) => {
+                    if (
+                        err instanceof Error &&
+                        err.message === 'Failed to fetch'
+                    ) {
+                        throw new Error(
+                            'Failed to fetch response, maybe your are offline?'
                         )
-                    )
-                }
-                return response
-            })
+                    }
+                    throw new Error('Unknown server error')
+                })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        throw new Error(
+                            await tryCatch(
+                                async () =>
+                                    response.json().then((v) => v.error),
+                                `Server returned error: ${response.statusText}`
+                            )
+                        )
+                    }
+                    return response
+                })
         },
     })
 }
