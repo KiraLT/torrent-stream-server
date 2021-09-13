@@ -1,10 +1,6 @@
 import React from 'react'
 import { useGlobal } from 'reactn'
-import {
-    Card,
-    CardDeck,
-    ProgressBar,
-} from 'react-bootstrap'
+import { Card, CardDeck, ProgressBar } from 'react-bootstrap'
 import { formatBytes } from 'common-stuff'
 
 import { DashboardApi } from 'common/api'
@@ -21,7 +17,7 @@ export function UsageWidget(): JSX.Element {
         },
         [],
         {
-            refreshInterval: 60 * 1000
+            refreshInterval: 60 * 1000,
         }
     )
 
@@ -32,7 +28,8 @@ export function UsageWidget(): JSX.Element {
                     <Card>
                         <Card.Header>
                             <Card.Title as="h4">
-                                <i className="ti-stats-down text-info" /> Disk space
+                                <i className="ti-stats-down text-info" /> Disk
+                                space
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -49,14 +46,17 @@ export function UsageWidget(): JSX.Element {
                                 variant="info"
                                 min={0}
                                 max={result.totalDiskSpace}
-                                now={result.totalDiskSpace - result.freeDiskSpace}
+                                now={
+                                    result.totalDiskSpace - result.freeDiskSpace
+                                }
                             />
                         </Card.Body>
                     </Card>
                     <Card>
                         <Card.Header>
                             <Card.Title as="h4">
-                                <i className="ti-stats-down text-warning" /> Torrents space
+                                <i className="ti-stats-down text-warning" />{' '}
+                                Torrents space
                             </Card.Title>
                         </Card.Header>
                         <Card.Body>
@@ -65,14 +65,18 @@ export function UsageWidget(): JSX.Element {
                                 <small className="text-muted">
                                     {' / '}
                                     {formatBytes(
-                                        result.freeDiskSpace + result.usedTorrentSpace
+                                        result.freeDiskSpace +
+                                            result.usedTorrentSpace
                                     )}
                                 </small>
                             </Card.Title>
                             <ProgressBar
                                 variant="info"
                                 min={0}
-                                max={result.freeDiskSpace + result.usedTorrentSpace}
+                                max={
+                                    result.freeDiskSpace +
+                                    result.usedTorrentSpace
+                                }
                                 now={result.usedTorrentSpace}
                             />
                         </Card.Body>

@@ -1,6 +1,7 @@
 import { CommandModule } from 'yargs'
+import { ensureError } from 'common-stuff'
 
-import { setup } from '../app'
+import { createAndRunApp } from '../app'
 
 export interface ServeArgs {
     config: string
@@ -16,13 +17,13 @@ export const serveCommand: CommandModule<{}, ServeArgs> = {
             desc: 'path to JSON config',
         },
     },
-    async handler({ config }) {
+    handler({ config }) {
         try {
-            await setup({
+            createAndRunApp({
                 configFile: config,
             })
         } catch (err) {
-            console.error(String(err))
+            console.error(ensureError(err).message)
             process.exit(1)
         }
     },

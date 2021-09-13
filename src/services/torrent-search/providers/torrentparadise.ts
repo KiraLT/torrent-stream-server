@@ -1,6 +1,11 @@
 import { formatBytes } from 'common-stuff'
 
-import { Provider, ProviderSearchOptions, ProviderMeta, ProviderTorrent } from '.'
+import {
+    Provider,
+    ProviderSearchOptions,
+    ProviderMeta,
+    ProviderTorrent,
+} from '.'
 import { formatMagnet, loadJson } from '../helpers'
 
 export interface TorrentParadiseItem {
@@ -23,7 +28,10 @@ export class TorrentParadiseProvider extends Provider {
         }
     }
 
-    async search(query: string, options?: ProviderSearchOptions): Promise<ProviderTorrent[]> {
+    async search(
+        query: string,
+        options?: ProviderSearchOptions
+    ): Promise<ProviderTorrent[]> {
         const {} = options || {}
 
         const url = `${this.domain}/api/search?q=${encodeURIComponent(query)}`

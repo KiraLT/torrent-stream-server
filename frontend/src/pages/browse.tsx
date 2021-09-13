@@ -41,27 +41,32 @@ export default withBearer(({ bearer }) => {
             return
         }
 
-        return new BrowseApi(getApiConfig({ bearer }))
-            .searchTorrents({
-                query,
-                category,
-                ...(providers.length ? {providers} : {})
-            })
+        return new BrowseApi(getApiConfig({ bearer })).searchTorrents({
+            query,
+            category,
+            ...(providers.length ? { providers } : {}),
+        })
     }, [providers, query, category, bearer])
 
-    const categories = providers.length === 1
-        ? allProviders.result?.items?.find((v) => providers.includes(v.provider))?.categories ?? []
-        : []
+    const categories =
+        providers.length === 1
+            ? allProviders.result?.items?.find((v) =>
+                  providers.includes(v.provider)
+              )?.categories ?? []
+            : []
 
     return (
         <Container className="mt-3">
             <Form
                 onSubmit={(event) => {
                     event.preventDefault()
-                    const formQuery = new FormData(event.target as HTMLFormElement).get('query')
+                    const formQuery = new FormData(
+                        event.target as HTMLFormElement
+                    ).get('query')
                     handler({
                         set: {
-                            query: typeof formQuery === 'string' ? formQuery : '',
+                            query:
+                                typeof formQuery === 'string' ? formQuery : '',
                         },
                     })
                 }}
@@ -72,9 +77,13 @@ export default withBearer(({ bearer }) => {
                             <Col className="pl-1 pr-1">
                                 <ProvidersSelect
                                     selected={providers}
-                                    options={allProviders.result?.items?.map(v => v.provider) ?? []}
+                                    options={
+                                        allProviders.result?.items?.map(
+                                            (v) => v.provider
+                                        ) ?? []
+                                    }
                                     loading={allProviders.loading}
-                                    onChange={v => {
+                                    onChange={(v) => {
                                         handler({
                                             set: {
                                                 provider: v.join(','),
@@ -92,10 +101,13 @@ export default withBearer(({ bearer }) => {
                                         handler({
                                             set: {
                                                 category: event.target.value,
-                                            }
+                                            },
                                         })
                                     }}
-                                    disabled={allProviders.loading || searchResults.loading}
+                                    disabled={
+                                        allProviders.loading ||
+                                        searchResults.loading
+                                    }
                                 >
                                     <option value="">All categories</option>
                                     {categories.map((v, vi) => (
@@ -103,17 +115,26 @@ export default withBearer(({ bearer }) => {
                                             {v.subcategories.length > 0 ? (
                                                 <>
                                                     <optgroup label={v.name}>
-                                                        <option value={v.id}>All {v.name}</option>
-                                                        {v.subcategories.map((s, si) => (
-                                                            <option value={s.id} key={si}>
-                                                                {s.name}
-                                                            </option>
-                                                        ))}
+                                                        <option value={v.id}>
+                                                            All {v.name}
+                                                        </option>
+                                                        {v.subcategories.map(
+                                                            (s, si) => (
+                                                                <option
+                                                                    value={s.id}
+                                                                    key={si}
+                                                                >
+                                                                    {s.name}
+                                                                </option>
+                                                            )
+                                                        )}
                                                     </optgroup>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <option value={v.id}>{v.name}</option>
+                                                    <option value={v.id}>
+                                                        {v.name}
+                                                    </option>
                                                 </>
                                             )}
                                         </Fragment>
@@ -125,7 +146,10 @@ export default withBearer(({ bearer }) => {
                     <Col sm className="pl-1 pr-1 mt-2">
                         <InputGroup>
                             <FormControl
-                                disabled={allProviders.loading || searchResults.loading}
+                                disabled={
+                                    allProviders.loading ||
+                                    searchResults.loading
+                                }
                                 defaultValue={query}
                                 type="search"
                                 placeholder="Search..."
@@ -133,7 +157,10 @@ export default withBearer(({ bearer }) => {
                             />
                             <InputGroup.Append className="border-0">
                                 <Button
-                                    disabled={allProviders.loading || searchResults.loading}
+                                    disabled={
+                                        allProviders.loading ||
+                                        searchResults.loading
+                                    }
                                     variant="outline-primary"
                                     type="submit"
                                     className="ti-search btn-simple m-0"
@@ -143,9 +170,17 @@ export default withBearer(({ bearer }) => {
                     </Col>
                 </Row>
             </Form>
-            {searchResults.error && <ErrorMessage error={searchResults.error} retry={searchResults.execute} />}
+            {searchResults.error && (
+                <ErrorMessage
+                    error={searchResults.error}
+                    retry={searchResults.execute}
+                />
+            )}
             {allProviders.error && (
-                <ErrorMessage error={allProviders.error} retry={allProviders.execute} />
+                <ErrorMessage
+                    error={allProviders.error}
+                    retry={allProviders.execute}
+                />
             )}
             {searchResults.loading && <Loader />}
 
@@ -157,35 +192,31 @@ export default withBearer(({ bearer }) => {
             {searchResults.result && (
                 <SearchResults
                     torrents={searchResults.result.items}
-                    onCategorySelect={v => {
+                    onCategorySelect={(v) => {
                         handler({
                             set: {
                                 category: v,
                             },
                         })
                     }}
-                    onProviderSelect={v => {
+                    onProviderSelect={(v) => {
                         handler({
                             set: {
                                 provider: v,
                             },
                         })
                     }}
-                    onMagnetRequest={async v => {
-                        const { magnet } =
-                            await new BrowseApi(
-                                getApiConfig({
-                                    bearer,
-                                })
-                            ).getMagnet({
-                                provider: v.provider,
-                                torrentId:
-                                    v.id,
+                    onMagnetRequest={async (v) => {
+                        const { magnet } = await new BrowseApi(
+                            getApiConfig({
+                                bearer,
                             })
+                        ).getMagnet({
+                            provider: v.provider,
+                            torrentId: v.id,
+                        })
                         history.push(
-                            `/play?torrent=${encodeURIComponent(
-                                magnet
-                            )}`
+                            `/play?torrent=${encodeURIComponent(magnet)}`
                         )
                     }}
                 />
@@ -195,88 +226,105 @@ export default withBearer(({ bearer }) => {
 })
 
 function ProvidersSelect({
-    selected, options, loading, onChange
+    selected,
+    options,
+    loading,
+    onChange,
 }: {
-    selected: string[],
+    selected: string[]
     options: string[]
     loading: boolean
     onChange: (values: string[]) => void
 }) {
     const [theme] = useGlobal('theme')
 
-    return <Select
-        value={selected.length ? selected.map(v => ({
-            label: v,
-            value: v
-        })) : {
-            label: 'All providers',
-            value: '*'
-        }}
-        options={[
-            ...sortBy(options).map(v => ({
-                label: v,
-                value: v
-            }))
-        ]}
-        isMulti
-        isLoading={loading}
-        onChange={(options) => {
-            onChange(options.map(v => v.value).filter(v => v !== '*'))
-        }}
-        styles={{
-            multiValue(base, state) {
-                return {
-                    ...base,
-                    ...(state.data.value === '*' ? {
-                        backgroundColor: 'grey'
-                    } as const : {})
-                }
-            },
-            multiValueLabel(base, state) {
-                return {
-                    ...base,
-                    ...(state.data.value === '*' ? {
-                        fontWeight: 'bold',
-                        color: 'white',
-                        paddingRight: 6
-                    } as const : {})
-                }
-            },
-            multiValueRemove(base, state) {
-                return {
-                    ...base,
-                    ...(state.data.value === '*' ? {
-                        display: 'none'
-                    } as const : {})
-                }
+    return (
+        <Select
+            value={
+                selected.length
+                    ? selected.map((v) => ({
+                          label: v,
+                          value: v,
+                      }))
+                    : {
+                          label: 'All providers',
+                          value: '*',
+                      }
             }
-        }}
-        theme={(v) => ({
-            ...v,
-            colors: getTheme(theme) === 'dark' ? {
-                ...v.colors,
-                neutral0: '#1e1e25',
-                primary25: '#27293d'
-            } : {
-                ...v.colors,
-                primary: '#e14eca',
-            }
-        })}
-    />
+            options={[
+                ...sortBy(options).map((v) => ({
+                    label: v,
+                    value: v,
+                })),
+            ]}
+            isMulti
+            isLoading={loading}
+            onChange={(options) => {
+                onChange(options.map((v) => v.value).filter((v) => v !== '*'))
+            }}
+            styles={{
+                multiValue(base, state) {
+                    return {
+                        ...base,
+                        ...(state.data.value === '*'
+                            ? ({
+                                  backgroundColor: 'grey',
+                              } as const)
+                            : {}),
+                    }
+                },
+                multiValueLabel(base, state) {
+                    return {
+                        ...base,
+                        ...(state.data.value === '*'
+                            ? ({
+                                  fontWeight: 'bold',
+                                  color: 'white',
+                                  paddingRight: 6,
+                              } as const)
+                            : {}),
+                    }
+                },
+                multiValueRemove(base, state) {
+                    return {
+                        ...base,
+                        ...(state.data.value === '*'
+                            ? ({
+                                  display: 'none',
+                              } as const)
+                            : {}),
+                    }
+                },
+            }}
+            theme={(v) => ({
+                ...v,
+                colors:
+                    getTheme(theme) === 'dark'
+                        ? {
+                              ...v.colors,
+                              neutral0: '#1e1e25',
+                              primary25: '#27293d',
+                          }
+                        : {
+                              ...v.colors,
+                              primary: '#e14eca',
+                          },
+            })}
+        />
+    )
 }
 
 function SearchResults({
     torrents,
     onCategorySelect,
     onProviderSelect,
-    onMagnetRequest
+    onMagnetRequest,
 }: {
     torrents: ProviderTorrentModel[]
     onCategorySelect: (category: string) => void
     onProviderSelect: (provider: string) => void
     onMagnetRequest: (torrent: ProviderTorrentModel) => Promise<void>
 }): JSX.Element {
-
     if (!torrents.length) {
         return <></>
     }
@@ -286,11 +334,18 @@ function SearchResults({
             <Card.Body>
                 <ListGroup variant="flush">
                     {torrents.map((torrent, ti) => (
-                        <ListGroup.Item key={ti} className="bg-transparent border-dark">
+                        <ListGroup.Item
+                            key={ti}
+                            className="bg-transparent border-dark"
+                        >
                             <Row>
                                 <Col xs className="d-flex mb-2">
                                     <span className="justify-content-center align-self-center text-break">
-                                        <SearchResultsTitle torrent={torrent} onCategorySelect={onCategorySelect} onProviderSelect={onProviderSelect}/>
+                                        <SearchResultsTitle
+                                            torrent={torrent}
+                                            onCategorySelect={onCategorySelect}
+                                            onProviderSelect={onProviderSelect}
+                                        />
                                     </span>
                                 </Col>
                                 <Col lg={5} className="d-flex mb-2">
@@ -303,7 +358,9 @@ function SearchResults({
                                         <Col className="d-flex pr-1 pl-2">
                                             <span className="justify-content-center align-self-center">
                                                 {!!torrent.time &&
-                                                    formatDate(new Date(torrent.time))}
+                                                    formatDate(
+                                                        new Date(torrent.time)
+                                                    )}
                                             </span>
                                         </Col>
                                         <Col className="d-flex pr-2 pl-2">
@@ -328,7 +385,10 @@ function SearchResults({
                                                 )}
                                             </span>
                                         </Col>
-                                        <Col className="d-flex pr-2 pl-2" xs="auto">
+                                        <Col
+                                            className="d-flex pr-2 pl-2"
+                                            xs="auto"
+                                        >
                                             <span className="justify-content-center align-self-center ml-auto">
                                                 {torrent.magnet ? (
                                                     <Button
@@ -344,7 +404,9 @@ function SearchResults({
                                                         variant="success"
                                                         className="pr-4 pl-4"
                                                         onClick={async () => {
-                                                            await onMagnetRequest(torrent)
+                                                            await onMagnetRequest(
+                                                                torrent
+                                                            )
                                                         }}
                                                     >
                                                         <i className="ti-control-play"></i>
@@ -364,61 +426,58 @@ function SearchResults({
 }
 
 function SearchResultsTitle({
-    onCategorySelect, torrent, onProviderSelect
+    onCategorySelect,
+    torrent,
+    onProviderSelect,
 }: {
     torrent: ProviderTorrentModel
     onCategorySelect: (category: string) => void
     onProviderSelect: (provider: string) => void
 }) {
-    return <>
-        {torrent.link ? (
-            <a
-                href={torrent.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-break"
-            >
-                {torrent.name}
-            </a>
-        ) : (
-            torrent.name
-        )}{' '}
-        <Badge
-            variant="primary"
-            pill={true}
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-                onProviderSelect(torrent.provider)
-            }}
-        >
-            {torrent.provider}
-        </Badge>
-        {torrent.category && (
+    return (
+        <>
+            {torrent.link ? (
+                <a
+                    href={torrent.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-break"
+                >
+                    {torrent.name}
+                </a>
+            ) : (
+                torrent.name
+            )}{' '}
             <Badge
-                variant="info"
+                variant="primary"
                 pill={true}
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                    if (torrent.category) {
-                        onCategorySelect(torrent.category.id)
-                    }
-                        
+                    onProviderSelect(torrent.provider)
                 }}
             >
-                {torrent.category.name}
+                {torrent.provider}
             </Badge>
-        )}{' '}
-        {torrent.isVip && (
-            <i className="ti-crown text-warning"></i>
-        )}{' '}
-        {!!torrent.comments && (
-            <Badge
-                className="text-secondary"
-                variant="light"
-            >
-                <i className="ti-comments"></i>{' '}
-                {torrent.comments}
-            </Badge>
-        )}
-    </>
+            {torrent.category && (
+                <Badge
+                    variant="info"
+                    pill={true}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                        if (torrent.category) {
+                            onCategorySelect(torrent.category.id)
+                        }
+                    }}
+                >
+                    {torrent.category.name}
+                </Badge>
+            )}{' '}
+            {torrent.isVip && <i className="ti-crown text-warning"></i>}{' '}
+            {!!torrent.comments && (
+                <Badge className="text-secondary" variant="light">
+                    <i className="ti-comments"></i> {torrent.comments}
+                </Badge>
+            )}
+        </>
+    )
 }

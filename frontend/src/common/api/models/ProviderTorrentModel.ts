@@ -18,7 +18,7 @@ import {
     ProviderCategoryModelSubcategoriesFromJSON,
     ProviderCategoryModelSubcategoriesFromJSONTyped,
     ProviderCategoryModelSubcategoriesToJSON,
-} from '.'
+} from './'
 
 /**
  *

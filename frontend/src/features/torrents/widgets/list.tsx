@@ -6,7 +6,7 @@ import {
     ListGroup,
     OverlayTrigger,
     Tooltip,
-    Button
+    Button,
 } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { formatBytes, sortBy } from 'common-stuff'
@@ -14,7 +14,11 @@ import { formatBytes, sortBy } from 'common-stuff'
 import { TorrentModel, TorrentFileModel } from 'common/api'
 import { formatFileName, getIconByType } from '../utils'
 
-export function TorrentsListWidget({ torrent }: { torrent: TorrentModel }): JSX.Element {
+export function TorrentsListWidget({
+    torrent,
+}: {
+    torrent: TorrentModel
+}): JSX.Element {
     return (
         <>
             <Card>
@@ -22,7 +26,9 @@ export function TorrentsListWidget({ torrent }: { torrent: TorrentModel }): JSX.
                     <Row className="mb-2">
                         <Col sm className="d-flex">
                             <span className="justify-content-center align-self-center">
-                                <h5 className="text-break card-category">{torrent.name}</h5>
+                                <h5 className="text-break card-category">
+                                    {torrent.name}
+                                </h5>
                                 <Card.Title as="h3" className="text-break">
                                     <i className="text-info ti-files" /> Files
                                 </Card.Title>
@@ -32,8 +38,26 @@ export function TorrentsListWidget({ torrent }: { torrent: TorrentModel }): JSX.
                             <OverlayTrigger
                                 overlay={
                                     <Tooltip id={`video-playlist-tooltip`}>
-                                        Download M3U playlist which can be opened with most Media
-                                        Players
+                                        Download all files as zip
+                                    </Tooltip>
+                                }
+                            >
+                                <Button
+                                    as={'a'}
+                                    href={torrent.streamZip}
+                                    className="w-100 justify-content-center align-self-center btn-simple"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    variant="success"
+                                >
+                                    <i className="ti-zip"></i> Download
+                                </Button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                overlay={
+                                    <Tooltip id={`video-playlist-tooltip`}>
+                                        Download M3U playlist which can be
+                                        opened with most Media Players
                                     </Tooltip>
                                 }
                             >
@@ -53,11 +77,19 @@ export function TorrentsListWidget({ torrent }: { torrent: TorrentModel }): JSX.
                 </Card.Header>
                 <Card.Body>
                     <ListGroup variant="flush">
-                        {sortBy(torrent.files, (v) => v.path.split('/')).map((v) => (
-                            <ListGroup.Item className="bg-transparent border-dark" key={v.path}>
-                                <TorrentsListItemWidget file={v} torrent={torrent} />
-                            </ListGroup.Item>
-                        ))}
+                        {sortBy(torrent.files, (v) => v.path.split('/')).map(
+                            (v) => (
+                                <ListGroup.Item
+                                    className="bg-transparent border-dark"
+                                    key={v.path}
+                                >
+                                    <TorrentsListItemWidget
+                                        file={v}
+                                        torrent={torrent}
+                                    />
+                                </ListGroup.Item>
+                            )
+                        )}
                     </ListGroup>
                 </Card.Body>
             </Card>
@@ -81,12 +113,16 @@ export function TorrentsListItemWidget({
                             .split('/')
                             .map((part, index, arr) =>
                                 index + 1 < arr.length ? (
-                                    <span className="text-muted">{part} / </span>
+                                    <span className="text-muted">
+                                        {part} /{' '}
+                                    </span>
                                 ) : (
                                     part
                                 )
                             )}{' '}
-                        <i className={`${getIconByType(file.type)} text-info`} />
+                        <i
+                            className={`${getIconByType(file.type)} text-info`}
+                        />
                     </span>
                 </Col>
                 <Col sm={'auto'}>
@@ -102,7 +138,9 @@ export function TorrentsListItemWidget({
                         <Col xs={6} className="d-flex text-right">
                             <OverlayTrigger
                                 overlay={
-                                    <Tooltip id={`play-tooltip-${file.path}`}>Play file</Tooltip>
+                                    <Tooltip id={`play-tooltip-${file.path}`}>
+                                        Play file
+                                    </Tooltip>
                                 }
                             >
                                 <Button

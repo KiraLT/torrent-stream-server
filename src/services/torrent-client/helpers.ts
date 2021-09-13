@@ -1,5 +1,5 @@
-import fetch from 'node-fetch'
 import { extname } from 'path'
+import { get } from 'superagent'
 
 export const mirrors = [
     'https://ngosang.github.io/trackerslist/trackers_all.txt',
@@ -13,12 +13,10 @@ export const mirrors = [
 export async function downloadTrackers(): Promise<string[]> {
     for (const mirror of mirrors) {
         try {
-            return fetch(mirror, {
-                timeout: 3000,
-            })
-                .then((v) => v.text())
+            return get(mirror)
+                .timeout(3000)
                 .then((v) =>
-                    v
+                    v.text
                         .split('\n')
                         .map((v) => v.trim())
                         .filter((v) => !!v)
@@ -50,10 +48,9 @@ export interface FindFileOptions {
  * @param files
  * @param options
  */
-export function filterFiles<T extends { type: string; name: string; path: string; length: number }>(
-    files: T[],
-    options: FindFileOptions
-): T[] {
+export function filterFiles<
+    T extends { type: string; name: string; path: string; length: number }
+>(files: T[], options: FindFileOptions): T[] {
     const filteredFiles = files.filter(
         (f, i) =>
             (options.fileIndex === undefined || options.fileIndex == i + 1) &&
@@ -67,7 +64,11 @@ export function filterFiles<T extends { type: string; name: string; path: string
                     .includes(options.fileType.toLowerCase().replace('.', '')))
     )
 
-    const file = filteredFiles.find((f) => options.file && f.path === options.file)
+    const file = filteredFiles.find(
+        (f) => options.file && f.path === options.file
+    )
 
-    return file ? [file] : [...filteredFiles].sort((a, b) => b.length - a.length)
+    return file
+        ? [file]
+        : [...filteredFiles].sort((a, b) => b.length - a.length)
 }

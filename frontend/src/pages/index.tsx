@@ -23,7 +23,11 @@ export function Pages(): JSX.Element {
                         <Route path="/" component={HomePage} exact />
                         <Route path="/play" component={PlayPage} exact />
                         <Route path="/browse" component={BrowsePage} exact />
-                        <Route path="/dashboard" component={DashboardPage} exact />
+                        <Route
+                            path="/dashboard"
+                            component={DashboardPage}
+                            exact
+                        />
                     </Switch>
                 </div>
                 <footer className="footer">

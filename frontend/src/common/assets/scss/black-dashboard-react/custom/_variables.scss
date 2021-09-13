@@ -368,7 +368,8 @@ $box-shadow-lg: 0 1rem 3rem rgba($black, 0.175);
 $dropdown-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.125);
 $box-shadow-raised: 0px 10px 25px 0px rgba(0, 0, 0, 0.3);
 $box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
-$sidebar-box-shadow: 0px 2px 22px 0 rgba(0, 0, 0, 0.2), 0px 2px 30px 0 rgba(0, 0, 0, 0.35);
+$sidebar-box-shadow: 0px 2px 22px 0 rgba(0, 0, 0, 0.2),
+    0px 2px 30px 0 rgba(0, 0, 0, 0.35);
 
 $component-active-color: $white !default;
 $component-active-bg: theme-color('primary') !default;
@@ -564,7 +565,8 @@ $btn-font-weight: 600 !default;
 $btn-text-transform: uppercase !default;
 $btn-letter-spacing: 0.025em !default;
 $btn-box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-$btn-hover-box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+$btn-hover-box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1),
+    0 3px 6px rgba(0, 0, 0, 0.08);
 $btn-focus-box-shadow: $btn-hover-box-shadow !default;
 $btn-focus-width: $input-btn-focus-width !default;
 
@@ -595,8 +597,10 @@ $input-disabled-bg: $gray-200 !default;
 
 $input-muted-bg: #edf0f5 !default;
 
-$input-alternative-box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
-$input-focus-alternative-box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+$input-alternative-box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15),
+    0 1px 0 rgba(0, 0, 0, 0.02);
+$input-focus-alternative-box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11),
+    0 1px 3px rgba(0, 0, 0, 0.08);
 
 $input-color: $opacity-8 !default;
 $input-border-color: #cad1d7 !default;
@@ -613,7 +617,8 @@ $input-placeholder-color: $gray-500 !default;
 $input-focus-placeholder-color: $gray-500 !default;
 
 $input-height-border: $input-border-width * 2 !default;
-$input-height-inner: ($font-size-base * $input-btn-line-height) + ($input-btn-padding-y * 2) !default;
+$input-height-inner: ($font-size-base * $input-btn-line-height) +
+    ($input-btn-padding-y * 2) !default;
 $input-height: calc(#{$input-height-inner} + #{$input-height-border}) !default;
 
 $input-transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -654,7 +659,10 @@ $custom-control-indicator-checked-color: $component-active-color !default;
 $custom-control-indicator-checked-bg: $component-active-bg !default;
 $custom-control-indicator-checked-border-color: $component-active-border-color !default;
 $custom-control-indicator-checked-box-shadow: $custom-control-indicator-box-shadow !default;
-$custom-control-indicator-checked-disabled-bg: rgba(theme-color('primary'), 0.5);
+$custom-control-indicator-checked-disabled-bg: rgba(
+    theme-color('primary'),
+    0.5
+);
 
 $custom-control-indicator-disabled-bg: $gray-200 !default;
 $custom-control-label-disabled-color: $gray-600 !default;
@@ -703,8 +711,8 @@ $dropdown-bg: $white !default;
 $dropdown-border-width: 0 !default;
 $dropdown-border-color: rgba($black, 0.15);
 $dropdown-border-radius: $border-radius-xs !default;
-$dropdown-box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1), 0 15px 35px rgba(50, 50, 93, 0.15),
-    0 5px 15px rgba(0, 0, 0, 0.1);
+$dropdown-box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1),
+    0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
 
 $dropdown-link-active-color: $component-active-color !default;
 $dropdown-link-active-bg: $component-active-bg !default;
@@ -934,7 +942,8 @@ $modal-content-border-color: rgba($black, 0.2);
 $modal-content-border-width: 1px !default;
 $modal-content-border-radius: $border-radius-sm !default;
 $modal-content-box-shadow-xs: 0px 10px 50px 0px rgba(0, 0, 0, 0.5);
-$modal-content-box-shadow-sm-up: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+$modal-content-box-shadow-sm-up: 0 15px 35px rgba(50, 50, 93, 0.2),
+    0 5px 15px rgba(0, 0, 0, 0.17);
 
 $modal-backdrop-bg: $black !default;
 $modal-backdrop-opacity: 0.16 !default;
@@ -973,7 +982,10 @@ $datepicker-active-background: theme-color('primary') !default;
 $datepicker-active-box-shadow: none !default;
 
 $datepicker-range-background: theme-color('primary') !default;
-$datepicker-range-cell-focused-background: darken($datepicker-range-background, 5%);
+$datepicker-range-cell-focused-background: darken(
+    $datepicker-range-background,
+    5%
+);
 $datepicker-range-color: $white !default;
 $datepicker-range-highlighted-bg: $gray-200 !default;
 

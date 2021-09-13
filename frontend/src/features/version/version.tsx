@@ -6,24 +6,31 @@ import { getLatestVersion } from './utils'
 import { packageName, packageVersion, releasesPage } from 'config'
 
 export function VersionAlert(): JSX.Element {
-    const [latestVersionAlert, setLatestVersionAlert] = useGlobal('latestVersionAlert')
+    const [latestVersionAlert, setLatestVersionAlert] =
+        useGlobal('latestVersionAlert')
 
     useEffect(() => {
         getLatestVersion(packageName)
             .then((version) => {
-                if (latestVersionAlert !== version && packageVersion !== version) {
+                if (
+                    latestVersionAlert !== version &&
+                    packageVersion !== version
+                ) {
                     setLatestVersionAlert(version)
 
-                    toast(`A new ${version} version is available, update now!`, {
-                        autoClose: false,
-                        type: 'info',
-                        onClick: () => {
-                            window.open(releasesPage)
-                        },
-                    })
+                    toast(
+                        `A new ${version} version is available, update now!`,
+                        {
+                            autoClose: false,
+                            type: 'info',
+                            onClick: () => {
+                                window.open(releasesPage)
+                            },
+                        }
+                    )
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err)
             })
     }, [latestVersionAlert, setLatestVersionAlert])

@@ -19,7 +19,10 @@ export function HistoryWidget(): JSX.Element {
                     <Card.Body>
                         <ListGroup variant="flush">
                             {historyItems.map((item, i) => (
-                                <ListGroup.Item key={i} className="bg-transparent border-dark">
+                                <ListGroup.Item
+                                    key={i}
+                                    className="bg-transparent border-dark"
+                                >
                                     <Row>
                                         <Col xs className="d-flex mb-2">
                                             <span className="justify-content-center align-self-center text-break">
@@ -41,7 +44,9 @@ export function HistoryWidget(): JSX.Element {
                                                     variant="warning"
                                                     onClick={() => {
                                                         removeHistoryItem(item)
-                                                        setHistoryItems(getHistoryItems())
+                                                        setHistoryItems(
+                                                            getHistoryItems()
+                                                        )
                                                     }}
                                                 >
                                                     {' '}

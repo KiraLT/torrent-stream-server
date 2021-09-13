@@ -517,8 +517,21 @@
             }
 
             .sidebar-wrapper {
-                > .nav [data-toggle='collapse'] ~ div > ul > li > a .sidebar-normal,
-                .user .info [data-toggle='collapse'] ~ div > ul > li > a .sidebar-normal,
+                > .nav
+                    [data-toggle='collapse']
+                    ~ div
+                    > ul
+                    > li
+                    > a
+                    .sidebar-normal,
+                .user
+                    .info
+                    [data-toggle='collapse']
+                    ~ div
+                    > ul
+                    > li
+                    > a
+                    .sidebar-normal,
                 .user .info > a > span,
                 > .nav li > a p {
                     @include transform-translate-x(-25px);
@@ -526,7 +539,13 @@
                 }
             }
 
-            .nav [data-toggle='collapse'] ~ div > ul > li > a .sidebar-mini-icon {
+            .nav
+                [data-toggle='collapse']
+                ~ div
+                > ul
+                > li
+                > a
+                .sidebar-mini-icon {
                 opacity: 1;
             }
         }
@@ -548,15 +567,34 @@
                 width: 260px;
 
                 > .nav li > a p,
-                > .nav [data-toggle='collapse'] ~ div > ul > li > a .sidebar-normal,
-                .user .info [data-toggle='collapse'] ~ div > ul > li > a .sidebar-normal,
+                > .nav
+                    [data-toggle='collapse']
+                    ~ div
+                    > ul
+                    > li
+                    > a
+                    .sidebar-normal,
+                .user
+                    .info
+                    [data-toggle='collapse']
+                    ~ div
+                    > ul
+                    > li
+                    > a
+                    .sidebar-normal,
                 .user .info > a > span {
                     @include transform-translate-x(0px);
                     opacity: 1;
                 }
             }
 
-            .nav [data-toggle='collapse'] ~ div > ul > li > a .sidebar-mini-icon {
+            .nav
+                [data-toggle='collapse']
+                ~ div
+                > ul
+                > li
+                > a
+                .sidebar-mini-icon {
                 opacity: 0;
             }
         }
@@ -596,7 +634,12 @@
         color-stop(60%, #204065),
         to(#2a5788)
     );
-    background: linear-gradient(to right, #0c2646 0%, #204065 60%, #2a5788 100%);
+    background: linear-gradient(
+        to right,
+        #0c2646 0%,
+        #204065 60%,
+        #2a5788 100%
+    );
     position: relative;
     overflow: hidden;
 

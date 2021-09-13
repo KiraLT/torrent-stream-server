@@ -1,6 +1,6 @@
 import { promisify } from 'util'
 import parseTorrent from 'parse-torrent'
-import { Logger } from 'common-stuff'
+import { Logger, deduplicate } from 'common-stuff'
 import { lookup } from 'mime-types'
 
 import {
@@ -39,36 +39,38 @@ export interface TorrentClientConfig {
 export class TorrentClient {
     protected torrents: Record<string, TorrentClientTorrent> = {}
     protected cleanLocked: boolean = false
+    protected adapter: TorrentAdapter
+    protected isLoading: Promise<void>
+    protected config: TorrentClientConfig
 
-    constructor(protected config: TorrentClientConfig, protected adapter: TorrentAdapter) {}
-
-    static async create(
-        config: TorrentClientConfig,
-        adapter?: TorrentAdapter
-    ): Promise<TorrentClient> {
-        return new TorrentClient(
-            {
-                ...config,
-                announce: [
-                    ...(config.announce || []),
-                    ...(config.useDefaultTrackers
-                        ? await downloadTrackers()
-                              .then((v) => {
-                                  config.logger.info(`Loaded ${v.length} trackers`)
-                                  return v
-                              })
-                              .catch(() => {
-                                  config.logger.warn('Failed to load tracker list')
-                                  return []
-                              })
-                        : []),
-                ],
-            },
-            adapter || new WebtorrentAdapter({
+    constructor(config: TorrentClientConfig, adapter?: TorrentAdapter) {
+        this.config = config
+        this.adapter =
+            adapter ??
+            new WebtorrentAdapter({
                 downloadLimit: config.downloadLimit,
-                uploadLimit: config.uploadLimit
+                uploadLimit: config.uploadLimit,
             })
-        )
+        this.isLoading = config.useDefaultTrackers
+            ? downloadTrackers()
+                  .then((v) => {
+                      config.logger.debug(`Loaded ${v.length} default trackers`)
+                      this.config = {
+                          ...this.config,
+                          announce: deduplicate([
+                              ...(config.announce ?? []),
+                              ...v,
+                          ]),
+                      }
+                  })
+                  .catch(() => {
+                      config.logger.warn('Failed to load tracker list')
+                  })
+            : Promise.resolve()
+    }
+
+    protected async loadAndWait(): Promise<void> {
+        await this.isLoading
     }
 
     getTorrents(): TorrentClientTorrent[] {
@@ -80,6 +82,8 @@ export class TorrentClient {
     }
 
     async removeTorrent(infoHash: string): Promise<void> {
+        await this.isLoading
+
         const torrent = this.torrents[infoHash]
         if (torrent) {
             await torrent.remove()
@@ -88,12 +92,16 @@ export class TorrentClient {
     }
 
     async addTorrent(link: string): Promise<TorrentClientTorrent> {
+        await this.isLoading
+
         let parsedLink: parseTorrent.Instance | undefined
         try {
             parsedLink = await promisify(parseTorrent.remote)(link)
         } catch (err) {
             throw new TorrentClientError(
-                `Cannot parse torrent: ${err instanceof Error ? err.message : err}, link: ${link}`
+                `Cannot parse torrent: ${
+                    err instanceof Error ? err.message : err
+                }, link: ${link}`
             )
         }
 
@@ -103,18 +111,20 @@ export class TorrentClient {
 
         const magnet = parseTorrent.toMagnetURI({
             ...parsedLink,
-            announce: [
-                ...new Set([...(parsedLink.announce || []), ...(this.config.announce || [])]),
-            ],
-            urlList: [...new Set([...(parsedLink.urlList || []), ...(this.config.urlList || [])])],
+            announce: deduplicate([
+                ...(parsedLink.announce || []),
+                ...(this.config.announce || []),
+            ]),
+            urlList: deduplicate([
+                ...(parsedLink.urlList || []),
+                ...(this.config.urlList || []),
+            ]),
             // @ts-ignore
-            peerAddresses: [
-                ...new Set([
-                    // @ts-ignore
-                    ...(parsedLink.peerAddresses || []),
-                    ...(this.config.peerAddresses || []),
-                ]),
-            ],
+            peerAddresses: deduplicate([
+                // @ts-ignore
+                ...(parsedLink.peerAddresses || []),
+                ...(this.config.peerAddresses || []),
+            ]),
         })
 
         const infoHash = parsedLink.infoHash
@@ -128,17 +138,19 @@ export class TorrentClient {
             return foundTorrent
         }
 
-        const torrent = await this.adapter.add(magnet, this.config.path).then((v) => ({
-            ...v,
-            link,
-            infoHash,
-            created: new Date(),
-            updated: new Date(),
-            files: v.files.map((f) => ({
-                ...f,
-                type: lookup(f.name) || '',
-            })),
-        }))
+        const torrent = await this.adapter
+            .add(magnet, this.config.path)
+            .then((v) => ({
+                ...v,
+                link,
+                infoHash,
+                created: new Date(),
+                updated: new Date(),
+                files: v.files.map((f) => ({
+                    ...f,
+                    type: lookup(f.name) || '',
+                })),
+            }))
 
         this.torrents[torrent.infoHash] = torrent
 
@@ -152,22 +164,30 @@ export class TorrentClient {
     }
 
     async destroy(): Promise<void> {
+        await this.isLoading
+
         this.config.logger.info('Closing torrent client')
 
         await this.adapter.destroy()
     }
 
     protected async checkForExpiredTorrents(): Promise<void> {
+        await this.isLoading
+
         if (this.cleanLocked) {
             return
         }
         this.cleanLocked = true
         try {
             const torrentToRemove = Object.values(this.torrents).filter(
-                (torrent) => Date.now() - torrent.updated.getTime() > this.config.ttl * 1000
+                (torrent) =>
+                    Date.now() - torrent.updated.getTime() >
+                    this.config.ttl * 1000
             )
             for (const torrent of torrentToRemove) {
-                this.config.logger.info(`Removing expired ${torrent.name} torrent`)
+                this.config.logger.info(
+                    `Removing expired ${torrent.name} torrent`
+                )
                 await this.removeTorrent(torrent.infoHash)
             }
         } finally {

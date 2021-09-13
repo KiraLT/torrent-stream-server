@@ -175,10 +175,20 @@
 }
 
 .btn-lg {
-    @include btn-size($btn-padding-y-lg, $btn-padding-x-lg, $font-size-base, $border-radius-lg);
+    @include btn-size(
+        $btn-padding-y-lg,
+        $btn-padding-x-lg,
+        $font-size-base,
+        $border-radius-lg
+    );
 }
 .btn-sm {
-    @include btn-size($btn-padding-y-sm, $btn-padding-x-sm, $font-size-base, $border-radius-sm);
+    @include btn-size(
+        $btn-padding-y-sm,
+        $btn-padding-x-sm,
+        $font-size-base,
+        $border-radius-sm
+    );
 }
 
 .btn-wd {

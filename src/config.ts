@@ -1,5 +1,4 @@
-import { readFile } from 'fs'
-import { promisify } from 'util'
+import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Logger, merge, convertToNested, camelCase } from 'common-stuff'
 import { z } from 'zod'
@@ -91,13 +90,13 @@ const configSchema = z.object({
         peerAddresses: z.array(z.string()),
         /**
          * Max download speed (bytes/sec) over all torrents
-         * 
+         *
          * Default: `5242880`
          */
         downloadLimit: z.number(),
         /**
          * Max upload speed (bytes/sec) over all torrents
-         * 
+         *
          * Default: `0`
          */
         uploadLimit: z.number(),
@@ -148,10 +147,10 @@ const configSchema = z.object({
         apiKey: z.string().optional(),
         /**
          * Limit requests per minute for single IP
-         * 
+         *
          * Default: 100
          */
-        rpm: z.number()
+        rpm: z.number(),
     }),
     /**
      * Get ip from `X-Forwarded-*` header.
@@ -164,7 +163,9 @@ const configSchema = z.object({
 export type Config = z.infer<typeof configSchema>
 
 export const isInGoogleAppEngine = process.env.GAE_APPLICATION ? true : false
-export const isInHeroku = process.env._ ? process.env._.toLowerCase().includes('heroku') : false
+export const isInHeroku = process.env._
+    ? process.env._.toLowerCase().includes('heroku')
+    : false
 
 const parsedEnv = convertToNested(process.env, {
     separator: '__',
@@ -194,8 +195,8 @@ const defaultConfig: Config = {
         announce: [],
         urlList: [],
         peerAddresses: [],
-        uploadLimit: 0,
-        downloadLimit: 5242880
+        uploadLimit: 1000,
+        downloadLimit: 5242880,
     },
     security: {
         streamApi: {
@@ -204,24 +205,36 @@ const defaultConfig: Config = {
         apiKey: (parsedEnv.apiKey as any) || undefined,
         frontendEnabled: true,
         apiEnabled: true,
-        rpm: 100
+        rpm: 100,
     },
 }
 
-export async function readConfig(path: string | undefined): Promise<Config> {
+export function readConfig(
+    path?: string,
+    overwrites?: Partial<Config>
+): Config {
     try {
         return configSchema.parse(
             merge(
                 merge(
-                    defaultConfig,
-                    path ? JSON.parse(await promisify(readFile)(path, { encoding: 'utf8' })) : {}
+                    merge(
+                        defaultConfig,
+                        path
+                            ? JSON.parse(
+                                  readFileSync(path, { encoding: 'utf8' })
+                              )
+                            : {}
+                    ),
+                    parsedEnv.config ?? {}
                 ),
-                parsedEnv.config || {}
+                overwrites ?? {}
             )
         )
     } catch (err) {
         if (err instanceof z.ZodError) {
-            const errors = err.errors.map((v) => `${v.message} @ ${v.path.join('.')}`)
+            const errors = err.errors.map(
+                (v) => `${v.message} @ ${v.path.join('.')}`
+            )
             throw Error(`Configuration error: ${errors.join(', ')}`)
         }
         throw Error(`Configuration error: ${err}`)

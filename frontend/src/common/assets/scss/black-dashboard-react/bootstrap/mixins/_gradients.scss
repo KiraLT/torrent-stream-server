@@ -2,7 +2,9 @@
 
 @mixin gradient-bg($color) {
     @if $enable-gradients {
-        background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
+        background: $color
+            linear-gradient(180deg, mix($body-bg, $color, 15%), $color)
+            repeat-x;
     } @else {
         background-color: $color;
     }
@@ -42,7 +44,11 @@
     background-repeat: repeat-x;
 }
 
-@mixin gradient-directional($start-color: $gray-700, $end-color: $gray-800, $deg: 45deg) {
+@mixin gradient-directional(
+    $start-color: $gray-700,
+    $end-color: $gray-800,
+    $deg: 45deg
+) {
     background-image: linear-gradient($deg, $start-color, $end-color);
     background-repeat: repeat-x;
 }
@@ -52,7 +58,12 @@
     $color-stop: 50%,
     $end-color: $red
 ) {
-    background-image: linear-gradient(to right, $start-color, $mid-color $color-stop, $end-color);
+    background-image: linear-gradient(
+        to right,
+        $start-color,
+        $mid-color $color-stop,
+        $end-color
+    );
     background-repeat: no-repeat;
 }
 @mixin gradient-y-three-colors(
@@ -61,7 +72,11 @@
     $color-stop: 50%,
     $end-color: $red
 ) {
-    background-image: linear-gradient($start-color, $mid-color $color-stop, $end-color);
+    background-image: linear-gradient(
+        $start-color,
+        $mid-color $color-stop,
+        $end-color
+    );
     background-repeat: no-repeat;
 }
 @mixin gradient-radial($inner-color: $gray-700, $outer-color: $gray-800) {

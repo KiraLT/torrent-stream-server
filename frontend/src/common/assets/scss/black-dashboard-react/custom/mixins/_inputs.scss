@@ -52,7 +52,8 @@
 
             & + .input-group-prepend .input-group-text,
             & + .input-group-append .input-group-text {
-                padding: $padding-vertical $padding-horizontal $padding-vertical 0;
+                padding: $padding-vertical $padding-horizontal $padding-vertical
+                    0;
             }
         }
     }
@@ -65,17 +66,19 @@
 
             & + .input-group-prepend .input-group-text,
             & + .input-group-append .input-group-text {
-                padding: $padding-vertical - 1 $padding-horizontal - 1 $padding-vertical - 1 0;
+                padding: $padding-vertical - 1 $padding-horizontal - 1
+                    $padding-vertical - 1 0;
             }
         }
 
         .input-group-prepend .input-group-text,
         .input-group-append .input-group-text {
-            padding: $padding-vertical - 1 0 $padding-vertical $padding-horizontal - 1;
+            padding: $padding-vertical - 1 0 $padding-vertical
+                $padding-horizontal - 1;
 
             & + .form-control {
-                padding: $padding-vertical $padding-horizontal - 1 $padding-vertical
-                    $padding-horizontal - 3;
+                padding: $padding-vertical $padding-horizontal - 1
+                    $padding-vertical $padding-horizontal - 3;
             }
         }
     }
@@ -89,7 +92,8 @@
 
             & + .input-group-prepend .input-group-text,
             & + .input-group-append .input-group-text {
-                padding: $padding-vertical $padding-horizontal $padding-vertical 0;
+                padding: $padding-vertical $padding-horizontal $padding-vertical
+                    0;
             }
         }
 
@@ -102,23 +106,25 @@
     .form-group,
     .input-group {
         .form-control {
-            padding: $padding-vertical - 1 $padding-horizontal - 1 $padding-vertical - 1
-                $padding-horizontal - 1;
+            padding: $padding-vertical - 1 $padding-horizontal - 1
+                $padding-vertical - 1 $padding-horizontal - 1;
 
             & + .input-group-prepend .input-group-text,
             & + .input-group-append .input-group-text {
-                padding: $padding-vertical - 1 $padding-horizontal - 1 $padding-vertical - 1 0;
+                padding: $padding-vertical - 1 $padding-horizontal - 1
+                    $padding-vertical - 1 0;
             }
         }
 
         .input-group-prepend .input-group-text,
         .input-group-append .input-group-text {
-            padding: $padding-vertical - 1 0 $padding-vertical - 1 $padding-horizontal - 1;
+            padding: $padding-vertical - 1 0 $padding-vertical - 1
+                $padding-horizontal - 1;
 
             & + .form-control,
             & ~ .form-control {
-                padding: $padding-vertical - 1 $padding-horizontal $padding-vertical
-                    $padding-horizontal - 3;
+                padding: $padding-vertical - 1 $padding-horizontal
+                    $padding-vertical $padding-horizontal - 3;
             }
         }
     }

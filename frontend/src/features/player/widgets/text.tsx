@@ -20,4 +20,3 @@ export function TextPlayerWidget({ url }: { url: string }): JSX.Element {
         </div>
     )
 }
-

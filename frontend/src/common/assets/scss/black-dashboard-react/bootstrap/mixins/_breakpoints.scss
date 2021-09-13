@@ -20,7 +20,11 @@
     $breakpoint-names: map-keys($breakpoints)
 ) {
     $n: index($breakpoint-names, $name);
-    @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+    @return if(
+        $n < length($breakpoint-names),
+        nth($breakpoint-names, $n + 1),
+        null
+    );
 }
 
 // Minimum breakpoint width. Null for the smallest (first) breakpoint.
@@ -85,7 +89,11 @@
 
 // Media that spans multiple breakpoint widths.
 // Makes the @content apply between the min and max breakpoints
-@mixin media-breakpoint-between($lower, $upper, $breakpoints: $grid-breakpoints) {
+@mixin media-breakpoint-between(
+    $lower,
+    $upper,
+    $breakpoints: $grid-breakpoints
+) {
     $min: breakpoint-min($lower, $breakpoints);
     $max: breakpoint-max($upper, $breakpoints);
 

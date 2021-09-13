@@ -59,7 +59,11 @@ export function AsyncButton({
                     }
                 }}
             >
-                {loading ? <Spinner as="span" animation="border" size="sm" /> : children}
+                {loading ? (
+                    <Spinner as="span" animation="border" size="sm" />
+                ) : (
+                    children
+                )}
             </Button>
             {confirm && confirm.content && (
                 <Modal
@@ -69,7 +73,9 @@ export function AsyncButton({
                     }}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>{confirm.title ?? 'Confirmation'}</Modal.Title>
+                        <Modal.Title>
+                            {confirm.title ?? 'Confirmation'}
+                        </Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>{confirm.content}</Modal.Body>
@@ -84,7 +90,9 @@ export function AsyncButton({
                             Close
                         </Button>
                         <Button
-                            variant={confirm.button?.variant ?? 'primary-outline'}
+                            variant={
+                                confirm.button?.variant ?? 'primary-outline'
+                            }
                             onClick={handleConfirm}
                         >
                             {confirm.button?.text ?? 'Confirm'}

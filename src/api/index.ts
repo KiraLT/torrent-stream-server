@@ -32,7 +32,9 @@ export function getApiRouter(globals: Globals, client: TorrentClient): Router {
                 validateRequests: true,
                 validateResponses: config.environment === 'development',
                 ignorePaths: (path: string) => {
-                    return !['/api', '/stream', '/playlist'].some((v) => path.startsWith(v))
+                    return !['/api', '/stream', '/playlist'].some((v) =>
+                        path.startsWith(v)
+                    )
                 },
                 validateSecurity: apiKey
                     ? {
@@ -42,7 +44,10 @@ export function getApiRouter(globals: Globals, client: TorrentClient): Router {
                                       req.headers.authorization || ''
                                   ).split(' ')
 
-                                  return type.toLowerCase() === 'bearer' && token === apiKey
+                                  return (
+                                      type.toLowerCase() === 'bearer' &&
+                                      token === apiKey
+                                  )
                               },
                           },
                       }

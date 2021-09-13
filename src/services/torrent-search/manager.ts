@@ -4,7 +4,7 @@ import {
     ProviderSearchOptions,
     ProviderTorrent,
     Provider,
-    ProviderError
+    ProviderError,
 } from './providers'
 
 import { executeProviders } from './helpers'
@@ -14,8 +14,10 @@ export interface ProvidersResult<T> {
     errors: ProviderError[]
 }
 
-export async function getMeta(targetProviders: Provider[]): Promise<ProvidersResult<ProviderMeta[]>> {
-    return executeProviders(targetProviders, v => v.getMeta())
+export async function getMeta(
+    targetProviders: Provider[]
+): Promise<ProvidersResult<ProviderMeta[]>> {
+    return executeProviders(targetProviders, (v) => v.getMeta())
 }
 
 export async function search(
@@ -24,15 +26,17 @@ export async function search(
     options: ProviderSearchOptions
 ): Promise<ProvidersResult<ProviderTorrent[]>> {
     const words = extractWords(query)
-    const { errors, items } = await executeProviders(targetProviders, v => v.search(query, options))
+    const { errors, items } = await executeProviders(targetProviders, (v) =>
+        v.search(query, options)
+    )
 
     return {
         errors,
-        items: sortBy(items.flat(), v => {
+        items: sortBy(items.flat(), (v) => {
             const index = extractWords(v.name)
             return [
-                words.filter(word => index.includes(word)).length * -1,
-                v.seeds * -1
+                words.filter((word) => index.includes(word)).length * -1,
+                v.seeds * -1,
             ]
         }),
     }

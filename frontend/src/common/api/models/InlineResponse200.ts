@@ -22,7 +22,7 @@ import {
     ProviderModelFromJSON,
     ProviderModelFromJSONTyped,
     ProviderModelToJSON,
-} from '.'
+} from './'
 
 /**
  *

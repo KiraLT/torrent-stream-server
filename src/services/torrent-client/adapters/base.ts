@@ -12,14 +12,20 @@ export interface TorrentAdapterFile {
     name: string
     path: string
     length: number
-    createReadStream(opts?: { start: number; end: number }): NodeJS.ReadableStream
+    createReadStream(opts?: {
+        start: number
+        end: number
+    }): NodeJS.ReadableStream
     stop(): void
 }
 
 export abstract class TorrentAdapter {
-    constructor(_options?: {downloadLimit?: number, uploadLimit?: number}) {}
+    constructor(_options?: { downloadLimit?: number; uploadLimit?: number }) {}
 
-    public abstract add(magnet: string, path: string): Promise<TorrentAdapterTorrent>
+    public abstract add(
+        magnet: string,
+        path: string
+    ): Promise<TorrentAdapterTorrent>
     public abstract destroy(): Promise<void>
 }
 

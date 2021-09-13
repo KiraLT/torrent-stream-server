@@ -25,7 +25,10 @@ export function ErrorMessage({
                 </div>
                 {retry && (
                     <div className="align-self-center">
-                        <Button variant="primary" onClick={() => retry().catch(() => undefined)}>
+                        <Button
+                            variant="primary"
+                            onClick={() => retry().catch(() => undefined)}
+                        >
                             Retry
                         </Button>
                     </div>

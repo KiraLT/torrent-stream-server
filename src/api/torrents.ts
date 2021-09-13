@@ -5,7 +5,11 @@ import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
 import { getSteamUrl, getPlaylistUrl } from '../helpers'
 import { Route, createRoute } from '../helpers/openapi'
 
-const torrentToJson = (v: TorrentClientTorrent, domain: string, encodeToken?: string) => {
+const torrentToJson = (
+    v: TorrentClientTorrent,
+    domain: string,
+    encodeToken?: string
+) => {
     return {
         name: v.name,
         infoHash: v.infoHash,
@@ -20,12 +24,27 @@ const torrentToJson = (v: TorrentClientTorrent, domain: string, encodeToken?: st
             type: f.type,
             length: f.length,
             stream: `${domain}${getSteamUrl(v.link, f.path, encodeToken)}`,
+            streamZip: `${domain}${getSteamUrl(
+                v.link,
+                f.path,
+                encodeToken,
+                'zip'
+            )}`,
         })),
         playlist: `${domain}${getPlaylistUrl(v.link, encodeToken)}`,
+        streamZip: `${domain}${getSteamUrl(
+            v.link,
+            undefined,
+            encodeToken,
+            'zip'
+        )}`,
     }
 }
 
-export function getTorrentsRouter({ config }: Globals, client: TorrentClient): Route[] {
+export function getTorrentsRouter(
+    { config }: Globals,
+    client: TorrentClient
+): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
     return [
@@ -40,7 +59,11 @@ export function getTorrentsRouter({ config }: Globals, client: TorrentClient): R
         createRoute('getTorrents', (req, res) => {
             const domain = req.protocol + '://' + req.get('host')
 
-            return res.json(client.getTorrents().map((v) => torrentToJson(v, domain, encodeToken)))
+            return res.json(
+                client
+                    .getTorrents()
+                    .map((v) => torrentToJson(v, domain, encodeToken))
+            )
         }),
         createRoute('getTorrent', (req, res) => {
             const { infoHash } = req.params
