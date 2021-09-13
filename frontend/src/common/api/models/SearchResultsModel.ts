@@ -22,7 +22,7 @@ import {
     ProviderTorrentModelFromJSON,
     ProviderTorrentModelFromJSONTyped,
     ProviderTorrentModelToJSON,
-} from '.'
+} from './'
 
 /**
  *

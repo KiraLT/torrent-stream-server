@@ -38,6 +38,24 @@ export function TorrentsListWidget({
                             <OverlayTrigger
                                 overlay={
                                     <Tooltip id={`video-playlist-tooltip`}>
+                                        Download all files as zip
+                                    </Tooltip>
+                                }
+                            >
+                                <Button
+                                    as={'a'}
+                                    href={torrent.streamZip}
+                                    className="w-100 justify-content-center align-self-center btn-simple"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    variant="success"
+                                >
+                                    <i className="ti-zip"></i> Download
+                                </Button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                overlay={
+                                    <Tooltip id={`video-playlist-tooltip`}>
                                         Download M3U playlist which can be
                                         opened with most Media Players
                                     </Tooltip>

@@ -57,6 +57,15 @@ export function TorrentViewWidget({
                                     <i className="ti-cloud-down"></i> Download
                                 </Dropdown.Item>
                                 <Dropdown.Item
+                                    eventKey="1"
+                                    as={'a'}
+                                    href={file.streamZip}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <i className="ti-zip"></i> Download as zip
+                                </Dropdown.Item>
+                                <Dropdown.Item
                                     eventKey="2"
                                     className="g-savetodrive"
                                     id="save-to-google-cloud"

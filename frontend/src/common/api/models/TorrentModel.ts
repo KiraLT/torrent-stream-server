@@ -18,7 +18,7 @@ import {
     TorrentFileModelFromJSON,
     TorrentFileModelFromJSONTyped,
     TorrentFileModelToJSON,
-} from '.'
+} from './'
 
 /**
  *
@@ -80,6 +80,12 @@ export interface TorrentModel {
      * @memberof TorrentModel
      */
     playlist: string
+    /**
+     *
+     * @type {string}
+     * @memberof TorrentModel
+     */
+    streamZip: string
 }
 
 export function TorrentModelFromJSON(json: any): TorrentModel {
@@ -103,6 +109,7 @@ export function TorrentModelFromJSONTyped(
         downloaded: json['downloaded'],
         downloadSpeed: json['downloadSpeed'],
         playlist: json['playlist'],
+        streamZip: json['streamZip'],
     }
 }
 
@@ -123,5 +130,6 @@ export function TorrentModelToJSON(value?: TorrentModel | null): any {
         downloaded: value.downloaded,
         downloadSpeed: value.downloadSpeed,
         playlist: value.playlist,
+        streamZip: value.streamZip,
     }
 }

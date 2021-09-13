@@ -1,6 +1,8 @@
 import pump from 'pump'
 import rangeParser from 'range-parser'
 import { HttpError, HttpStatusCodes } from 'common-stuff'
+import archiver from 'archiver'
+import { Readable } from 'stream'
 
 import { TorrentClient, filterFiles } from '../services/torrent-client'
 import { Globals } from '../config'
@@ -18,10 +20,16 @@ export function getStreamRouter(
         file?: string
         fileType?: string
         fileIndex?: number
+        output?: string
     }
     const parseParams = (params: Params): Params => {
         if (encodeToken) {
-            if (params.file || params.fileIndex || params.fileType) {
+            if (
+                params.file ||
+                params.fileIndex ||
+                params.fileType ||
+                params.output
+            ) {
                 throw new HttpError(
                     HttpStatusCodes.BAD_REQUEST,
                     `All parameters should be encoded with JWT`
@@ -49,22 +57,49 @@ export function getStreamRouter(
 
     return [
         createRoute('getStream', async (req, res) => {
-            const { torrent: link, ...params } = parseParams({
+            const {
+                torrent: link,
+                output,
+                ...params
+            } = parseParams({
                 torrent: req.params.torrent,
                 ...req.query,
             })
 
-            const torrent = await client.addTorrent(link)
+            req.socket.setTimeout(2 * 60 * 60 * 1000)
 
-            const file = filterFiles(torrent.files, params)[0]
+            const torrent = await client.addTorrent(link)
+            const files = filterFiles(torrent.files, params)
+            const file = files[0]
+            const fileName =
+                file && files.length === 1 ? file.name : torrent.name
+
+            if (output === 'zip') {
+                res.attachment(`${fileName}.zip`)
+
+                const archive = archiver('zip')
+
+                files.forEach((file) => {
+                    archive.append(file.createReadStream() as Readable, {
+                        name: file.path,
+                    })
+                })
+
+                archive.finalize()
+
+                return pump(archive, res, () => {
+                    files.forEach((file) => {
+                        file.stop()
+                    })
+                })
+            }
 
             if (!file) {
                 throw new HttpError(HttpStatusCodes.NOT_FOUND)
             }
 
+            res.attachment(fileName)
             res.setHeader('Accept-Ranges', 'bytes')
-            res.attachment(file.name)
-            req.connection.setTimeout(3600000)
 
             const parsedRange = req.headers.range
                 ? rangeParser(file.length, req.headers.range)

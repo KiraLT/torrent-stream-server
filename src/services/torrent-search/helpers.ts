@@ -23,7 +23,10 @@ const defaultHeaders = {
 
 export async function loadPage(url: string): Promise<Response> {
     const response = get(url)
-        .set('User-Agent', 'torrent-stream-server (+https://github.com/KiraLT/torrent-stream-server)')
+        .set(
+            'User-Agent',
+            'torrent-stream-server (+https://github.com/KiraLT/torrent-stream-server)'
+        )
         .send()
 
     if (!response.ok) {

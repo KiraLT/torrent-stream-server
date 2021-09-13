@@ -43,15 +43,14 @@ export class TorrentClient {
     protected isLoading: Promise<void>
     protected config: TorrentClientConfig
 
-    constructor(
-        config: TorrentClientConfig,
-        adapter?: TorrentAdapter
-    ) {
+    constructor(config: TorrentClientConfig, adapter?: TorrentAdapter) {
         this.config = config
-        this.adapter = adapter ?? new WebtorrentAdapter({
-            downloadLimit: config.downloadLimit,
-            uploadLimit: config.uploadLimit,
-        })
+        this.adapter =
+            adapter ??
+            new WebtorrentAdapter({
+                downloadLimit: config.downloadLimit,
+                uploadLimit: config.uploadLimit,
+            })
         this.isLoading = config.useDefaultTrackers
             ? downloadTrackers()
                   .then((v) => {
@@ -59,9 +58,9 @@ export class TorrentClient {
                       this.config = {
                           ...this.config,
                           announce: deduplicate([
-                            ...(config.announce ?? []),
-                            ...v,
-                        ])
+                              ...(config.announce ?? []),
+                              ...v,
+                          ]),
                       }
                   })
                   .catch(() => {

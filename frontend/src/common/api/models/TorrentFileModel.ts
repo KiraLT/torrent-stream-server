@@ -49,6 +49,12 @@ export interface TorrentFileModel {
      * @memberof TorrentFileModel
      */
     stream: string
+    /**
+     *
+     * @type {string}
+     * @memberof TorrentFileModel
+     */
+    streamZip: string
 }
 
 export function TorrentFileModelFromJSON(json: any): TorrentFileModel {
@@ -68,6 +74,7 @@ export function TorrentFileModelFromJSONTyped(
         type: json['type'],
         length: json['length'],
         stream: json['stream'],
+        streamZip: json['streamZip'],
     }
 }
 
@@ -84,5 +91,6 @@ export function TorrentFileModelToJSON(value?: TorrentFileModel | null): any {
         type: value.type,
         length: value.length,
         stream: value.stream,
+        streamZip: value.streamZip,
     }
 }

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express'
 import YAML from 'yamljs'
 import { resolve } from 'path'
-import { flatMap } from 'common-stuff'
+import { flatMap, filterRecord } from 'common-stuff'
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types'
 import { stringify } from 'querystring'
 
@@ -117,7 +117,7 @@ export function getRouteUrl<O extends keyof Operations>(
     query: RouteType<O>[3]
 ): string {
     const queryString = Object.keys((query as {}) || {}).length
-        ? `?${stringify(query)}`
+        ? `?${stringify(filterRecord(query as {}, ([_k, v]) => !!v))}`
         : ''
 
     return `${Object.entries((params as any) || {}).reduce(

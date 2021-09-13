@@ -124,6 +124,7 @@ paths:
                 - $ref: '#/components/parameters/file'
                 - $ref: '#/components/parameters/fileType'
                 - $ref: '#/components/parameters/fileIndex'
+                - $ref: '#/components/parameters/output'
             responses:
                 200:
                     description: OK
@@ -151,6 +152,7 @@ paths:
                 - $ref: '#/components/parameters/file'
                 - $ref: '#/components/parameters/fileType'
                 - $ref: '#/components/parameters/fileIndex'
+                - $ref: '#/components/parameters/output'
             responses:
                 200:
                     description: OK
@@ -363,6 +365,14 @@ components:
             allowReserved: true
             schema:
                 type: number
+        output:
+            in: query
+            name: output
+            description: Set output type
+            allowReserved: true
+            schema:
+                type: string
+                enum: ['zip']
     schemas:
         UsageModel:
             type: object
@@ -397,7 +407,9 @@ components:
                     type: number
                 playlist:
                     type: string
-            required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed', 'playlist']
+                streamZip:
+                    type: string
+            required: ['link', 'infoHash', 'name', 'started', 'updated', 'files', 'downloaded', 'downloadSpeed', 'playlist', 'streamZip']
         TorrentFileModel:
             type: object
             properties:
@@ -411,7 +423,9 @@ components:
                     type: number
                 stream:
                     type: string
-            required: ['name', 'path', 'length', 'type', 'stream']
+                streamZip:
+                    type: string
+            required: ['name', 'path', 'length', 'type', 'stream', 'streamZip']
         ProviderModel:
             type: object
             properties:

@@ -13,7 +13,8 @@ export const mirrors = [
 export async function downloadTrackers(): Promise<string[]> {
     for (const mirror of mirrors) {
         try {
-            return get(mirror).timeout(3000)
+            return get(mirror)
+                .timeout(3000)
                 .then((v) =>
                     v.text
                         .split('\n')

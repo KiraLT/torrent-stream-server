@@ -35,8 +35,9 @@ export function verifyJwtToken<T extends object | string>(
 
 export function getSteamUrl(
     torrent: string,
-    file: string,
-    encodeToken?: string
+    file?: string,
+    encodeToken?: string,
+    output?: 'zip'
 ): string {
     if (encodeToken) {
         return getRouteUrl(
@@ -46,6 +47,7 @@ export function getSteamUrl(
                     {
                         torrent,
                         file,
+                        output,
                     },
                     encodeToken
                 ),
@@ -59,7 +61,7 @@ export function getSteamUrl(
         {
             torrent,
         },
-        { file }
+        { file, output }
     )
 }
 

@@ -38,6 +38,7 @@ export interface GetStreamRequest {
     file?: string
     fileType?: string
     fileIndex?: number
+    output?: GetStreamOutputEnum
 }
 
 export interface GetStream2Request {
@@ -45,6 +46,7 @@ export interface GetStream2Request {
     file?: string
     fileType?: string
     fileIndex?: number
+    output?: GetStream2OutputEnum
 }
 
 /**
@@ -188,6 +190,10 @@ export class StreamApi extends runtime.BaseAPI {
             queryParameters['fileIndex'] = requestParameters.fileIndex
         }
 
+        if (requestParameters.output !== undefined) {
+            queryParameters['output'] = requestParameters.output
+        }
+
         const headerParameters: runtime.HTTPHeaders = {}
 
         const response = await this.request({
@@ -245,6 +251,10 @@ export class StreamApi extends runtime.BaseAPI {
             queryParameters['fileIndex'] = requestParameters.fileIndex
         }
 
+        if (requestParameters.output !== undefined) {
+            queryParameters['output'] = requestParameters.output
+        }
+
         const headerParameters: runtime.HTTPHeaders = {}
 
         const response = await this.request({
@@ -264,4 +274,19 @@ export class StreamApi extends runtime.BaseAPI {
         const response = await this.getStream2Raw(requestParameters)
         return await response.value()
     }
+}
+
+/**
+ * @export
+ * @enum {string}
+ */
+export enum GetStreamOutputEnum {
+    Zip = 'zip',
+}
+/**
+ * @export
+ * @enum {string}
+ */
+export enum GetStream2OutputEnum {
+    Zip = 'zip',
 }

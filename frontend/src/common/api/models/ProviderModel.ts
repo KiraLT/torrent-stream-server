@@ -18,7 +18,7 @@ import {
     ProviderCategoryModelFromJSON,
     ProviderCategoryModelFromJSONTyped,
     ProviderCategoryModelToJSON,
-} from '.'
+} from './'
 
 /**
  *

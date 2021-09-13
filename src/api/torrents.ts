@@ -24,8 +24,20 @@ const torrentToJson = (
             type: f.type,
             length: f.length,
             stream: `${domain}${getSteamUrl(v.link, f.path, encodeToken)}`,
+            streamZip: `${domain}${getSteamUrl(
+                v.link,
+                f.path,
+                encodeToken,
+                'zip'
+            )}`,
         })),
         playlist: `${domain}${getPlaylistUrl(v.link, encodeToken)}`,
+        streamZip: `${domain}${getSteamUrl(
+            v.link,
+            undefined,
+            encodeToken,
+            'zip'
+        )}`,
     }
 }
 

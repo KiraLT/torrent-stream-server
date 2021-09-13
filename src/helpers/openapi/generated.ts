@@ -61,6 +61,7 @@ export interface components {
             downloaded: number
             downloadSpeed: number
             playlist: string
+            streamZip: string
         }
         TorrentFileModel: {
             name: string
@@ -68,6 +69,7 @@ export interface components {
             type: string
             length: number
             stream: string
+            streamZip: string
         }
         ProviderModel: {
             provider: string
@@ -170,6 +172,8 @@ export interface components {
         fileType: string
         /** File index (starting from `1`) */
         fileIndex: number
+        /** Set output type */
+        output: 'zip'
     }
 }
 
@@ -262,6 +266,8 @@ export interface operations {
                 fileType?: components['parameters']['fileType']
                 /** File index (starting from `1`) */
                 fileIndex?: components['parameters']['fileIndex']
+                /** Set output type */
+                output?: components['parameters']['output']
             }
         }
         responses: {
@@ -289,6 +295,8 @@ export interface operations {
                 fileType?: components['parameters']['fileType']
                 /** File index (starting from `1`) */
                 fileIndex?: components['parameters']['fileIndex']
+                /** Set output type */
+                output?: components['parameters']['output']
             }
         }
         responses: {
