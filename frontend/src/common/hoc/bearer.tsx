@@ -21,7 +21,7 @@ export function withBearer<T>(
                         setBearerRequired(false)
                     })
                     .catch(async (err) => {
-                        if (err instanceof Response && err.status === 401) {
+                        if (String(err).toLowerCase().includes('authorization header required')) {
                             setBearerRequired(true)
                         } else {
                             setError(String(err))
