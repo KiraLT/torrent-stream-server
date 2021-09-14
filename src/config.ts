@@ -148,7 +148,7 @@ const configSchema = z.object({
         /**
          * Limit requests per minute for single IP
          *
-         * Default: 100
+         * Default: 300
          */
         rpm: z.number(),
     }),
@@ -205,7 +205,7 @@ const defaultConfig: Config = {
         apiKey: (parsedEnv.apiKey as any) || undefined,
         frontendEnabled: true,
         apiEnabled: true,
-        rpm: 100,
+        rpm: 300,
     },
 }
 
