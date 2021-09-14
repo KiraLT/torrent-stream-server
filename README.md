@@ -49,31 +49,4 @@ HTTP server to convert any torrent to stream with video support.
 * [Security docs](https://github.com/KiraLT/torrent-stream-server/wiki/security)
 * [API docs](https://github.com/KiraLT/torrent-stream-server/wiki/API)
 * [Development docs](https://github.com/KiraLT/torrent-stream-server/wiki/development)
-
-## Examples
-
-### Open in VLC
-
-Running the following commands from a shell will run VLC and start playing the Sintel movie stream from its public torrent:
-
-#### By infohash (BTIH)
-
-``` bash
-vlc "http://localhost:3000/stream/08ada5a7a6183aae1e09d831df6748d566095a10"
-```
-#### By magnet URI
-``` bash
-vlc "http://localhost:3000/stream?torrent=magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&file=Sintel.mp4"
-```
-or
-``` bash
-vlc "http://127.0.0.1:3000/stream/magnet%3A%3Fxt%3Durn%3Abtih%3A08ada5a7a6183aae1e09d831df6748d566095a10?file=Sintel.mp4"
-```
-
-### Download file using curl
-
-This command will download Sintel movie from torrents and save as `sintel.mp4`.
-
-``` bash
-curl "http://localhost:3000/stream/08ada5a7a6183aae1e09d831df6748d566095a10" > sintel.mp4
-```
+* [Usage examples](https://github.com/KiraLT/torrent-stream-server/wiki)
