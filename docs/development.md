@@ -6,6 +6,12 @@ One-click ready-to-code development environments:
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/KiraLT/torrent-stream-server)
 
+## Using Docker & Docker Compose
+Docker and Docker Compose required. NodeJS **not** required on development host.
+
+* Edit `docker-compose.yml` to tailor to your needs (make sure `build: .` is uncommented).
+* Run `docker-compose up --build [--force-recreate]`.
+
 ## From Source
 
 > Frontend & backend are separate packages.

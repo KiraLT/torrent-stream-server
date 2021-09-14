@@ -1,0 +1,30 @@
+version: "2.4"
+services:
+  torrent-stream-server:
+    container_name: torrent-stream-server
+    restart: unless-stopped
+
+# Use 'build' instead of 'image' for building from local source:
+#    build: .
+    image: ghcr.io/kiralt/torrent-stream-server
+# Add optional command line switches:
+#    command: [ "-c", "config.json" ]
+
+    environment:
+      - HOST
+# You can either expose host's env vars or explicitly set them:
+      - PORT
+#      - PORT=80
+
+# You can use host networking mode instead of port mapping:
+#    network_mode: host
+    ports:
+      - "3000:3000"
+
+# The 'config.json' file in the repo is mounted. To use it, make sure
+# you set the appropriate '-c' switch in the 'command' section.
+    volumes:
+      - type: bind
+        source: ${PWD}/config.json
+        target: /usr/app/config.json
+        read_only: true
