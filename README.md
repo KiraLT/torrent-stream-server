@@ -28,6 +28,7 @@ HTTP server to convert any torrent to stream with video support.
 
 [![Dependencies](https://david-dm.org/KiraLT/torrent-stream-server.svg)](https://david-dm.org/KiraLT/torrent-stream-server)
 [![npm version](https://badge.fury.io/js/torrent-stream-server.svg)](https://www.npmjs.com/package/torrent-stream-server)
+[![npm downloads](https://img.shields.io/npm/dt/torrent-stream-server)](https://www.npmjs.com/package/torrent-stream-server)
 
 * `npm install -g torrent-stream-server`
 * `torrent-stream-server serve`
