@@ -225,7 +225,7 @@ export function readConfig(
                               )
                             : {}
                     ),
-                    parsedEnv.config ?? {}
+                    (parsedEnv.config || undefined) ?? {}
                 ),
                 overwrites ?? {}
             )
