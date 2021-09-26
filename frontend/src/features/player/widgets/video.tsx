@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, memo } from 'react'
 import { Alert } from 'react-bootstrap'
 import isMobile from 'ismobilejs'
 import videojs from 'video.js'
@@ -6,18 +6,19 @@ import videojs from 'video.js'
 const chromecast = require('@silvermine/videojs-chromecast')
 chromecast(videojs)
 
-export function VideoPlayerWidget({
+export const VideoPlayerWidget = memo(({
     url,
     type,
 }: {
     url: string
     type: string
-}): JSX.Element {
+}) => {
     const device = isMobile(window.navigator)
     const ref = useRef<HTMLVideoElement>(null)
 
     useEffect(() => {
         if (ref.current) {
+            console.log('CREATING', ref.current, url)
             const v = videojs(ref.current, {
                 controls: true,
                 sources: [
@@ -49,11 +50,11 @@ export function VideoPlayerWidget({
                 v.dispose()
             }
         }
-    })
+    }, [url, type])
 
     return (
         <>
-            <div data-vjs-player>
+            <div data-vjs-player key={url}>
                 <video
                     ref={ref}
                     className="video-js vjs-theme-custom vjs-big-play-centered"
@@ -99,4 +100,4 @@ export function VideoPlayerWidget({
             )}
         </>
     )
-}
+})
