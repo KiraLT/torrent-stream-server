@@ -127,9 +127,9 @@ export class NyaaProvider extends Provider {
         options?: ProviderSearchOptions
     ): Promise<ProviderTorrent[]> {
         const { category, limit } = options || {}
-
+        
         const result = await si.search(query, limit, {
-            category: category as si.Category | undefined,
+            category: category as keyof typeof si.Category | undefined,
         })
 
         const categories = (await this.getMeta()).categories.flatMap((v) => [
