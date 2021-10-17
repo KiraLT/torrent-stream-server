@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken'
 
-import { getRouteUrl } from './openapi'
+import { getRouteUrl } from '../services/openapi'
 
 export function exists(json: any, key: string) {
     const value = json[key]

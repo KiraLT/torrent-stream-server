@@ -122,16 +122,16 @@ export class WebtorrentAdapter extends TorrentAdapter {
                 })
             },
             getDownloadSpeed() {
-                return torrent.downloadSpeed
+                return torrent.downloadSpeed ?? 0
             },
             getDownloaded() {
-                return torrent.downloaded
+                return torrent.downloaded ?? 0
             },
             getUploadSpeed() {
-                return torrent.uploadSpeed
+                return torrent.uploadSpeed ?? 0
             },
             getUploaded() {
-                return torrent.uploaded
+                return torrent.uploaded ?? 0
             },
         }
     }

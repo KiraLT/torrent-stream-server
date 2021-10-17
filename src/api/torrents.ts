@@ -1,9 +1,9 @@
 import { HttpError, HttpStatusCodes } from 'common-stuff'
 
 import { Globals } from '../config'
-import { TorrentClient, TorrentClientTorrent } from '../services/torrent-client'
+import { TorrentClientTorrent } from '../services/torrent-client'
 import { getSteamUrl, getPlaylistUrl } from '../helpers'
-import { Route, createRoute } from '../helpers/openapi'
+import { Route, createRoute } from '../services/openapi'
 
 const torrentToJson = (
     v: TorrentClientTorrent,
@@ -42,8 +42,7 @@ const torrentToJson = (
 }
 
 export function getTorrentsRouter(
-    { config }: Globals,
-    client: TorrentClient
+    { config, client }: Globals,
 ): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 

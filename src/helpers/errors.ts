@@ -9,7 +9,7 @@ export function handleApiErrors(
     return (err, _req, resp, next) => {
         if (err) {
             if (err instanceof TorrentClientError) {
-                logger.warn(`Torrent client error: ${err.message}`)
+                logger.warn(err.message)
                 return resp.status(400).json({
                     error: err.message,
                 })

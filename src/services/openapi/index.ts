@@ -2,10 +2,10 @@ import { Request, Response, NextFunction, Router } from 'express'
 import YAML from 'yamljs'
 import { resolve } from 'path'
 import { flatMap, filterRecord } from 'common-stuff'
-import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types'
+import type { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types'
 import { stringify } from 'querystring'
 
-import { operations as Operations, paths as Paths } from './generated'
+import { operations as Operations, paths as Paths, components as Components } from './generated'
 
 type KeysOfUnion<T> = T extends T ? keyof T : never
 type Operation = keyof Operations
@@ -15,6 +15,8 @@ type Method = KeysOfUnion<Paths[Url]>
 export const openapi = YAML.load(
     resolve(__dirname, '../../../openapi.yaml')
 ) as OpenAPIV3.Document
+
+export type Models = Components['schemas']
 
 function getPathByOperation<O extends Operation>(
     operation: O

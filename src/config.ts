@@ -2,6 +2,10 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { Logger, merge, convertToNested, camelCase } from 'common-stuff'
 import { z } from 'zod'
+import { Express } from 'express'
+
+import { LogsStorage } from './services/logging'
+import { TorrentClient } from './services/torrent-client'
 
 export enum Environment {
     Production = 'production',
@@ -52,6 +56,12 @@ const configSchema = z.object({
          * Default: `info`
          */
         level: z.enum(['debug', 'info', 'warn', 'error']),
+        /**
+         * How many latest logs should be stored and retrieved by API or shown in the dashboard.
+         *
+         * Default: `100`
+         */
+        storeLimit: z.number().nonnegative()
     }),
     /**
      * Torrent client settings
@@ -187,6 +197,7 @@ const defaultConfig: Config = {
             },
         ],
         level: 'info',
+        storeLimit: 100
     },
     torrents: {
         path: '/tmp/torrent-stream-server',
@@ -249,4 +260,7 @@ export const frontendBuildPath = resolve(__dirname, '../frontend/build')
 export interface Globals {
     config: Config
     logger: Logger
+    logStorage: LogsStorage
+    app: Express
+    client: TorrentClient
 }

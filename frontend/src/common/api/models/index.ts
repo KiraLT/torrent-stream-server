@@ -1,5 +1,6 @@
 export * from './ApiErrorModel'
 export * from './InlineResponse200'
+export * from './Log'
 export * from './MagnetModel'
 export * from './ProviderCategoryModel'
 export * from './ProviderCategoryModelSubcategories'
