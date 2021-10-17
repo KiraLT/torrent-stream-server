@@ -1,5 +1,5 @@
 import { Globals } from '../config'
-import { createRoute, Route } from '../helpers/openapi'
+import { createRoute, Route } from '../services/openapi'
 
 export function getAuthRouter({}: Globals): Route[] {
     return [

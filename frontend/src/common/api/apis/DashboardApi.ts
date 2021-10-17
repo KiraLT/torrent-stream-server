@@ -17,6 +17,9 @@ import {
     ApiErrorModel,
     ApiErrorModelFromJSON,
     ApiErrorModelToJSON,
+    Log,
+    LogFromJSON,
+    LogToJSON,
     UsageModel,
     UsageModelFromJSON,
     UsageModelToJSON,
@@ -26,6 +29,41 @@ import {
  *
  */
 export class DashboardApi extends runtime.BaseAPI {
+    /**
+     */
+    async getLogsRaw(): Promise<runtime.ApiResponse<Array<Log>>> {
+        const queryParameters: any = {}
+
+        const headerParameters: runtime.HTTPHeaders = {}
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken
+            const tokenString =
+                typeof token === 'function' ? token('apiKey', []) : token
+
+            if (tokenString) {
+                headerParameters['Authorization'] = `Bearer ${tokenString}`
+            }
+        }
+        const response = await this.request({
+            path: `/api/logs`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        })
+
+        return new runtime.JSONApiResponse(response, (jsonValue) =>
+            jsonValue.map(LogFromJSON)
+        )
+    }
+
+    /**
+     */
+    async getLogs(): Promise<Array<Log>> {
+        const response = await this.getLogsRaw()
+        return await response.value()
+    }
+
     /**
      */
     async getUsageRaw(): Promise<runtime.ApiResponse<UsageModel>> {

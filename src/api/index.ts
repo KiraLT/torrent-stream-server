@@ -3,17 +3,17 @@ import { HttpError, HttpStatusCodes } from 'common-stuff'
 import { middleware } from 'express-openapi-validator'
 import swaggerUi from 'swagger-ui-express'
 
-import { TorrentClient } from '../services/torrent-client'
 import { Globals } from '../config'
-import { getAuthRouter } from './auth'
-import { getBrowseRouter } from './browse'
-import { getStreamRouter } from './stream'
-import { getTorrentsRouter } from './torrents'
-import { getUsageRouter } from './usage'
+import { getAuthRouter } from '../api/auth'
+import { getLogsRouter } from '../api/logs'
+import { getBrowseRouter } from '../api/browse'
+import { getStreamRouter } from '../api/stream'
+import { getTorrentsRouter } from '../api/torrents'
+import { getUsageRouter } from '../api/usage'
 import { handleApiErrors } from '../helpers/errors'
-import { createRouter, openapi } from '../helpers/openapi'
+import { createRouter, openapi } from '../services/openapi'
 
-export function getApiRouter(globals: Globals, client: TorrentClient): Router {
+export function getApiRouter(globals: Globals): Router {
     const { config, logger } = globals
     const app = Router()
 
@@ -60,8 +60,9 @@ export function getApiRouter(globals: Globals, client: TorrentClient): Router {
                 ...getAuthRouter(globals),
                 ...getBrowseRouter(globals),
                 ...getUsageRouter(globals),
-                ...getTorrentsRouter(globals, client),
-                ...getStreamRouter(globals, client),
+                ...getLogsRouter(globals),
+                ...getTorrentsRouter(globals),
+                ...getStreamRouter(globals),
             ])
         )
 

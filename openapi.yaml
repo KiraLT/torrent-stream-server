@@ -327,6 +327,30 @@ paths:
                     $ref: '#/components/responses/401'
                 403:
                     $ref: '#/components/responses/403'
+    /api/logs:
+        get:
+            operationId: getLogs
+            summary: "Retrieve latest server logs"
+            tags:
+                - dashboard
+            security:
+            - apiKey: []
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Log'
+                                    
+                400:
+                    $ref: '#/components/responses/400'
+                401:
+                    $ref: '#/components/responses/401'
+                403:
+                    $ref: '#/components/responses/403'
 components:
     parameters:
         torrentParam:
@@ -532,6 +556,20 @@ components:
                 success:
                     type: boolean
             required: ['success']
+        Log:
+            type: object
+            description: Server log entry
+            properties:
+                message:
+                    description: Log message
+                    type: string
+                time:
+                    description: Log timestamp in seconds
+                    type: number
+                level:
+                    type: string
+                    enum: ['debug', 'info', 'warn', 'error']
+            required: ['message', 'time', 'level']
     responses:
         204:
             description: Successful operation

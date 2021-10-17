@@ -4,14 +4,13 @@ import { HttpError, HttpStatusCodes } from 'common-stuff'
 import archiver from 'archiver'
 import { Readable } from 'stream'
 
-import { TorrentClient, filterFiles } from '../services/torrent-client'
+import { filterFiles } from '../services/torrent-client'
 import { Globals } from '../config'
 import { verifyJwtToken, getSteamUrl } from '../helpers'
-import { createRoute, Route, getRouteUrl } from '../helpers/openapi'
+import { createRoute, Route, getRouteUrl } from '../services/openapi'
 
 export function getStreamRouter(
-    { config }: Globals,
-    client: TorrentClient
+    { config, client }: Globals,
 ): Route[] {
     const encodeToken = config.security.streamApi.key || config.security.apiKey
 
@@ -45,7 +44,7 @@ export function getStreamRouter(
             if (!data) {
                 throw new HttpError(
                     HttpStatusCodes.FORBIDDEN,
-                    'Incorrect JWT encoding'
+                    'Incorrect JWT encofding'
                 )
             }
 
@@ -66,7 +65,9 @@ export function getStreamRouter(
                 ...req.query,
             })
 
-            req.socket.setTimeout(2 * 60 * 60 * 1000)
+            if (typeof req.socket.setTimeout === 'function') {
+                req.socket.setTimeout(2 * 60 * 60 * 10)
+            }
 
             const torrent = await client.addTorrent(link)
             const files = filterFiles(torrent.files, params)
@@ -145,8 +146,10 @@ export function getStreamRouter(
             const files = filterFiles(torrent.files, params).filter(
                 (v) => v.type.includes('video') || v.type.includes('audio')
             )
-
-            req.connection.setTimeout(10000)
+            
+            if (typeof req.socket.setTimeout === 'function') {
+                req.socket.setTimeout(2 * 60 * 60 * 10)
+            }
 
             res.attachment(torrent.name + `.m3u`)
 

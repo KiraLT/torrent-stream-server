@@ -1,4 +1,4 @@
-import express, { Express } from 'express'
+import express from 'express'
 import { join } from 'path'
 import cors from 'cors'
 import { Logger } from 'common-stuff'
@@ -6,8 +6,8 @@ import { createHttpTerminator } from 'http-terminator'
 import rateLimit from 'express-rate-limit'
 
 import { TorrentClient } from './services/torrent-client'
-import { readConfig, Config, frontendBuildPath } from './config'
-import { createLogger } from './helpers/logging'
+import { readConfig, Config, frontendBuildPath, Globals } from './config'
+import { createLogger, LogsStorage } from './services/logging'
 import { getApiRouter } from './api'
 
 import 'express-async-errors'
@@ -19,19 +19,15 @@ export interface AppOptions {
     client?: TorrentClient
 }
 
-export interface AppGlobals {
-    app: Express
-    client: TorrentClient
-    logger: Logger
-    config: Config
-}
-
-export function createApp(options: AppOptions): AppGlobals {
-    const config = readConfig(options.configFile, options.config)
-    const logger = options.logger ?? createLogger(config)
+export function createApp(options?: AppOptions): Globals {
+    const config = readConfig(options?.configFile, options?.config)
+    const logStorage = new LogsStorage({
+        limit: config.logging.storeLimit
+    })
+    const logger = options?.logger ? options.logger : createLogger(config, logStorage)
 
     const client =
-        options.client ??
+        options?.client ??
         new TorrentClient({
             logger,
             ...config.torrents,
@@ -57,8 +53,10 @@ export function createApp(options: AppOptions): AppGlobals {
             {
                 config,
                 logger,
-            },
-            client
+                logStorage,
+                app,
+                client
+            }
         )
     )
 
@@ -69,26 +67,24 @@ export function createApp(options: AppOptions): AppGlobals {
         })
     }
 
-    return { app, client, logger, config }
+    return { app, client, logger, config, logStorage }
 }
 
-export function createAndRunApp(options: AppOptions): AppGlobals {
-    const { app, config, logger, client } = createApp(options)
+export function createAndRunApp(options?: AppOptions): Globals {
+    const { app, config, logger, client, logStorage } = createApp(options)
 
     const server = app.listen(config.port, config.host, () => {
+        const accessHost = config.host === '0.0.0.0' ? '127.0.0.1' : config.host
+
         logger.info(
-            `Running ${config.environment} server on ${config.host}:${config.port}`
+            [
+                `Running ${config.environment} server on ${config.host}:${config.port}`,
+                ...(config.environment === 'development' ? [
+                    `* Website on http://${accessHost}:${config.port}`,
+                    `* Docs on http://${accessHost}:${config.port}/api-docs`
+                ] : [])
+            ].join('\n')
         )
-
-        if (config.environment === 'development') {
-            const accessHost =
-                config.host === '0.0.0.0' ? '127.0.0.1' : config.host
-
-            logger.info(`* Website on http://${accessHost}:${config.port}`)
-            logger.info(
-                `* Docs on http://${accessHost}:${config.port}/api-docs`
-            )
-        }
     })
 
     const httpTerminator = createHttpTerminator({
@@ -116,5 +112,5 @@ export function createAndRunApp(options: AppOptions): AppGlobals {
     process.on('SIGTERM', shutdown)
     process.on('SIGINT', shutdown)
 
-    return { app, config, logger, client }
+    return { app, config, logger, client, logStorage }
 }

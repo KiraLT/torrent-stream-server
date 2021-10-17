@@ -1,6 +1,6 @@
 import { Globals } from '../config'
 import { getUsedSpace, checkDiskSpace } from '../helpers/usage'
-import { createRoute, Route } from '../helpers/openapi'
+import { createRoute, Route } from '../services/openapi'
 
 export function getUsageRouter({ config }: Globals): Route[] {
     return [

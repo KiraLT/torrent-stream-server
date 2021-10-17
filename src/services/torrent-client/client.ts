@@ -151,6 +151,8 @@ export class TorrentClient {
                     type: lookup(f.name) || '',
                 })),
             }))
+        
+        this.config.logger.info(`Adding new torrent "${torrent.name}"`)
 
         this.torrents[torrent.infoHash] = torrent
 

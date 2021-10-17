@@ -8,7 +8,7 @@ import {
     getDefaultProvider,
     getDefaultProviders,
 } from '../services/torrent-search'
-import { createRoute, Route } from '../helpers/openapi'
+import { createRoute, Route } from '../services/openapi'
 
 export function getBrowseRouter({}: Globals): Route[] {
     return [
