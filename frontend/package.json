@@ -11,7 +11,7 @@
         "@types/react": "^17.0.24",
         "@types/react-dom": "^17.0.9",
         "@types/react-router-dom": "^5.3.0",
-        "@types/react-select": "^4.0.18",
+        "@types/react-select": "^5.0.1",
         "@types/video.js": "^7.3.27",
         "bootstrap": "^5.1.1",
         "classnames": "^2.3.1",
