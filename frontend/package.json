@@ -35,9 +35,9 @@
         "if-node-version": "^1.1.1"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "if-node-version '>= 17' && react-scripts --openssl-legacy-provider build || react-scripts build",
-        "test": "react-scripts test"
+        "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
+        "build": "if-node-version '>= 17' && SKIP_PREFLIGHT_CHECK=true react-scripts --openssl-legacy-provider build || SKIP_PREFLIGHT_CHECK=true react-scripts build",
+        "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test"
     },
     "eslintConfig": {
         "extends": [
