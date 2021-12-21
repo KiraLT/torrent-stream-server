@@ -112,7 +112,7 @@
         "dev-frontend": "npm --prefix frontend run start",
         "dev": "concurrently --kill-others \"npm run dev-backend\" \"npm run dev-frontend\"",
         "heroku-cleanup": "rm -rf frontend/node_modules",
-        "postinstall": "[ ! -d frontend/src ] || npm --prefix frontend install && npm run build",
+        "postinstall": "[ ! -d frontend/src ] || npm --prefix frontend install",
         "prettify": "prettier --write \"{src,frontend/spec}/**/*.{js,ts,tsx,json,css,scss}\"",
         "start": "node lib/index.js serve",
         "uninstall": "rm -rf frontend/node_modules",
