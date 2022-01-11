@@ -4,6 +4,7 @@ import { NyaaProvider } from './nyaa'
 import { ThepiratebayProvider } from './thepiratebay'
 import { TorrentParadiseProvider } from './torrentparadise'
 import { X1337Provider } from './1337x'
+import { RarbgProvider } from './rarbg'
 import { Provider } from './base'
 import { TorrentsBrowserError } from '../errors'
 
@@ -12,6 +13,7 @@ export const defaultProviders = [
     new ThepiratebayProvider(),
     new TorrentParadiseProvider(),
     new X1337Provider(),
+    new RarbgProvider(),
 ]
 
 export function getDefaultProviders(providerNames: string[]): Provider[] {

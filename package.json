@@ -28,6 +28,7 @@
         "parse-torrent": "^9.1.4",
         "pump": "^3.0.0",
         "range-parser": "^1.2.1",
+        "rarbg-api": "^1.1.4",
         "superagent": "^6.1.0",
         "swagger-ui-express": "^4.1.6",
         "webtorrent": "^1.5.5",
