@@ -17,7 +17,7 @@
         "classnames": "^2.3.1",
         "common-stuff": "^1.5.2",
         "ismobilejs": "^1.1.1",
-        "node-sass": "^6.0.1",
+        "node-sass": "^7.0.0",
         "react": "^17.0.2",
         "react-app-polyfill": "^2.0.0",
         "react-async-hook": "^4.0.0",
