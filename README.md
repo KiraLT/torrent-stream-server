@@ -50,4 +50,4 @@ HTTP server to convert any torrent to stream with video support.
 * [Security docs](https://github.com/KiraLT/torrent-stream-server/wiki/security)
 * [API docs](https://github.com/KiraLT/torrent-stream-server/wiki/API)
 * [Development docs](https://github.com/KiraLT/torrent-stream-server/wiki/development)
-* [Usage examples](https://github.com/KiraLT/torrent-stream-server/wiki)
+* [Usage examples](https://github.com/KiraLT/torrent-stream-server/wiki/Examples)
