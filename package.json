@@ -19,7 +19,7 @@
         "express-async-errors": "^3.1.1",
         "express-openapi-validator": "^4.13.1",
         "express-rate-limit": "^5.3.0",
-        "get-folder-size": "^2.0.1",
+        "get-folder-size": "^4.0.0",
         "http-terminator": "^3.0.3",
         "jsonwebtoken": "^8.5.1",
         "mime-types": "^2.1.32",
