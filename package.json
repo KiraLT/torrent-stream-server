@@ -21,7 +21,7 @@
         "express-rate-limit": "^5.3.0",
         "get-folder-size": "^2.0.1",
         "http-terminator": "^3.0.3",
-        "jsonwebtoken": "^8.5.1",
+        "jsonwebtoken": "^9.0.0",
         "mime-types": "^2.1.32",
         "nyaapi": "^2.4.1",
         "openapi-types": "^9.3.0",
